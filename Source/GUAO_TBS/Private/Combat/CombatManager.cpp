@@ -11,8 +11,8 @@ ACombatManager::ACombatManager()
 {
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComp"));
 
-	CharacterMargin = 100.f;
-	CommonAttackMargin = 20.f;
+	CharacterMargin = 250.f;
+	CommonAttackMargin = 40.f;
 	CurrentCombatState = ECombatState::Startup;
 
 	bWaitingForPawn = false;
@@ -91,10 +91,14 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 
 				FCombatPawnInfo CombatPawnInfo;
 				CombatPawnInfo.CombatPawn = InAllTeamsInfo[i].AllCombatPawns[j];
+				
+				CombatPawnInfo.CombatPawn->SetCombatManager(this);
+				CombatPawnInfo.CombatPawn->CombatTeam = i;
+				CombatPawnInfo.CombatPawn->GetOnCombatPawnDeathDelegate().AddUObject(this, &ACombatManager::CheckCombatState);
+
 				FVector CombatPawnLocation = BaseLocation + CharacterMarginVector * j;
 				CombatPawnInfo.CommonAttackLocation = CombatPawnLocation + CommonAttackMarginVector;
 				CombatPawnInfo.CombatPawn->SetActorLocationAndRotation(CombatPawnLocation, BaseRotation);
-
 				CombatTeamInfo.AllCombatPawnInfo.Add(CombatPawnInfo);
 			}
 		}
@@ -108,7 +112,26 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 	ToggleToTargetState(ECombatState::BeginCombat);
 }
 
+void ACombatManager::CheckCombatState()
+{
+	int32 SurvivingTeams = -1;
 
+	for (int32 i = 0; i < AllTeamsInfo.Num(); ++i)
+	{
+		for (const FCombatPawnInfo& CombatPawnInfo : AllTeamsInfo[i].AllCombatPawnInfo)
+		{
+			if (CombatPawnInfo.CombatPawn && !CombatPawnInfo.CombatPawn->bIsDead)
+			{
+				if (SurvivingTeams == i) { continue; }
+				else if (SurvivingTeams == -1) { SurvivingTeams = i; continue; }
+				else { return; }
+			}
+		}
+	}
+
+	WinTeam = SurvivingTeams;
+	ToggleToTargetState(ECombatState::GameOver);
+}
 
 void ACombatManager::Tick(float DeltaSeconds)
 {
@@ -143,8 +166,9 @@ void ACombatManager::Tick(float DeltaSeconds)
 			TurnBout();
 			break;
 		case ECombatState::GameOver:
+			GameOver();
 			break;
-		case ECombatState::Victory:
+		case ECombatState::Results:
 			break;
 	}
 }
@@ -160,17 +184,26 @@ void ACombatManager::ChooseFirstPawn()
 
 void ACombatManager::ChooseNextPawn()
 {
-	CurrentPawnNum++;
-
 	checkf(AllTeamsInfo.IsValidIndex(CurrentTeamNum), TEXT("-_- can'f find right team"));
 
-	if (AllTeamsInfo[CurrentTeamNum].AllCombatPawnInfo.Num() == CurrentPawnNum)
+	while (true)
 	{
-		ToggleToTargetState(ECombatState::TurnTeam);
-	}
-	else
-	{
-		ToggleToTargetState(ECombatState::BeginPawnTurn);
+		CurrentPawnNum++;
+
+		if (AllTeamsInfo[CurrentTeamNum].AllCombatPawnInfo.Num() == CurrentPawnNum)
+		{
+			ToggleToTargetState(ECombatState::TurnTeam);
+			return;
+		}
+		else
+		{
+			ACombatPawn* CombatPawn = AllTeamsInfo[CurrentTeamNum].AllCombatPawnInfo[CurrentPawnNum].CombatPawn;
+			if (CombatPawn && !CombatPawn->bIsDead)
+			{
+				ToggleToTargetState(ECombatState::BeginPawnTurn);
+				return;
+			}
+		}
 	}
 }
 
@@ -185,8 +218,7 @@ void ACombatManager::TurnTeam()
 	}
 	else
 	{
-		checkf(AllTeamsInfo.IsValidIndex(CurrentTeamNum) && AllTeamsInfo[CurrentTeamNum].AllCombatPawnInfo.IsValidIndex(0), TEXT("-_- can't find right pawn"));
-		ToggleToTargetState(ECombatState::BeginPawnTurn);
+		ToggleToTargetState(ECombatState::ChoosePawn);
 	}
 }
 
@@ -245,4 +277,11 @@ void ACombatManager::Action(float DeltaSeconds)
 			ToggleToTargetState(ECombatState::EndPawnTurn);
 		}
 	}
+}
+
+
+void ACombatManager::GameOver()
+{
+	UE_LOG(LogTemp, Log, TEXT("-_- the win team is %d"), WinTeam);
+	ToggleToTargetState(ECombatState::Results);
 }

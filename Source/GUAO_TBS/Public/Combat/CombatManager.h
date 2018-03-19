@@ -25,7 +25,7 @@ enum class ECombatState : uint8
 	TurnBout,
 
 	GameOver,
-	Victory
+	Results
 };
 
 USTRUCT(BlueprintType)
@@ -81,6 +81,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitiallizeCombat(const TArray<FCombatTeam>& InAllTeams);
 
+	void CheckCombatState();
+	void GameOver();
 
 	//////////////////////////////////////////////////////////////////////////
 	/// Combat State
@@ -117,6 +119,7 @@ protected:
 	int32 CurrentTeamNum;
 	int32 CurrentPawnNum;
 	int32 CurrentBout;
+	int32 WinTeam;
 
 	bool bWaitingForPawn;
 
@@ -125,6 +128,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	int32 CommonAttackMargin;
 
+
+public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<FCombatTeamInfo> AllTeamsInfo;
 };
