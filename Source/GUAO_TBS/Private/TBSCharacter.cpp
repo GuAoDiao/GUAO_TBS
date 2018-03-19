@@ -211,7 +211,6 @@ bool ATBSCharacter::FindCurrentMouseOverTileIndex(int32& OutIndex)
 
 void ATBSCharacter::StartMovement()
 {
-
 	TArray<FVector> PathVectorArray;
 
 	for (int32 PathIndex : GridPathFinding->PathIndexArray)
@@ -235,7 +234,6 @@ void ATBSCharacter::TickMovement(float DeltaSeconds)
 	if (CurrentSplineDistance <= MovePathComp->GetDistanceAlongSplineAtSplinePoint(PointIndex))
 	{
 		SetActorLocation(GridManager->GetVectorFromIndex(GridPathFinding->CurrentPathEnd));
-		Index = GridPathFinding->CurrentPathEnd;
 		EndMovement();
 	}
 	else
@@ -261,6 +259,10 @@ void ATBSCharacter::EndMovement()
 	bIsMoving = false;
 	bDisableClickTile = false;
 	CurrentSpeed = 0.f;
+
+	GridManager->AllTilePawns.Remove(Index);
+	Index = GridPathFinding->CurrentPathEnd;
+	GridManager->AllTilePawns.Add(Index, this);
 
 	if (SelectTilePawnIndex != -1 && GridManager->AllTilePawns.Contains(SelectTilePawnIndex) && GridManager->AllTilePawns[SelectTilePawnIndex])
 	{
