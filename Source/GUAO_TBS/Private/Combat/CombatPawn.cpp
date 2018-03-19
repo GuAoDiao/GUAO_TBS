@@ -4,6 +4,9 @@
 
 #include "Components/SkeletalMeshComponent.h"
 
+#include "Combat/DecisionMakers/TestDecisionMaker.h"
+#include "Combat/Actions/ICombatAction.h"
+
 ACombatPawn::ACombatPawn()
 {
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComp"));
@@ -23,29 +26,39 @@ void ACombatPawn::OnConstruction(const FTransform& Transform)
 
 void ACombatPawn::BeginMakeDecision()
 {
-	UE_LOG(LogTemp, Log, TEXT("-_- Begin Make Decision"));
+	DecisionMaker = new FTestDecisionMaker();
+	if (DecisionMaker) { DecisionMaker->BeginMakeDecision(this); }
 }
 
 bool ACombatPawn::MakeDecision(float DeltaSeconds)
 {
-	UE_LOG(LogTemp, Log, TEXT("-_- Waiting for Make Decision"));
+	if (DecisionMaker)
+	{
+		if (DecisionMaker->MakeDecision(DeltaSeconds))
+		{
+			delete DecisionMaker;
+			return true;
+		}
+		return false;
+	}
 	return true;
 }
 
 void ACombatPawn::BeginExecuteAction()
 {
-	UE_LOG(LogTemp, Log, TEXT("-_- Begin action"));
-	CountTime = 1.f;
+	if (CombatAction) { CombatAction->BeginExecuteAction(this); }
 }
 
 bool ACombatPawn::ExecuteAction(float DeltaSeconds)
 {
-	CountTime -= DeltaSeconds;
-	if (CountTime <= 0.f)
+	if (CombatAction)
 	{
-		return true;
+		if (CombatAction->ExecuteAction(DeltaSeconds))
+		{
+			delete CombatAction;
+			return true;
+		}
+		return false;
 	}
-
-	// UE_LOG(LogTemp, Log, TEXT("-_- Waiting for action"));
 	return false;
 }

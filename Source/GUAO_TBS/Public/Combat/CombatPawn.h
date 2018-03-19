@@ -6,6 +6,9 @@
 #include "GameFramework/Pawn.h"
 #include "CombatPawn.generated.h"
 
+class IDecisionMaker;
+class ICombatAction;
+
 UCLASS()
 class GUAO_TBS_API ACombatPawn : public APawn
 {
@@ -22,6 +25,10 @@ public:
 	bool ExecuteAction(float DeltaSeconds);
 
 
+	void SetCombatAction(ICombatAction* InCombatAction) { CombatAction = InCombatAction; }
+protected:
+	IDecisionMaker* DecisionMaker;
+	ICombatAction* CombatAction;
 
 	float CountTime;
 protected:
