@@ -4,8 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "TilePawn/TilePawn.h"
-#include "EnemyPawn.generated.h"
-
+#include "NPCTilePawn.generated.h"
 
 class ATBSCharacter;
 
@@ -13,14 +12,14 @@ class ATBSCharacter;
  * 
  */
 UCLASS()
-class GUAO_TBS_API AEnemyPawn : public ATilePawn
+class GUAO_TBS_API ANPCTilePawn : public ATilePawn
 {
 	GENERATED_BODY()
 	
 public:
-	AEnemyPawn();
+	ANPCTilePawn();
 
-	void FightWith(ATBSCharacter* InPlayer);
+	void TalkWith(ATBSCharacter* InPlayer);
 	
 	
 };

@@ -4,20 +4,28 @@
 
 #include "Components/ArrowComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
-
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
+#include "Camera/CameraComponent.h"
 
 #include "Combat/CombatPawn.h"
 #include "Combat/CombatLayout.h"
+#include "TBSPlayerController.h"
+#include "TBSGameState.h"
 
 ACombatManager::ACombatManager()
 {
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComp"));
+	CameraCompoent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 
 	CharacterMargin = 250.f;
 	CommonAttackMargin = 100.f;
 	CurrentCombatState = ECombatState::Startup;
-
 	bWaitingForPawn = false;
+
+	TeamNums = 2;
+	TeamBasePosition.Add(FVector(250.f, 0.f, 0.f));
+	TeamBasePosition.Add(FVector(-250.f, 0.f, 0.f));
 
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -28,7 +36,7 @@ void ACombatManager::OnConstruction(const FTransform& Transform)
 
 	for (UArrowComponent* ArrowComp : TeamArrowPositionComp)
 	{
-		ArrowComp->DestroyComponent();
+		if (ArrowComp) { ArrowComp->DestroyComponent(); }
 	}
 
 	TeamArrowPositionComp.Empty();
@@ -39,8 +47,9 @@ void ACombatManager::OnConstruction(const FTransform& Transform)
 		{
 			UArrowComponent* ArrowComp = NewObject<UArrowComponent>(this);
 			ArrowComp->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-			ArrowComp->SetRelativeTransform(TeamBasePosition[i]);
+			ArrowComp->SetRelativeLocation(TeamBasePosition[i]);
 			ArrowComp->RegisterComponent();
+			TeamArrowPositionComp.Add(ArrowComp);
 		}
 	}
 	else
@@ -66,9 +75,14 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 	FVector MiddleLocation = FVector::ZeroVector;
 	for (int32 i = 0; i < TeamNums; ++i)
 	{
-		MiddleLocation = i == 0 ? TeamBasePosition[0].GetLocation() : (MiddleLocation + TeamBasePosition[i].GetLocation()) / 2.f;
+		MiddleLocation = i == 0 ? TeamBasePosition[0] : (MiddleLocation + TeamBasePosition[i]) / 2.f;
 	}
+
+
 	MiddleLocation += CurrentLocation;
+
+	CameraCompoent->SetRelativeLocation(MiddleLocation + FVector(0.f, 0.f, 1000.f));
+	CameraCompoent->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f));
 
 	// set current player team
 	PlayerTeam = InPlayerTeam;
@@ -82,15 +96,15 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 		if (TeamBaseComp)
 		{
 			TeamBaseComp->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-			TeamBaseComp->SetRelativeTransform(TeamBasePosition[i]);
+			TeamBaseComp->SetRelativeLocation(TeamBasePosition[i]);
 			TeamBaseComp->RegisterComponent();
 
 			const int32 CombatPawnsNum = InAllTeamsInfo[i].AllCombatPawns.Num();
-			const FRotator BaseRotation = FRotationMatrix::MakeFromX(MiddleLocation - (CurrentLocation + TeamBasePosition[i].GetLocation())).Rotator();
+			const FRotator BaseRotation = FRotationMatrix::MakeFromX(MiddleLocation - (CurrentLocation + TeamBasePosition[i])).Rotator();
 			const FVector CharacterMarginVector = CharacterMargin * BaseRotation.Quaternion().GetAxisY();
 			const FVector CommonAttackMarginVector = CommonAttackMargin * BaseRotation.Quaternion().GetAxisX();
 
-			const FVector PawnBaseLocation = CurrentLocation + TeamBasePosition[i].GetLocation() - (float)(CombatPawnsNum - 1) / 2.f * CharacterMarginVector;
+			const FVector PawnBaseLocation = CurrentLocation + TeamBasePosition[i] - (float)(CombatPawnsNum - 1) / 2.f * CharacterMarginVector;
 			
 			// initialize all combat pawn info
 			for (int32 j = 0; j < CombatPawnsNum; ++j)
@@ -151,7 +165,7 @@ void ACombatManager::Tick(float DeltaSeconds)
 			Startup();
 			break;
 		case ECombatState::BeginCombat:
-			ChooseFirstPawn();
+			BeginCombat();
 			break;
 		case ECombatState::ChoosePawn:
 			ChooseNextPawn();
@@ -187,15 +201,18 @@ void ACombatManager::Startup()
 	if (!CombatLayout && CombatLayoutClass)
 	{
 		CombatLayout = CreateWidget<UCombatLayout>(GetGameInstance(), CombatLayoutClass);
-		if (CombatLayout) { CombatLayout->AddToViewport(); }
+		if (CombatLayout)
+		{
+			CombatLayout->CombatManager = this;
+			CombatLayout->AddToViewport();
+		}
 	}
 
 	ToggleToTargetState(ECombatState::BeginCombat);
 }
 
-void ACombatManager::ChooseFirstPawn()
+void ACombatManager::BeginCombat()
 {
-
 	CurrentTeamNum = -1;
 	CurrentBout = 0;
 	ToggleToTargetState(ECombatState::TurnTeam);
@@ -302,6 +319,17 @@ void ACombatManager::Action(float DeltaSeconds)
 void ACombatManager::GameOver()
 {
 	if (CombatLayout) { CombatLayout->OnGameOver(WinTeam, WinTeam == PlayerTeam); }
-	
 	ToggleToTargetState(ECombatState::Results);
+}
+
+
+void ACombatManager::CloseCombat()
+{
+	if (CombatLayout) { CombatLayout->RemoveFromParent(); }
+
+	ATBSGameState* OwnerTBSGameState = GetWorld() ? GetWorld()->GetGameState<ATBSGameState>() : nullptr;
+	if (OwnerTBSGameState)
+	{
+		OwnerTBSGameState->CloseCombat();
+	}
 }

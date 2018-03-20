@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+
+#include "TBSTypes.h"
+
 #include "CombatPawn.generated.h"
 
 class IDecisionMaker;
@@ -32,7 +35,7 @@ public:
 	void UpdateHealth();
 
 	void OnDeath();
-
+	void ResetPawnState();
 
 public:
 	DECLARE_MULTICAST_DELEGATE(FOnCombatPawnDeathDelegate);
@@ -51,9 +54,9 @@ protected:
 
 	float CountTime;
 public:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	class USkeletalMeshComponent* SkeletalMeshComp;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	class UWidgetComponent* HealthBarComp;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UCombatPawnHealthBar> HealthBarClass;
@@ -72,30 +75,15 @@ public:
 	float Defence;
 	UPROPERTY(EditDefaultsOnly)
 	float Luck;
-
+	
 
 	void BeginAttackAnimation();
 	void BeginRunAnimation();
 	void BeginIdleAnimation();
-	
-	UPROPERTY(EditDefaultsOnly)
-	class UAnimationAsset* IdleAnimSequence;
-	UPROPERTY(EditDefaultsOnly)
-	class UAnimationAsset* RunAnimSequence;
-	UPROPERTY(EditDefaultsOnly)
-	class UAnimationAsset* ReadFightAnimSequence;
-	UPROPERTY(EditDefaultsOnly)
-	class UAnimationAsset* AttackAnimSequence;
-	UPROPERTY(EditDefaultsOnly)
-	class UAnimationAsset* AccpetDamageAnimSequence;
-	UPROPERTY(EditDefaultsOnly)
-	class UAnimationAsset* OnDeathAnimSequence;
-	UPROPERTY(EditDefaultsOnly)
-	class UAnimationAsset* DeathAnimSequence;
-
-
 	void DelayToSetDeathPosition();
 	FTimerHandle DelayToSetDeathPositionTimer;
+
+	FBaseCombatPawnAnimation BaseAnimation;
 
 	bool bIsDead;
 	int32 CombatTeam;

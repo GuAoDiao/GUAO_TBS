@@ -11,8 +11,8 @@
 
 #include "GridManager.h"
 #include "GridPathFinding.h"
-#include "TilePawn/NPC/NPCPawn.h"
-#include "TilePawn/Enemy/EnemyPawn.h"
+#include "TilePawn/NPC/NPCTilePawn.h"
+#include "TilePawn/Enemy/EnemyTilePawn.h"
 
 ATBSCharacter::ATBSCharacter()
 {
@@ -41,6 +41,7 @@ ATBSCharacter::ATBSCharacter()
 	CurrentSpeed = 0.f;
 	PawnMaxSpeed = 500.f;
 	PawnMovementSpeedAcceleration = 25.f;
+	bCanMoveViewport = true;
 
 	TileType = ETBSTileType::Player;
 }
@@ -75,7 +76,6 @@ void ATBSCharacter::RebindInputComponent(UInputComponent* InInputComp)
 
 		InInputComp->BindAction("ZoomIn", IE_Pressed, this, &ATBSCharacter::ZoomIn);
 		InInputComp->BindAction("ZoomOut", IE_Pressed, this, &ATBSCharacter::ZoomOut);
-
 		InInputComp->BindAction("ResetAngleOfView", IE_Pressed, this, &ATBSCharacter::ResetAngleOfView);
 
 		InInputComp->BindAction("ClickedTile", IE_Pressed, this, &ATBSCharacter::ClickedTile);
@@ -84,7 +84,7 @@ void ATBSCharacter::RebindInputComponent(UInputComponent* InInputComp)
 
 void ATBSCharacter::ZoomIn()
 {
-	if (SpringArmComp->TargetArmLength < ScrollRoof)
+	if (bCanMoveViewport && SpringArmComp->TargetArmLength < ScrollRoof)
 	{
 		SpringArmComp->TargetArmLength = FMath::Lerp(SpringArmComp->TargetArmLength, SpringArmComp->TargetArmLength + CameraScrollSpeed * GetWorld()->GetDeltaSeconds(), 0.1f);
 	}
@@ -92,7 +92,7 @@ void ATBSCharacter::ZoomIn()
 
 void ATBSCharacter::ZoomOut()
 {
-	if (SpringArmComp->TargetArmLength > ScrollFloor)
+	if (bCanMoveViewport && SpringArmComp->TargetArmLength > ScrollFloor)
 	{
 		SpringArmComp->TargetArmLength = FMath::Lerp(SpringArmComp->TargetArmLength, SpringArmComp->TargetArmLength - CameraScrollSpeed * GetWorld()->GetDeltaSeconds(), 0.1f);
 	}
@@ -101,7 +101,7 @@ void ATBSCharacter::ZoomOut()
 
 void ATBSCharacter::RotatingAngleOfView(float AxisValue)
 {
-	if (AxisValue != 0.f )
+	if (AxisValue != 0.f && bCanMoveViewport)
 	{
 		FRotator Rotation = SpringArmComp->GetComponentRotation();
 		Rotation.Yaw = FMath::Lerp(Rotation.Yaw, Rotation.Yaw + AxisValue * GetWorld()->GetDeltaSeconds() * CameraRotateSpeed, 0.2f);
@@ -111,14 +111,17 @@ void ATBSCharacter::RotatingAngleOfView(float AxisValue)
 
 void ATBSCharacter::ResetAngleOfView()
 {
-	FRotator Rotation = SpringArmComp->GetComponentRotation();
-	Rotation.Yaw = 0.f;
-	SpringArmComp->SetWorldRotation(Rotation);
+	if (bCanMoveViewport)
+	{
+		FRotator Rotation = SpringArmComp->GetComponentRotation();
+		Rotation.Yaw = 0.f;
+		SpringArmComp->SetWorldRotation(Rotation);
+	}
 }
 
 void ATBSCharacter::MoveHorizontal(float AxisValue)
 {
-	if (AxisValue != 0.f)
+	if (AxisValue != 0.f && bCanMoveViewport)
 	{
 		SpringArmComp->AddWorldOffset(FRotationMatrix(FRotator(0.f, CameraComp->GetComponentRotation().Yaw, 0.f)).GetScaledAxis(EAxis::Y) * AxisValue * GetWorld()->GetDeltaSeconds() * CameraMoveSpeed);
 	}
@@ -126,7 +129,7 @@ void ATBSCharacter::MoveHorizontal(float AxisValue)
 
 void ATBSCharacter::MoveVertical(float AxisValue)
 {
-	if (AxisValue != 0.f)
+	if (AxisValue != 0.f && bCanMoveViewport)
 	{
 		SpringArmComp->AddWorldOffset(FRotator(0., CameraComp->GetComponentRotation().Yaw, 0.f).Vector() * AxisValue * GetWorld()->GetDeltaSeconds() * CameraMoveSpeed);
 	}
@@ -270,13 +273,13 @@ void ATBSCharacter::EndMovement()
 		{
 			case  ETBSTileType::Enemy:
 			{
-				AEnemyPawn* EnemyPawn = Cast<AEnemyPawn>(GridManager->AllTilePawns[SelectTilePawnIndex]);
+				AEnemyTilePawn* EnemyPawn = Cast<AEnemyTilePawn>(GridManager->AllTilePawns[SelectTilePawnIndex]);
 				if (EnemyPawn) { EnemyPawn->FightWith(this); }
 				break;
 			}
 			case ETBSTileType::NPC:
 			{
-				ANPCPawn* NPCPawn = Cast<ANPCPawn>(GridManager->AllTilePawns[SelectTilePawnIndex]);
+				ANPCTilePawn* NPCPawn = Cast<ANPCTilePawn>(GridManager->AllTilePawns[SelectTilePawnIndex]);
 				if (NPCPawn) { NPCPawn->TalkWith(this); }
 				break;
 			}

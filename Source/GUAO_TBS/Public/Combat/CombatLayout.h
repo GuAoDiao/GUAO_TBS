@@ -24,4 +24,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnGameOver(int32 WinTeam, bool bIsPlayerWin);
+
+	UPROPERTY(BlueprintReadOnly)
+	class ACombatManager* CombatManager;
 };

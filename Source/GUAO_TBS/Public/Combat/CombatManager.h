@@ -4,66 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
+#include "TBSTypes.h"
+
 #include "CombatManager.generated.h"
 
 class ACombatPawn;
-
-UENUM(BlueprintType)
-enum class ECombatState : uint8
-{
-	Startup,
-	BeginCombat,
-
-	ChoosePawn,
-	BeginPawnTurn,
-	Decision,
-	Action,
-	EndPawnTurn,
-
-	TurnTeam,
-
-	TurnBout,
-
-	GameOver,
-	Results
-};
-
-USTRUCT(BlueprintType)
-struct FCombatTeam
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TArray<ACombatPawn*> AllCombatPawns;
-};
-
-struct  FCombatPawnInfo;
-
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnBeginPawnTurnDelegate, const FCombatPawnInfo&);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnEndTurnDelegate, const FCombatPawnInfo&);
-
-USTRUCT(BlueprintType)
-struct FCombatPawnInfo
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	ACombatPawn* CombatPawn;
-	FVector CommonAttackLocation;
-	FOnBeginPawnTurnDelegate OnBeginPawnTurn;
-	FOnEndTurnDelegate OnEndTurnDelegate;
-};
-
-USTRUCT(BlueprintType)
-struct FCombatTeamInfo
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TArray<FCombatPawnInfo> AllCombatPawnInfo;
-	UPROPERTY()
-	USceneComponent* TeamBaseComps;
-};
 
 
 UCLASS()
@@ -81,9 +27,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitiallizeCombat(const TArray<FCombatTeam>& InAllTeams, int32 InPlayerTeam);
 
-	void CheckCombatState();
-	void GameOver();
 
+
+	UPROPERTY(VisibleAnywhere)
+	class UCameraComponent* CameraCompoent;
 	//////////////////////////////////////////////////////////////////////////
 	/// Combat State
 public:
@@ -97,12 +44,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	int32 TeamNums;
 	UPROPERTY(EditDefaultsOnly)
-	TArray<FTransform> TeamBasePosition;
+	TArray<FVector> TeamBasePosition;
+
 	UPROPERTY(EditDefaultsOnly)
 	TArray<class UArrowComponent*> TeamArrowPositionComp;
 
 	void Startup();
-	void ChooseFirstPawn();
+	void BeginCombat();
 	void ChooseNextPawn();
 	void TurnTeam();
 	void TurnBout();
@@ -113,7 +61,10 @@ protected:
 	void Action(float DeltaSeconds);
 
 	void EndPawnTurn();
-
+	void CheckCombatState();
+	void GameOver();
+	UFUNCTION(BlueprintCallable)
+	void CloseCombat();
 
 
 	int32 CurrentTeamNum;

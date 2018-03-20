@@ -1,7 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TBSPlayerController.h"
+
 #include "TBSCharacter.h"
+#include "Combat/CombatManager.h"
 
 ATBSPlayerController::ATBSPlayerController()
 {
@@ -21,7 +23,22 @@ void ATBSPlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	MoveViewportFromMouse();
+	if (bCanMoveViewport) { MoveViewportFromMouse(); }
+}
+
+void ATBSPlayerController::TurnViewportToCombat(ACombatManager* CombatManager)
+{
+	SetViewTarget(CombatManager);
+	if (OwnerTBSCharacter) { OwnerTBSCharacter->bCanMoveViewport = false; }
+}
+
+void ATBSPlayerController::TurnViewportToCharacter()
+{
+	if (OwnerTBSCharacter)
+	{
+		OwnerTBSCharacter->bCanMoveViewport = true;
+		SetViewTarget(OwnerTBSCharacter);
+	}
 }
 
 void ATBSPlayerController::SetPawn(APawn* InPawn)

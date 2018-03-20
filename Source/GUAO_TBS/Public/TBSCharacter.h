@@ -37,6 +37,8 @@ public:
 	void ResetAngleOfView();
 	void MoveHorizontal(float AxisValue);
 	void MoveVertical(float AxisValue);
+
+	bool bCanMoveViewport;
 private:
 	float ScrollRoof;
 	float ScrollFloor;

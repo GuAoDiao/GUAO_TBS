@@ -33,9 +33,13 @@ protected:
 	/// Adjust Viewport Position
 public:
 	void GetViewportRightBottomPosition();
+
+	void TurnViewportToCombat(class ACombatManager* CombatManager);
+	void TurnViewportToCharacter();
 protected:
 	void MoveViewportFromMouse();
 private:
+	bool bCanMoveViewport;
 	float ViewportRightPosition;
 	float ViewportBottomPosition;	
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
 
 #include "TBSTypes.generated.h"
 
@@ -13,6 +14,26 @@ enum class  ETBSTileType : uint8
 	Player,
 	NPC,
 	Enemy
+};
+
+UENUM(BlueprintType)
+enum class ECombatState : uint8
+{
+	Startup,
+	BeginCombat,
+
+	ChoosePawn,
+	BeginPawnTurn,
+	Decision,
+	Action,
+	EndPawnTurn,
+
+	TurnTeam,
+
+	TurnBout,
+
+	GameOver,
+	Results
 };
 
 
@@ -42,16 +63,78 @@ public:
 	int32 NorthWest;
 };
 
-USTRUCT()
 struct FGridPathFindingResult
 {
-	GENERATED_USTRUCT_BODY()
 public:
 	FGridPathFindingResult(int32 InIndex = 0, int32 InCost = 0, int32 InParent = 0) : Index(InIndex), Cost(InCost), Parent(InParent) {}
 	int32 Index;
 	int32 Cost;
 	int32 Parent;
 };
+
+
+USTRUCT(BlueprintType)
+struct FBaseCombatPawnAnimation : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly)
+	FString CombatPawnName;
+	UPROPERTY(EditDefaultsOnly)
+	class UAnimationAsset* IdleAnimAsset;
+	UPROPERTY(EditDefaultsOnly)
+	class UAnimationAsset* ReadFightAnimAsset;
+	UPROPERTY(EditDefaultsOnly)
+	class UAnimationAsset* RunAnimAsset;
+	UPROPERTY(EditDefaultsOnly)
+	class UAnimationAsset* AttackAnimAsset;
+	UPROPERTY(EditDefaultsOnly)
+	class UAnimationAsset* AccpetDamageAnimAsset;
+	UPROPERTY(EditDefaultsOnly)
+	class UAnimationAsset* OnDeathAnimAsset;
+	UPROPERTY(EditDefaultsOnly)
+	class UAnimationAsset* DeathAnimAsset;
+};
+
+
+
+USTRUCT(BlueprintType)
+struct FCombatTeam
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<class ACombatPawn*> AllCombatPawns;
+};
+
+struct  FCombatPawnInfo;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnBeginPawnTurnDelegate, const FCombatPawnInfo&);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnEndTurnDelegate, const FCombatPawnInfo&);
+
+USTRUCT(BlueprintType)
+struct FCombatPawnInfo
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	ACombatPawn* CombatPawn;
+	FVector CommonAttackLocation;
+	FOnBeginPawnTurnDelegate OnBeginPawnTurn;
+	FOnEndTurnDelegate OnEndTurnDelegate;
+};
+
+USTRUCT(BlueprintType)
+struct FCombatTeamInfo
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<FCombatPawnInfo> AllCombatPawnInfo;
+	UPROPERTY()
+	USceneComponent* TeamBaseComps;
+};
+
 
 #define ECC_PathTrace ECC_GameTraceChannel1
 #define ECC_RangeTrace ECC_GameTraceChannel1
