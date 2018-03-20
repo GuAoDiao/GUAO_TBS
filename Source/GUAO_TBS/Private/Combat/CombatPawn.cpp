@@ -28,6 +28,8 @@ ACombatPawn::ACombatPawn()
 	Attack = 20.f;
 	Defence = 10.f;
 	MaxHealth = 100.f;
+
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void ACombatPawn::OnConstruction(const FTransform& Transform)
@@ -46,6 +48,19 @@ void ACombatPawn::BeginPlay()
 		HealthBarComp->SetWidgetClass(HealthBarClass);
 		HealthBarComp->SetWidgetSpace(EWidgetSpace::Screen);
 		HealthBarComp->SetDrawSize(FVector2D(100.f, 20.f));
+		
+		HealthBar = Cast<UCombatPawnHealthBar>(HealthBarComp->GetUserWidgetObject());
+		if (HealthBar) { HealthBar->UpdateHealthBarPercent(Health, MaxHealth); }
+	}
+}
+
+void ACombatPawn::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (HealthBarComp && HealthBarClass)
+	{
+		// HealthBarComp->SetWorldRotation();
 	}
 }
 
@@ -112,29 +127,17 @@ void ACombatPawn::AcceptDamage(float Damage, ACombatPawn* Causer)
 	{
 		SkeletalMeshComp->PlayAnimation(AccpetDamageAnimSequence, false);
 	}
-
-	if (Causer)
-	{
-		UE_LOG(LogTemp, Log, TEXT("-_- %s causer %f damage to %s"), *Causer->CombatPawnName, Damage, *CombatPawnName);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Log, TEXT("-_- %s accept %f damage"), *CombatPawnName, Damage);
-	}
 }
 
 void ACombatPawn::UpdateHealth()
 {
-	UCombatPawnHealthBar* HealthBar = Cast<UCombatPawnHealthBar>(HealthBarComp->GetUserWidgetObject());
 	if (HealthBar) { HealthBar->UpdateHealthBarPercent(Health, MaxHealth); }
 }
 
 void ACombatPawn::OnDeath()
 {
 	bIsDead = true;
-
-	UE_LOG(LogTemp, Log, TEXT("-_- %s is death"), *CombatPawnName);
-
+	
 	OnCombatPawnDeathDelegate.Broadcast();
 
 	if (SkeletalMeshComp && OnDeathAnimSequence)

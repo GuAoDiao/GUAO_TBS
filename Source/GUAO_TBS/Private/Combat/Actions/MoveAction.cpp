@@ -7,7 +7,7 @@
 FMoveAction::FMoveAction(const FVector& InTargetLocation)
 {
 	TargetLocation = InTargetLocation;
-	MoveSpeed = 3.f;
+	MoveSpeed = 5.f;
 }
 
 void FMoveAction::BeginExecuteAction(class ACombatPawn* Character)

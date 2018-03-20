@@ -79,7 +79,7 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	UFUNCTION(BlueprintCallable)
-	void InitiallizeCombat(const TArray<FCombatTeam>& InAllTeams);
+	void InitiallizeCombat(const TArray<FCombatTeam>& InAllTeams, int32 InPlayerTeam);
 
 	void CheckCombatState();
 	void GameOver();
@@ -101,7 +101,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TArray<class UArrowComponent*> TeamArrowPositionComp;
 
-
+	void Startup();
 	void ChooseFirstPawn();
 	void ChooseNextPawn();
 	void TurnTeam();
@@ -119,6 +119,7 @@ protected:
 	int32 CurrentTeamNum;
 	int32 CurrentPawnNum;
 	int32 CurrentBout;
+	int32 PlayerTeam;
 	int32 WinTeam;
 
 	bool bWaitingForPawn;
@@ -128,7 +129,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	int32 CommonAttackMargin;
 
-
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UCombatLayout> CombatLayoutClass;
+	UPROPERTY(Transient)
+	class UCombatLayout* CombatLayout;
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<FCombatTeamInfo> AllTeamsInfo;

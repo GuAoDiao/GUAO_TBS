@@ -3,16 +3,18 @@
 #include "CombatManager.h"
 
 #include "Components/ArrowComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 #include "Combat/CombatPawn.h"
+#include "Combat/CombatLayout.h"
 
 ACombatManager::ACombatManager()
 {
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComp"));
 
 	CharacterMargin = 250.f;
-	CommonAttackMargin = 40.f;
+	CommonAttackMargin = 100.f;
 	CurrentCombatState = ECombatState::Startup;
 
 	bWaitingForPawn = false;
@@ -53,21 +55,25 @@ void ACombatManager::ToggleToTargetState(ECombatState InTargetState)
 	CurrentCombatState = InTargetState;
 }
 
-void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo)
+void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo, int32 InPlayerTeam)
 {
 	if (!IsToggleTargetState(ECombatState::Startup)) { return; }
 
-	const FVector CurrentLocation = GetActorLocation();
-
 	checkf(TeamBasePosition.Num() >= TeamNums, TEXT("can't find enough position"));
-
-	FVector AllLocation = FVector::ZeroVector;
-
+	
+	const FVector CurrentLocation = GetActorLocation();
+	// calculate the middle position
+	FVector MiddleLocation = FVector::ZeroVector;
 	for (int32 i = 0; i < TeamNums; ++i)
 	{
-		AllLocation = (AllLocation + TeamBasePosition[i].GetLocation()) / 2.f;
+		MiddleLocation = i == 0 ? TeamBasePosition[0].GetLocation() : (MiddleLocation + TeamBasePosition[i].GetLocation()) / 2.f;
 	}
+	MiddleLocation += CurrentLocation;
 
+	// set current player team
+	PlayerTeam = InPlayerTeam;
+
+	// initialize all combat team info
 	for (int32 i = 0 ; i < TeamNums; ++i)
 	{
 		FCombatTeamInfo CombatTeamInfo;
@@ -80,11 +86,13 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 			TeamBaseComp->RegisterComponent();
 
 			const int32 CombatPawnsNum = InAllTeamsInfo[i].AllCombatPawns.Num();
-			const FVector CharacterMarginVector = CharacterMargin * TeamBasePosition[i].GetRotation().GetAxisY();
-			const FVector CommonAttackMarginVector = CommonAttackMargin * TeamBasePosition[i].GetRotation().GetAxisX();
-			const FVector BaseLocation = CurrentLocation + TeamBasePosition[i].GetLocation() - (float)CombatPawnsNum / 2.f * CharacterMarginVector;
-			const FRotator BaseRotation = FRotationMatrix::MakeFromX(AllLocation - TeamBasePosition[i].GetLocation()).Rotator();
+			const FRotator BaseRotation = FRotationMatrix::MakeFromX(MiddleLocation - (CurrentLocation + TeamBasePosition[i].GetLocation())).Rotator();
+			const FVector CharacterMarginVector = CharacterMargin * BaseRotation.Quaternion().GetAxisY();
+			const FVector CommonAttackMarginVector = CommonAttackMargin * BaseRotation.Quaternion().GetAxisX();
 
+			const FVector PawnBaseLocation = CurrentLocation + TeamBasePosition[i].GetLocation() - (float)(CombatPawnsNum - 1) / 2.f * CharacterMarginVector;
+			
+			// initialize all combat pawn info
 			for (int32 j = 0; j < CombatPawnsNum; ++j)
 			{
 				if (!InAllTeamsInfo[i].AllCombatPawns[j]) { continue; }
@@ -96,7 +104,7 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 				CombatPawnInfo.CombatPawn->CombatTeam = i;
 				CombatPawnInfo.CombatPawn->GetOnCombatPawnDeathDelegate().AddUObject(this, &ACombatManager::CheckCombatState);
 
-				FVector CombatPawnLocation = BaseLocation + CharacterMarginVector * j;
+				FVector CombatPawnLocation = PawnBaseLocation + CharacterMarginVector * j;
 				CombatPawnInfo.CommonAttackLocation = CombatPawnLocation + CommonAttackMarginVector;
 				CombatPawnInfo.CombatPawn->SetActorLocationAndRotation(CombatPawnLocation, BaseRotation);
 				CombatTeamInfo.AllCombatPawnInfo.Add(CombatPawnInfo);
@@ -109,7 +117,7 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 	}
 
 
-	ToggleToTargetState(ECombatState::BeginCombat);
+	ToggleToTargetState(ECombatState::Startup);
 }
 
 void ACombatManager::CheckCombatState()
@@ -140,6 +148,7 @@ void ACombatManager::Tick(float DeltaSeconds)
 	switch (CurrentCombatState)
 	{
 		case ECombatState::Startup:
+			Startup();
 			break;
 		case ECombatState::BeginCombat:
 			ChooseFirstPawn();
@@ -173,6 +182,16 @@ void ACombatManager::Tick(float DeltaSeconds)
 	}
 }
 
+void ACombatManager::Startup()
+{
+	if (!CombatLayout && CombatLayoutClass)
+	{
+		CombatLayout = CreateWidget<UCombatLayout>(GetGameInstance(), CombatLayoutClass);
+		if (CombatLayout) { CombatLayout->AddToViewport(); }
+	}
+
+	ToggleToTargetState(ECombatState::BeginCombat);
+}
 
 void ACombatManager::ChooseFirstPawn()
 {
@@ -200,6 +219,7 @@ void ACombatManager::ChooseNextPawn()
 			ACombatPawn* CombatPawn = AllTeamsInfo[CurrentTeamNum].AllCombatPawnInfo[CurrentPawnNum].CombatPawn;
 			if (CombatPawn && !CombatPawn->bIsDead)
 			{
+				if (CombatLayout) { CombatLayout->OnChangePawn(CurrentPawnNum); }
 				ToggleToTargetState(ECombatState::BeginPawnTurn);
 				return;
 			}
@@ -210,7 +230,7 @@ void ACombatManager::ChooseNextPawn()
 void ACombatManager::TurnTeam()
 {
 	CurrentTeamNum++;
-	CurrentPawnNum = 0;
+	CurrentPawnNum = -1;
 
 	if (CurrentTeamNum == TeamNums)
 	{
@@ -218,6 +238,7 @@ void ACombatManager::TurnTeam()
 	}
 	else
 	{
+		if (CombatLayout) { CombatLayout->OnChangeTeam(CurrentTeamNum); }
 		ToggleToTargetState(ECombatState::ChoosePawn);
 	}
 }
@@ -227,14 +248,12 @@ void ACombatManager::TurnBout()
 	CurrentBout++;
 	CurrentTeamNum = -1;
 
-	UE_LOG(LogTemp, Log, TEXT("-_- Current Bout is %d, Turn Team"), CurrentBout);
+	if (CombatLayout) { CombatLayout->OnChangeBount(CurrentBout); }
 	ToggleToTargetState(ECombatState::TurnTeam);
 }
 
 void ACombatManager::BeginPawnTurn()
 {
-	UE_LOG(LogTemp, Log, TEXT("-_- current team : %d, current pawn: %d"), CurrentTeamNum, CurrentPawnNum);
-
 	AllTeamsInfo[CurrentTeamNum].AllCombatPawnInfo[CurrentPawnNum].OnBeginPawnTurn.Broadcast(AllTeamsInfo[CurrentTeamNum].AllCombatPawnInfo[CurrentPawnNum]);
 	ToggleToTargetState(ECombatState::Decision);
 }
@@ -282,6 +301,7 @@ void ACombatManager::Action(float DeltaSeconds)
 
 void ACombatManager::GameOver()
 {
-	UE_LOG(LogTemp, Log, TEXT("-_- the win team is %d"), WinTeam);
+	if (CombatLayout) { CombatLayout->OnGameOver(WinTeam, WinTeam == PlayerTeam); }
+	
 	ToggleToTargetState(ECombatState::Results);
 }

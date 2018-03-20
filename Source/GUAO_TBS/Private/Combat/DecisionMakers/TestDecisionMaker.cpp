@@ -11,8 +11,6 @@
 
 void FTestDecisionMaker::BeginMakeDecision(class ACombatPawn* Character)
 {
-	UE_LOG(LogTemp, Log, TEXT("-_- Begin Make Decision"));
-
 	ACombatManager* CombatManager =Character->GetCombatManager();
 
 	if (CombatManager)
@@ -36,6 +34,5 @@ void FTestDecisionMaker::BeginMakeDecision(class ACombatPawn* Character)
 }
 bool FTestDecisionMaker::MakeDecision(float DeltaSeconds)
 {
-	UE_LOG(LogTemp, Log, TEXT("-_- Finished Make Decision"));
 	return true;
 }

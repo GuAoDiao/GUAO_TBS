@@ -20,6 +20,7 @@ public:
 	
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 
 	void BeginMakeDecision();
 	bool MakeDecision(float DeltaSeconds);
@@ -56,6 +57,9 @@ public:
 	class UWidgetComponent* HealthBarComp;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UCombatPawnHealthBar> HealthBarClass;
+	UPROPERTY(Transient)
+	class UCombatPawnHealthBar* HealthBar;
+
 	UPROPERTY(EditDefaultsOnly)
 	FString CombatPawnName;
 	UPROPERTY(EditDefaultsOnly)

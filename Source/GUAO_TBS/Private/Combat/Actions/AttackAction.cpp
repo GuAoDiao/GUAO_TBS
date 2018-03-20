@@ -42,8 +42,6 @@ void FAttackAction::BeginExecuteAction(class ACombatPawn* Character)
 			bIsWaitForAttack = false;
 		}
 	}
-
-	UE_LOG(LogTemp, Log, TEXT("-_- Begin Excute Action"));
 }
 
 bool FAttackAction::ExecuteAction(float DeltaSeconds)
