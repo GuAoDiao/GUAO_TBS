@@ -153,7 +153,9 @@ public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnBeginPawnTurnDelegate, const FCombatPawnInfo&);
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnEndTurnDelegate, const FCombatPawnInfo&);
 
+	UPROPERTY(BlueprintReadOnly)
 	ACombatPawn* CombatPawn;
+	UPROPERTY(BlueprintReadOnly)
 	FVector CommonAttackLocation;
 	FOnBeginPawnTurnDelegate OnBeginPawnTurn;
 	FOnEndTurnDelegate OnEndTurnDelegate;
@@ -166,7 +168,7 @@ struct FCombatTeamInfo
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<FCombatPawnInfo> AllCombatPawnInfo;
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	USceneComponent* TeamBaseComps;
 };
 

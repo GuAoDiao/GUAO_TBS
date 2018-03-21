@@ -14,8 +14,6 @@ AEnemyTilePawn::AEnemyTilePawn()
 	TileType = ETBSTileType::Enemy;
 
 	AllCombatEnemy.Add(TEXT("Rebels"));
-	AllCombatEnemy.Add(TEXT("LeadingRole"));
-	AllCombatEnemy.Add(TEXT("Rebels"));
 }
 
 void AEnemyTilePawn::FightWith(ATBSCharacter* InPlayer)

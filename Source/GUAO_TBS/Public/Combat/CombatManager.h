@@ -68,6 +68,13 @@ protected:
 	void CloseCombat();
 
 
+	
+public:
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetPlayerTeam() const { return PlayerTeam; }
+protected:
+
 	int32 CurrentTeamNum;
 	int32 CurrentPawnNum;
 	int32 CurrentBout;

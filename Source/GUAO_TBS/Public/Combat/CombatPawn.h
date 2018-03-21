@@ -44,7 +44,7 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	/// Combat
-	void BeginMakeDecision();
+	virtual void BeginMakeDecision();
 	bool MakeDecision(float DeltaSeconds);
 	void BeginExecuteAction();
 	bool ExecuteAction(float DeltaSeconds);
@@ -63,6 +63,7 @@ protected:
 	FOnCombatPawnDeathDelegate OnCombatPawnDeathDelegate;
 
 public:
+	UFUNCTION(BlueprintCallable)
 	ACombatManager* GetCombatManager() const { return CombatManager; }
 	void SetCombatManager(ACombatManager* InCombatManager) { CombatManager = InCombatManager; }
 	void SetCombatAction(ICombatAction* InCombatAction) { CombatAction = InCombatAction; }
