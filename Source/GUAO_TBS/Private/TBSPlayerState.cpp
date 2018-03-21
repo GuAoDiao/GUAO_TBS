@@ -26,9 +26,15 @@ void ATBSPlayerState::BeginPlay()
 
 		if (OwnerCombatPawnClass)
 		{
-			AllCombatPawn.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(OwnerCombatPawnClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
-			AllCombatPawn.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(OwnerCombatPawnClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
-			AllCombatPawn.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(OwnerCombatPawnClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
+			for (int32 i = 0; i < 3; ++i)
+			{
+				ACombatPawn* CombatPawn = World->SpawnActor<ACombatPawn>(OwnerCombatPawnClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters);
+				if (CombatPawn)
+				{
+					CombatPawn->SetCombatPawnName(OwnerCombatPawnName);
+					AllCombatPawn.AllCombatPawns.Add(CombatPawn);
+				}
+			}
 		}
 		
 		for (ACombatPawn* CombatPawn : AllCombatPawn.AllCombatPawns)

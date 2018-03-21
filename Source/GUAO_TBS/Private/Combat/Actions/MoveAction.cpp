@@ -16,7 +16,7 @@ void FMoveAction::BeginExecuteAction(class ACombatPawn* Character)
 	if (OwnerCombatPawn)
 	{			
 		OwnerCombatPawn->SetActorRotation(FRotationMatrix::MakeFromX(TargetLocation - OwnerCombatPawn->GetActorLocation()).Rotator());
-		OwnerCombatPawn->BeginRunAnimation();
+		OwnerCombatPawn->ToggleToTargetCombatPawnState(ECombatPawnState::Run);
 		MoveDirection = (TargetLocation - OwnerCombatPawn->GetActorLocation()).GetSafeNormal();
 	}
 }

@@ -4,6 +4,19 @@
 
 #include "Combat/Actions/ICombatAction.h"
 
+namespace EAttackState
+{
+	enum Type
+	{
+		Ready,
+		MoveToAttackLocation,
+		Attack,
+		WaitAttackFinished,
+		MoveToOrigin,
+		Finished
+	};
+}
+
 class FAttackAction : public ICombatAction
 {
 public:
@@ -16,14 +29,12 @@ protected:
 	float TempTime;
 	int32 TargetTeam;
 	int32 TargetIndex;
-	ACombatPawn* OnwenCombatPawn;
+	ACombatPawn* OwnerCombatPawn;
 	ACombatPawn* TargetPawn;
 	FVector OriginLocation;
 	FRotator OriginRotatiton;
 
-	bool bIsMoving;
-	bool bIsWaitForAttack;
-	bool bIsAttacked;
+	EAttackState::Type CurrentAttackState;
 
 	class FMoveAction* MoveAction;
 };

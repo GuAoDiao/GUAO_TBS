@@ -10,12 +10,13 @@ ATBSPlayerController::ATBSPlayerController()
 	PrimaryActorTick.bCanEverTick = true;
 
 	bShowMouseCursor = true;
+	bCanMoveViewport = true;
 }
 
 void ATBSPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	GetViewportRightBottomPosition();
 }
 

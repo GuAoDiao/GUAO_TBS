@@ -28,9 +28,10 @@ public:
 	void InitiallizeCombat(const TArray<FCombatTeam>& InAllTeams, int32 InPlayerTeam);
 
 
-
 	UPROPERTY(VisibleAnywhere)
-	class UCameraComponent* CameraCompoent;
+	class USpringArmComponent* SpringArmComp;
+	UPROPERTY(VisibleAnywhere)
+	class UCameraComponent* CameraComp;
 	//////////////////////////////////////////////////////////////////////////
 	/// Combat State
 public:

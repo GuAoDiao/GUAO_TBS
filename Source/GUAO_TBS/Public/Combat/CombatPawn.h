@@ -12,6 +12,22 @@
 class IDecisionMaker;
 class ICombatAction;
 class ACombatManager;
+class UCombatPawnInfoDisplay;
+
+
+namespace ECombatPawnState
+{
+	enum Type
+	{
+		Idle,
+		ReadFight,
+		Run,
+		Attack,
+		BeHit,
+		Death,
+		OnDeath
+	};
+}
 
 UCLASS()
 class GUAO_TBS_API ACombatPawn : public APawn
@@ -21,10 +37,13 @@ class GUAO_TBS_API ACombatPawn : public APawn
 public:
 	ACombatPawn();
 	
+	void SetCombatPawnName(const FString& InCombatPawnName);
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
+	//////////////////////////////////////////////////////////////////////////
+	/// Combat
 	void BeginMakeDecision();
 	bool MakeDecision(float DeltaSeconds);
 	void BeginExecuteAction();
@@ -35,8 +54,8 @@ public:
 	void UpdateHealth();
 
 	void OnDeath();
-	void ResetPawnState();
 
+	bool bIsDead;
 public:
 	DECLARE_MULTICAST_DELEGATE(FOnCombatPawnDeathDelegate);
 	FOnCombatPawnDeathDelegate& GetOnCombatPawnDeathDelegate() {return OnCombatPawnDeathDelegate;}
@@ -47,22 +66,19 @@ public:
 	ACombatManager* GetCombatManager() const { return CombatManager; }
 	void SetCombatManager(ACombatManager* InCombatManager) { CombatManager = InCombatManager; }
 	void SetCombatAction(ICombatAction* InCombatAction) { CombatAction = InCombatAction; }
+	int32 CombatTeam;
+
 protected:
 	IDecisionMaker* DecisionMaker;
 	ICombatAction* CombatAction;
 	ACombatManager* CombatManager;
 
-	float CountTime;
 public:
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	class USkeletalMeshComponent* SkeletalMeshComp;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	class UWidgetComponent* HealthBarComp;
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class UCombatPawnHealthBar> HealthBarClass;
-	UPROPERTY(Transient)
-	class UCombatPawnHealthBar* HealthBar;
 
+
+	//////////////////////////////////////////////////////////////////////////
+	/// Attribute
+public:
 	UPROPERTY(EditDefaultsOnly)
 	FString CombatPawnName;
 	UPROPERTY(EditDefaultsOnly)
@@ -75,16 +91,48 @@ public:
 	float Defence;
 	float Luck;
 	
-
-	void BeginAttackAnimation();
-	void BeginRunAnimation();
-	void BeginIdleAnimation();
-	void DelayToSetDeathPosition();
-	FTimerHandle DelayToSetDeathPositionTimer;
-
-	FBaseCombatPawnDisplayInfo BaseDisplayInfo;
+	void InitializeCombatPawnAttribute();
+	void ResetPawnState();
+protected:
 	FBaseCombatPawnFightInfo BaseFightInfo;
+	//////////////////////////////////////////////////////////////////////////
+	/// Combat Pawn State
+public:
+	ECombatPawnState::Type GetCombatPawnState() const { return CurrentCombatPawnState; }
+	void ToggleToTargetCombatPawnState(ECombatPawnState::Type TargetCombatPawnState);
 
-	bool bIsDead;
-	int32 CombatTeam;
+
+protected:
+	void ToggleToIdleState();
+	void ToggleToReadFightState();
+	void ToggleToRunState();
+	void ToggleToAttackState();
+	void ToggleToBeHitState();
+	void ToggleToOnDeathState();
+	void ToggleToDeathState();
+
+	void DelayToSetDeathState();
+	void DelayToSetIdleState();
+
+	FTimerHandle DelayToSetDeathStateTimer;
+	FTimerHandle DelayToSetIdleStateTimer;
+
+	ECombatPawnState::Type CurrentCombatPawnState;
+
+	//////////////////////////////////////////////////////////////////////////
+	/// Display
+protected:
+	FBaseCombatPawnDisplayInfo BaseDisplayInfo;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	class USkeletalMeshComponent* SkeletalMeshComp;
+
+	//////////////////////////////////////////////////////////////////////////
+	/// Combat Pawn Info Display
+protected:
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	class UWidgetComponent* CombatPawnInfoDisplayComp;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UCombatPawnInfoDisplay> CombatPawnInfoDisplayClass;
+	UPROPERTY(Transient)
+	UCombatPawnInfoDisplay* CombatPawnInfoDisplay;
 };

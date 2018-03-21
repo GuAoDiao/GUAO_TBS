@@ -11,7 +11,7 @@
 #include "Combat/DecisionMakers/TestDecisionMaker.h"
 #include "Combat/Actions/ICombatAction.h"
 #include "Combat/CombatManager.h"
-#include "Combat/CombatPawnHealthBar.h"
+#include "Combat/CombatPawnInfoDisplay.h"
 #include "Combat/CombatPawnManager.h"
 #include "TBSCharacter.h"
 
@@ -22,9 +22,12 @@ ACombatPawn::ACombatPawn()
 	SkeletalMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComp"));
 	SkeletalMeshComp->SetupAttachment(RootComponent);
 
-	HealthBarComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComp"));
-	HealthBarComp->SetupAttachment(GetRootComponent());
-	HealthBarComp->SetRelativeLocation(FVector(0.f, 0.f, 140.f));
+	CombatPawnInfoDisplayComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComp"));
+	CombatPawnInfoDisplayComp->SetDrawSize(FVector2D(100.f, 60.f));
+	CombatPawnInfoDisplayComp->SetupAttachment(GetRootComponent());
+	CombatPawnInfoDisplayComp->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
+
+	CombatPawnInfoDisplayClass = LoadClass<UCombatPawnInfoDisplay>(this, TEXT("WidgetBlueprint'/Game/GUAO_TBS/Blueprints/Combat/W_CombatPawnDisplayInfo.W_CombatPawnDisplayInfo_C'"));
 
 	bIsDead = false;
 
@@ -42,22 +45,26 @@ void ACombatPawn::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
+	if (!CombatPawnName.IsEmpty()) { SetCombatPawnName(CombatPawnName); }
+}
+
+void ACombatPawn::SetCombatPawnName(const FString& InCombatPawnName)
+{
+	CombatPawnName = InCombatPawnName;
 
 	if (!CombatPawnName.IsEmpty())
 	{
 		FCombatPawnManager* CombatPawnManager = FCombatPawnManager::GetCombatPawnManagerInstance();
 		CombatPawnManager->GetBaseCombatDisplayInfo(CombatPawnName, BaseDisplayInfo);
-		if (BaseDisplayInfo.SkeletalMesh) { SkeletalMeshComp->SetSkeletalMesh(BaseDisplayInfo.SkeletalMesh); }
-
-		if (CombatPawnManager->GetBaseCombatPawnFightInfo(CombatPawnName, BaseFightInfo))
+		if (BaseDisplayInfo.SkeletalMesh)
 		{
-			Level = BaseFightInfo.Level;
-			MaxHealth = BaseFightInfo.MHP;
-			MaxMana = BaseFightInfo.MMP;
-			Attack = BaseFightInfo.Attack;
-			Defence = BaseFightInfo.Defence;
-			Luck = BaseFightInfo.Luck;
+			SkeletalMeshComp->SetSkeletalMesh(BaseDisplayInfo.SkeletalMesh);
+			SkeletalMeshComp->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+			SkeletalMeshComp->SetRelativeScale3D(BaseDisplayInfo.SkeletalMeshScale);
+			if (BaseDisplayInfo.IdleAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.IdleAnimAsset, true); }
 		}
+
+		if (CombatPawnManager->GetBaseCombatPawnFightInfo(CombatPawnName, BaseFightInfo)) { InitializeCombatPawnAttribute(); }
 	}
 	
 	Health = MaxHealth;
@@ -68,34 +75,22 @@ void ACombatPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (HealthBarClass)
+	if (CombatPawnInfoDisplayClass)
 	{
-		HealthBarComp->SetWidgetClass(HealthBarClass);
-		HealthBarComp->SetWidgetSpace(EWidgetSpace::Screen);
-		HealthBarComp->SetDrawSize(FVector2D(100.f, 20.f));
+		CombatPawnInfoDisplayComp->SetWidgetClass(CombatPawnInfoDisplayClass);
+		CombatPawnInfoDisplayComp->SetWidgetSpace(EWidgetSpace::World);
 		
-		HealthBar = Cast<UCombatPawnHealthBar>(HealthBarComp->GetUserWidgetObject());
-		if (HealthBar) { HealthBar->UpdateHealthBarPercent(Health, MaxHealth); }
+		CombatPawnInfoDisplay = Cast<UCombatPawnInfoDisplay>(CombatPawnInfoDisplayComp->GetUserWidgetObject());
+		if (CombatPawnInfoDisplay)
+		{
+			CombatPawnInfoDisplay->InitializeCombatPawnInfoDisplay(Level, CombatPawnName, MaxHealth, MaxMana);
+		}
 	}
 }
 
 void ACombatPawn::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
-	/*
-	if (HealthBarComp && HealthBarClass)
-	{
-		APlayerController* OwnerPC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr;
-		if (OwnerPC)
-		{
-			FVector Location;
-			FRotator Rotation;
-			OwnerPC->GetPlayerViewPoint(Location, Rotation);
-			HealthBarComp->SetWorldRotation(FRotationMatrix::MakeFromX(Location - HealthBarComp->GetComponentLocation()).Rotator());
-		}
-	}
-	*/
 }
 
 void ACombatPawn::BeginMakeDecision()
@@ -165,12 +160,26 @@ void ACombatPawn::AcceptDamage(float Damage, ACombatPawn* Causer)
 
 void ACombatPawn::UpdateHealth()
 {
-	if (HealthBar) { HealthBar->UpdateHealthBarPercent(Health, MaxHealth); }
+	if (CombatPawnInfoDisplay) { CombatPawnInfoDisplay->UpdateHealthBarPercent(Health, MaxHealth); }
+}
+void ACombatPawn::InitializeCombatPawnAttribute()
+{
+	Level = BaseFightInfo.Level;
+	MaxHealth = BaseFightInfo.MHP;
+	MaxMana = BaseFightInfo.MMP;
+	Attack = BaseFightInfo.Attack;
+	Defence = BaseFightInfo.Defence;
+	Luck = BaseFightInfo.Luck;
+
+	if (CombatPawnInfoDisplay)
+	{
+		CombatPawnInfoDisplay->InitializeCombatPawnInfoDisplay(Level, CombatPawnName, MaxHealth, MaxMana);
+	}
 }
 void ACombatPawn::ResetPawnState()
 {
 	Health = MaxHealth;
-	UpdateHealth();
+	Mana = MaxMana;
 }
 
 void ACombatPawn::OnDeath()
@@ -179,19 +188,79 @@ void ACombatPawn::OnDeath()
 	
 	OnCombatPawnDeathDelegate.Broadcast();
 
-	if (SkeletalMeshComp && BaseDisplayInfo.OnDeathAnimAsset)
+	ToggleToTargetCombatPawnState(ECombatPawnState::OnDeath);
+}
+
+
+void ACombatPawn::ToggleToTargetCombatPawnState(ECombatPawnState::Type TargetCombatPawnState)
+{
+	CurrentCombatPawnState = TargetCombatPawnState;
+
+	switch (CurrentCombatPawnState)
+	{	
+		case ECombatPawnState::Idle:
+			ToggleToIdleState();
+			break;
+		case ECombatPawnState::ReadFight:
+			ToggleToReadFightState();
+			break;
+		case ECombatPawnState::Run:
+			ToggleToRunState();
+			break;
+		case ECombatPawnState::Attack:
+			ToggleToAttackState();
+			break;
+		case ECombatPawnState::BeHit:
+			ToggleToBeHitState();
+			break;
+		case ECombatPawnState::Death:
+			ToggleToDeathState();
+			break;
+		case ECombatPawnState::OnDeath:
+			ToggleToOnDeathState();
+			break;
+	}
+
+	if (CombatPawnInfoDisplayComp)
 	{
-		SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.OnDeathAnimAsset, false);
-		if (GetWorld() && BaseDisplayInfo.DeathAnimAsset)
-		{
-			GetWorld()->GetTimerManager().SetTimer(DelayToSetDeathPositionTimer, this, &ACombatPawn::DelayToSetDeathPosition, BaseDisplayInfo.OnDeathAnimAsset->GetMaxCurrentTime(), false);
-		}
+		CombatPawnInfoDisplayComp->SetVisibility(
+			CurrentCombatPawnState == ECombatPawnState::Idle || CurrentCombatPawnState == ECombatPawnState::BeHit ||
+			CurrentCombatPawnState == ECombatPawnState::Death || CurrentCombatPawnState == ECombatPawnState::OnDeath
+		);
 	}
 }
 
 
-void ACombatPawn::DelayToSetDeathPosition() { if (SkeletalMeshComp && BaseDisplayInfo.DeathAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.DeathAnimAsset, false); } }
-void ACombatPawn::BeginAttackAnimation() { if (SkeletalMeshComp && BaseDisplayInfo.AttackAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.AttackAnimAsset, false); } }
+void ACombatPawn::ToggleToIdleState() { if (BaseDisplayInfo.IdleAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.IdleAnimAsset, true); } }
+void ACombatPawn::ToggleToReadFightState() { if (BaseDisplayInfo.RunAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.ReadFightAnimAsset, true); } }
+void ACombatPawn::ToggleToRunState() { if (BaseDisplayInfo.RunAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.RunAnimAsset, true); } }
+void ACombatPawn::ToggleToAttackState() { if (BaseDisplayInfo.AttackAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.AttackAnimAsset, false); } }
+void ACombatPawn::ToggleToDeathState() { if (BaseDisplayInfo.DeathAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.DeathAnimAsset, false); } }
 
-void ACombatPawn::BeginRunAnimation() { if (SkeletalMeshComp && BaseDisplayInfo.RunAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.RunAnimAsset, true); } }
-void ACombatPawn::BeginIdleAnimation() { if (SkeletalMeshComp && BaseDisplayInfo.IdleAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.IdleAnimAsset, true); } }
+void ACombatPawn::ToggleToBeHitState()
+{
+	if (BaseDisplayInfo.AccpetDamageAnimAsset)
+	{
+		SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.AccpetDamageAnimAsset, false);
+
+		if (GetWorld())
+		{
+			GetWorld()->GetTimerManager().SetTimer(DelayToSetIdleStateTimer, this, &ACombatPawn::DelayToSetIdleState, BaseDisplayInfo.AccpetDamageAnimAsset->GetMaxCurrentTime(), false);
+		}
+	}
+}
+
+void ACombatPawn::ToggleToOnDeathState()
+{
+	if (BaseDisplayInfo.OnDeathAnimAsset)
+	{
+		SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.OnDeathAnimAsset, false);
+		if (GetWorld())
+		{
+			GetWorld()->GetTimerManager().SetTimer(DelayToSetDeathStateTimer, this, &ACombatPawn::DelayToSetDeathState, BaseDisplayInfo.OnDeathAnimAsset->GetMaxCurrentTime(), false);
+		}
+	}
+}
+
+void ACombatPawn::DelayToSetIdleState() { ToggleToTargetCombatPawnState(ECombatPawnState::Idle); }
+void ACombatPawn::DelayToSetDeathState() { ToggleToTargetCombatPawnState(ECombatPawnState::Death); }

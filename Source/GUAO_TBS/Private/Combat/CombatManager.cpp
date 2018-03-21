@@ -7,6 +7,7 @@
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 #include "Combat/CombatPawn.h"
 #include "Combat/CombatLayout.h"
@@ -16,7 +17,10 @@
 ACombatManager::ACombatManager()
 {
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComp"));
-	CameraCompoent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
+	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
+	SpringArmComp->SetupAttachment(RootComponent);
+	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
+	CameraComp->SetupAttachment(SpringArmComp);
 
 	CharacterMargin = 250.f;
 	CommonAttackMargin = 100.f;
@@ -81,8 +85,9 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 
 	MiddleLocation += CurrentLocation;
 
-	CameraCompoent->SetRelativeLocation(MiddleLocation + FVector(0.f, 0.f, 1000.f));
-	CameraCompoent->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f));
+	SpringArmComp->SetWorldLocation(MiddleLocation);
+	SpringArmComp->TargetArmLength=  800.f;
+	SpringArmComp->SetRelativeRotation(FRotator(-60.f, -105.f, 0.f));
 
 	// set current player team
 	PlayerTeam = InPlayerTeam;

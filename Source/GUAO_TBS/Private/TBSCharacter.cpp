@@ -190,6 +190,7 @@ void ATBSCharacter::ClickedTile()
 		}
 	}
 
+	SelectTilePawnIndex = -1;
 	EndMovement();
 }
 

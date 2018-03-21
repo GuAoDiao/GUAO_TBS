@@ -18,6 +18,7 @@ FAttackAction::FAttackAction(int32 InTargetTeam, int32 InTargetIndex)
 void FAttackAction::BeginExecuteAction(class ACombatPawn* Character)
 {
 	TempTime = 1.f;
+	CurrentAttackState = EAttackState::Ready;
 
 	ACombatManager* CombatManager = Character ? Character->GetCombatManager() : nullptr;
 	if (CombatManager)
@@ -31,65 +32,75 @@ void FAttackAction::BeginExecuteAction(class ACombatPawn* Character)
 			TargetPawn = CombatPawn;
 			
 
-			OnwenCombatPawn = Character;
-			OriginLocation = OnwenCombatPawn->GetActorLocation();
-			OriginRotatiton = OnwenCombatPawn->GetActorRotation();
+			OwnerCombatPawn = Character;
+			OriginLocation = OwnerCombatPawn->GetActorLocation();
+			OriginRotatiton = OwnerCombatPawn->GetActorRotation();
 			
 			MoveAction = new FMoveAction(CombatManager->AllTeamsInfo[TargetTeam].AllCombatPawnInfo[TargetIndex].CommonAttackLocation);
-			MoveAction->BeginExecuteAction(OnwenCombatPawn);
-			bIsMoving = true;
-			bIsAttacked = false;
-			bIsWaitForAttack = false;
+			MoveAction->BeginExecuteAction(OwnerCombatPawn);
+			CurrentAttackState = EAttackState::MoveToAttackLocation;
 		}
 	}
 }
 
 bool FAttackAction::ExecuteAction(float DeltaSeconds)
 {
-	if (MoveAction && bIsMoving)
+	switch (CurrentAttackState)
 	{
-		if (MoveAction->ExecuteAction(DeltaSeconds))
+		case EAttackState::MoveToAttackLocation:
+		case EAttackState::MoveToOrigin:
 		{
-			delete MoveAction;
-			MoveAction = nullptr;
+			if (MoveAction && MoveAction->ExecuteAction(DeltaSeconds))
+			{
+				delete MoveAction;
+				MoveAction = nullptr;
+
+				CurrentAttackState = CurrentAttackState == EAttackState::MoveToAttackLocation ? EAttackState::Attack : EAttackState::Finished;
+			}
+			break;
+		}
+		case EAttackState::Attack:
+		{
+			OwnerCombatPawn->ToggleToTargetCombatPawnState(ECombatPawnState::Attack);
+
+			float Damage = OwnerCombatPawn->Attack - TargetPawn->Defence;
+
+			float Luck = OwnerCombatPawn->Luck - TargetPawn->Luck;
+			if (FMath::RandRange(0.f, 1000.f) / 10.f < Luck)
+			{
+				Damage *= 2.f;
+				UE_LOG(LogTemp, Warning, TEXT("-_- good luck, critical attack"));
+			}
 			
-			bIsMoving = false;
-		}
-	}
-	else if (bIsWaitForAttack)
-	{
-		TempTime -= DeltaSeconds;
-		if (TempTime <= 0.f)
-		{
-			MoveAction = new FMoveAction(OriginLocation);
-			MoveAction->BeginExecuteAction(OnwenCombatPawn);
+			TargetPawn->AcceptDamage(Damage, OwnerCombatPawn);
 
-			bIsAttacked = true;
-			bIsMoving = true;
-			bIsWaitForAttack = false;
-		}
-	}
-	else
-	{
-		if (bIsAttacked)
-		{
-			delete MoveAction;
+			if (MoveAction) { delete MoveAction; }
 			MoveAction = nullptr;
 
-			OnwenCombatPawn->BeginIdleAnimation();
-			OnwenCombatPawn->SetActorLocationAndRotation(OriginLocation, OriginRotatiton);
+			CurrentAttackState = EAttackState::WaitAttackFinished;
+
+			break;
+		}
+		case EAttackState::WaitAttackFinished:
+		{
+			TempTime -= DeltaSeconds;
+			if (TempTime <= 0.f)
+			{
+				MoveAction = new FMoveAction(OriginLocation);
+				MoveAction->BeginExecuteAction(OwnerCombatPawn);
+
+				CurrentAttackState = EAttackState::MoveToOrigin;
+			}
+			break;
+		}
+		case EAttackState::Finished:
+		{
+			if (MoveAction) { delete MoveAction; }
+			MoveAction = nullptr;
+
+			OwnerCombatPawn->ToggleToTargetCombatPawnState(ECombatPawnState::Idle);
+			OwnerCombatPawn->SetActorLocationAndRotation(OriginLocation, OriginRotatiton);
 			return true;
-		}
-		else
-		{
-			OnwenCombatPawn->BeginAttackAnimation();
-			TargetPawn->AcceptDamage(OnwenCombatPawn->Attack - TargetPawn->Defence, OnwenCombatPawn);
-
-			delete MoveAction;
-			MoveAction = nullptr;
-			bIsMoving = false;
-
-			bIsWaitForAttack = true;
 		}
 	}
 

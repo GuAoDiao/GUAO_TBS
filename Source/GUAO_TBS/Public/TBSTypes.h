@@ -83,6 +83,8 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	class USkeletalMesh* SkeletalMesh;
 	UPROPERTY(EditDefaultsOnly)
+	FVector SkeletalMeshScale;
+	UPROPERTY(EditDefaultsOnly)
 	class UAnimationAsset* IdleAnimAsset;
 	UPROPERTY(EditDefaultsOnly)
 	class UAnimationAsset* ReadFightAnimAsset;
@@ -140,17 +142,17 @@ public:
 	TArray<class ACombatPawn*> AllCombatPawns;
 };
 
-struct  FCombatPawnInfo;
+struct FCombatPawnInfo;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnBeginPawnTurnDelegate, const FCombatPawnInfo&);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnEndTurnDelegate, const FCombatPawnInfo&);
 
 USTRUCT(BlueprintType)
 struct FCombatPawnInfo
 {
 	GENERATED_USTRUCT_BODY()
 public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnBeginPawnTurnDelegate, const FCombatPawnInfo&);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnEndTurnDelegate, const FCombatPawnInfo&);
+
 	ACombatPawn* CombatPawn;
 	FVector CommonAttackLocation;
 	FOnBeginPawnTurnDelegate OnBeginPawnTurn;

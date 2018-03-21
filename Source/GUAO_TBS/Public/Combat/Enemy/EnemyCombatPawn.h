@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Combat/CombatPawn.h"
-#include "RebelsCombatPawn.generated.h"
+#include "EnemyCombatPawn.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GUAO_TBS_API ARebelsCombatPawn : public ACombatPawn
+class GUAO_TBS_API AEnemyCombatPawn : public ACombatPawn
 {
 	GENERATED_BODY()
 	

@@ -13,7 +13,6 @@ AEnemyTilePawn::AEnemyTilePawn()
 {
 	TileType = ETBSTileType::Enemy;
 
-
 	AllCombatEnemy.Add(TEXT("Rebels"));
 	AllCombatEnemy.Add(TEXT("LeadingRole"));
 	AllCombatEnemy.Add(TEXT("Rebels"));
@@ -42,9 +41,11 @@ void AEnemyTilePawn::BeginCombat()
 		for (const FString& CombatEnemyName : AllCombatEnemy)
 		{
 			TSubclassOf<ACombatPawn> CombatEnemyClass = FCombatPawnManager::GetCombatPawnManagerInstance()->GetCombatPawnClassFromName(CombatEnemyName);
-			if (CombatEnemyClass)
+			ACombatPawn* ComatPawn = CombatEnemyClass ? World->SpawnActor<ACombatPawn>(CombatEnemyClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters) : nullptr;
+			if (ComatPawn)
 			{
-				EnemyTeam.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(CombatEnemyClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
+				ComatPawn->SetCombatPawnName(CombatEnemyName);
+				EnemyTeam.AllCombatPawns.Add(ComatPawn);
 			}
 		}
 
