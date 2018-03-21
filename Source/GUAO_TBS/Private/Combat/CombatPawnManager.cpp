@@ -2,11 +2,17 @@
 
 #include "CombatPawnManager.h"
 
+#include "Combat/CombatPawn.h"
+
+
 FCombatPawnManager* FCombatPawnManager::CombatPawnManager = nullptr;
 
 FCombatPawnManager::FCombatPawnManager()
 {
-	BaseCombatPawnAnimationDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_BaseCombatPawnAnimation.DT_BaseCombatPawnAnimation'"));
+	AllBaseCombatDisplayInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_AllBaseCombatDisplayInfo.DT_AllBaseCombatDisplayInfo'"));
+	AllCombatPawnClassInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_AllCombatPawnClassInfo.DT_AllCombatPawnClassInfo'"));
+	AllBaseCombatPawnFightInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_AllBaseCombatPawnFightInfo.DT_AllBaseCombatPawnFightInfo'"));
+	// FBaseCombatPawnFightInfo
 }
 
 FCombatPawnManager* FCombatPawnManager::GetCombatPawnManagerInstance()
@@ -21,16 +27,47 @@ FCombatPawnManager* FCombatPawnManager::GetCombatPawnManagerInstance()
 	return CombatPawnManager;
 }
 
-bool FCombatPawnManager::GetBaseAnimationFromName(const FString& InCombatPawnName, FBaseCombatPawnAnimation& OutBaseCombatPawnAnimation)
+bool FCombatPawnManager::GetBaseCombatDisplayInfo(const FString& InCombatPawnName, FBaseCombatPawnDisplayInfo& OutBaseCombatDisplayInfo)
 {
-	if (BaseCombatPawnAnimationDT)
+	if (AllBaseCombatDisplayInfoDT)
 	{
-		FBaseCombatPawnAnimation*  BaseCombatPawnAnimation  = BaseCombatPawnAnimationDT->FindRow<FBaseCombatPawnAnimation>(FName(*InCombatPawnName), TEXT("-_- find combat pawn base animation"));
-		if (BaseCombatPawnAnimation)
+		FBaseCombatPawnDisplayInfo*  BaseCombatDisplayInfo = AllBaseCombatDisplayInfoDT->FindRow<FBaseCombatPawnDisplayInfo>(FName(*InCombatPawnName), TEXT("-_- find combat pawn base display info"));
+		if (BaseCombatDisplayInfo)
 		{
-			OutBaseCombatPawnAnimation = *BaseCombatPawnAnimation;
+			OutBaseCombatDisplayInfo = *BaseCombatDisplayInfo;
+			return true;
 		}
 	}
 	
+	return false;
+}
+
+
+TSubclassOf<ACombatPawn> FCombatPawnManager::GetCombatPawnClassFromName(const FString& InCombatPawnName)
+{
+	if (AllCombatPawnClassInfoDT)
+	{
+		FCombatPawnClassInfo*  CombatPawnClassInfo = AllCombatPawnClassInfoDT->FindRow<FCombatPawnClassInfo>(FName(*InCombatPawnName), TEXT("-_- find combat pawn class info"));
+		if (CombatPawnClassInfo)
+		{
+			return CombatPawnClassInfo->CombatPawnClass;
+		}
+	}
+
+	return nullptr;
+}
+
+bool FCombatPawnManager::GetBaseCombatPawnFightInfo(const FString& InCombatPawnName, FBaseCombatPawnFightInfo& OutBaseCombatPawnDisplayInfo)
+{
+	if (AllBaseCombatPawnFightInfoDT)
+	{
+		FBaseCombatPawnFightInfo*  BaseCombatFightInfo = AllBaseCombatPawnFightInfoDT->FindRow<FBaseCombatPawnFightInfo>(FName(*InCombatPawnName), TEXT("-_- find combat pawn base base fight info"));
+		if (BaseCombatFightInfo)
+		{
+			OutBaseCombatPawnDisplayInfo = *BaseCombatFightInfo;
+			return true;
+		}
+	}
+
 	return false;
 }

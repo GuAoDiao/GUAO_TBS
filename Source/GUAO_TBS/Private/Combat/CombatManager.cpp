@@ -330,6 +330,6 @@ void ACombatManager::CloseCombat()
 	ATBSGameState* OwnerTBSGameState = GetWorld() ? GetWorld()->GetGameState<ATBSGameState>() : nullptr;
 	if (OwnerTBSGameState)
 	{
-		OwnerTBSGameState->CloseCombat();
+		OwnerTBSGameState->CloseCombat(WinTeam, WinTeam == PlayerTeam);
 	}
 }

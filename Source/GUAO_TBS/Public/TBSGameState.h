@@ -11,6 +11,7 @@
 
 class ACombatManager;
 class ACombatPawn;
+class AEnemyTilePawn;
 
 /**
  * 
@@ -23,10 +24,13 @@ class GUAO_TBS_API ATBSGameState : public AGameStateBase
 public:
 	ATBSGameState();
 
-	UFUNCTION(BlueprintCallable, Exec)
+	UFUNCTION(BlueprintCallable)
 	void BeginCombat(FCombatTeam& EnemyTeam);
 	UFUNCTION(BlueprintCallable)
-	void CloseCombat();
+	void BeginCombatFromEnemyTilePawn(AEnemyTilePawn* EnemyTilePawn);
+
+	UFUNCTION(BlueprintCallable)
+	void CloseCombat(int32 WinTeam, bool bIsPlayerWin);
 	
 
 protected:
@@ -40,4 +44,6 @@ protected:
 	TSubclassOf<ACombatManager> CombatManagerClass;
 	UPROPERTY(Transient)
 	ACombatManager* CombatManager;
+	UPROPERTY(Transient)
+	AEnemyTilePawn* CurrentFightWithEnemyTilePawn;
 };

@@ -4,13 +4,19 @@
 
 #include "Engine/World.h"
 
-#include "TBSGameState.h"
 #include "TBSTypes.h"
+#include "TBSGameState.h"
 #include "Combat/CombatPawn.h"
+#include "CombatPawnManager.h"
 
 AEnemyTilePawn::AEnemyTilePawn()
 {
 	TileType = ETBSTileType::Enemy;
+
+
+	AllCombatEnemy.Add(TEXT("Rebels"));
+	AllCombatEnemy.Add(TEXT("LeadingRole"));
+	AllCombatEnemy.Add(TEXT("Rebels"));
 }
 
 void AEnemyTilePawn::FightWith(ATBSCharacter* InPlayer)
@@ -19,16 +25,39 @@ void AEnemyTilePawn::FightWith(ATBSCharacter* InPlayer)
 	ATBSGameState* OnwerTBSGS = GetWorld() ? GetWorld()->GetGameState<ATBSGameState>() : nullptr;
 	if (OnwerTBSGS)
 	{
+		OnwerTBSGS->BeginCombatFromEnemyTilePawn(this);
+	}
+}
+
+void AEnemyTilePawn::BeginCombat()
+{
+	UWorld* World = GetWorld();
+	ATBSGameState* OnwerTBSGS = GetWorld() ? GetWorld()->GetGameState<ATBSGameState>() : nullptr;
+	if (World && OnwerTBSGS)
+	{
 		FActorSpawnParameters ActorSpawnParameters;
 		ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		FCombatTeam EnemyTeam;
-		EnemyTeam.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(OwnerCombatEnemyClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
-		EnemyTeam.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(OwnerCombatEnemyClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
-		EnemyTeam.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(OwnerCombatEnemyClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
+		for (const FString& CombatEnemyName : AllCombatEnemy)
+		{
+			TSubclassOf<ACombatPawn> CombatEnemyClass = FCombatPawnManager::GetCombatPawnManagerInstance()->GetCombatPawnClassFromName(CombatEnemyName);
+			if (CombatEnemyClass)
+			{
+				EnemyTeam.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(CombatEnemyClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
+			}
+		}
 
 		OnwerTBSGS->BeginCombat(EnemyTeam);
 	}
 }
 
+void AEnemyTilePawn::FightSuccess()
+{
+	UE_LOG(LogTemp, Log, TEXT("-_- you win"));
+}
 
+void AEnemyTilePawn::FightFailure()
+{
+	UE_LOG(LogTemp, Log, TEXT("-_- you lost"));
+}

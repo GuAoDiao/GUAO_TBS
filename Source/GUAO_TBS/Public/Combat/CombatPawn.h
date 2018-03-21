@@ -66,14 +66,13 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	FString CombatPawnName;
 	UPROPERTY(EditDefaultsOnly)
+	int32 Level;
 	float MaxHealth;
-	UPROPERTY(EditDefaultsOnly)
 	float Health;
-	UPROPERTY(EditDefaultsOnly)
+	float MaxMana;
+	float Mana;
 	float Attack;
-	UPROPERTY(EditDefaultsOnly)
 	float Defence;
-	UPROPERTY(EditDefaultsOnly)
 	float Luck;
 	
 
@@ -83,7 +82,8 @@ public:
 	void DelayToSetDeathPosition();
 	FTimerHandle DelayToSetDeathPositionTimer;
 
-	FBaseCombatPawnAnimation BaseAnimation;
+	FBaseCombatPawnDisplayInfo BaseDisplayInfo;
+	FBaseCombatPawnFightInfo BaseFightInfo;
 
 	bool bIsDead;
 	int32 CombatTeam;

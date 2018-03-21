@@ -28,9 +28,12 @@ ACombatPawn::ACombatPawn()
 
 	bIsDead = false;
 
-	Attack = 20.f;
-	Defence = 10.f;
-	MaxHealth = 100.f;
+	Level = 1;
+	MaxHealth = 50.f;
+	MaxMana = 50.f;
+	Attack = 15.f;
+	Defence = 5.f;
+	Luck = 0.f;
 
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -39,12 +42,26 @@ void ACombatPawn::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	Health = MaxHealth;
 
 	if (!CombatPawnName.IsEmpty())
 	{
-		FCombatPawnManager::GetCombatPawnManagerInstance()->GetBaseAnimationFromName(CombatPawnName, BaseAnimation);
+		FCombatPawnManager* CombatPawnManager = FCombatPawnManager::GetCombatPawnManagerInstance();
+		CombatPawnManager->GetBaseCombatDisplayInfo(CombatPawnName, BaseDisplayInfo);
+		if (BaseDisplayInfo.SkeletalMesh) { SkeletalMeshComp->SetSkeletalMesh(BaseDisplayInfo.SkeletalMesh); }
+
+		if (CombatPawnManager->GetBaseCombatPawnFightInfo(CombatPawnName, BaseFightInfo))
+		{
+			Level = BaseFightInfo.Level;
+			MaxHealth = BaseFightInfo.MHP;
+			MaxMana = BaseFightInfo.MMP;
+			Attack = BaseFightInfo.Attack;
+			Defence = BaseFightInfo.Defence;
+			Luck = BaseFightInfo.Luck;
+		}
 	}
+	
+	Health = MaxHealth;
+	Mana = MaxMana;
 }
 
 void ACombatPawn::BeginPlay()
@@ -140,9 +157,9 @@ void ACombatPawn::AcceptDamage(float Damage, ACombatPawn* Causer)
 	{
 		OnDeath();
 	}
-	else if (SkeletalMeshComp && BaseAnimation.AccpetDamageAnimAsset)
+	else if (SkeletalMeshComp && BaseDisplayInfo.AccpetDamageAnimAsset)
 	{
-		SkeletalMeshComp->PlayAnimation(BaseAnimation.AccpetDamageAnimAsset, false);
+		SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.AccpetDamageAnimAsset, false);
 	}
 }
 
@@ -162,19 +179,19 @@ void ACombatPawn::OnDeath()
 	
 	OnCombatPawnDeathDelegate.Broadcast();
 
-	if (SkeletalMeshComp && BaseAnimation.OnDeathAnimAsset)
+	if (SkeletalMeshComp && BaseDisplayInfo.OnDeathAnimAsset)
 	{
-		SkeletalMeshComp->PlayAnimation(BaseAnimation.OnDeathAnimAsset, false);
-		if (GetWorld() && BaseAnimation.DeathAnimAsset)
+		SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.OnDeathAnimAsset, false);
+		if (GetWorld() && BaseDisplayInfo.DeathAnimAsset)
 		{
-			GetWorld()->GetTimerManager().SetTimer(DelayToSetDeathPositionTimer, this, &ACombatPawn::DelayToSetDeathPosition, BaseAnimation.OnDeathAnimAsset->GetMaxCurrentTime(), false);
+			GetWorld()->GetTimerManager().SetTimer(DelayToSetDeathPositionTimer, this, &ACombatPawn::DelayToSetDeathPosition, BaseDisplayInfo.OnDeathAnimAsset->GetMaxCurrentTime(), false);
 		}
 	}
 }
 
 
-void ACombatPawn::DelayToSetDeathPosition() { if (SkeletalMeshComp && BaseAnimation.DeathAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseAnimation.DeathAnimAsset, false); } }
-void ACombatPawn::BeginAttackAnimation() { if (SkeletalMeshComp && BaseAnimation.AttackAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseAnimation.AttackAnimAsset, false); } }
+void ACombatPawn::DelayToSetDeathPosition() { if (SkeletalMeshComp && BaseDisplayInfo.DeathAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.DeathAnimAsset, false); } }
+void ACombatPawn::BeginAttackAnimation() { if (SkeletalMeshComp && BaseDisplayInfo.AttackAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.AttackAnimAsset, false); } }
 
-void ACombatPawn::BeginRunAnimation() { if (SkeletalMeshComp && BaseAnimation.RunAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseAnimation.RunAnimAsset, true); } }
-void ACombatPawn::BeginIdleAnimation() { if (SkeletalMeshComp && BaseAnimation.IdleAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseAnimation.IdleAnimAsset, true); } }
+void ACombatPawn::BeginRunAnimation() { if (SkeletalMeshComp && BaseDisplayInfo.RunAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.RunAnimAsset, true); } }
+void ACombatPawn::BeginIdleAnimation() { if (SkeletalMeshComp && BaseDisplayInfo.IdleAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.IdleAnimAsset, true); } }

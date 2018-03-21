@@ -4,10 +4,11 @@
 
 #include "Engine/World.h"
 #include "Combat/CombatPawn.h"
+#include "Combat/CombatPawnManager.h"
 
 ATBSPlayerState::ATBSPlayerState()
 {
-
+	OwnerCombatPawnName = TEXT("LeadingRole");
 }
 
 void ATBSPlayerState::BeginPlay()
@@ -21,10 +22,15 @@ void ATBSPlayerState::BeginPlay()
 		FActorSpawnParameters ActorSpawnParameters;
 		ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		AllCombatPawn.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(OwnerCombatPawnClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
-		AllCombatPawn.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(OwnerCombatPawnClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
-		AllCombatPawn.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(OwnerCombatPawnClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
+		TSubclassOf<ACombatPawn> OwnerCombatPawnClass = FCombatPawnManager::GetCombatPawnManagerInstance()->GetCombatPawnClassFromName(OwnerCombatPawnName);
 
+		if (OwnerCombatPawnClass)
+		{
+			AllCombatPawn.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(OwnerCombatPawnClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
+			AllCombatPawn.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(OwnerCombatPawnClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
+			AllCombatPawn.AllCombatPawns.Add(World->SpawnActor<ACombatPawn>(OwnerCombatPawnClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters));
+		}
+		
 		for (ACombatPawn* CombatPawn : AllCombatPawn.AllCombatPawns)
 		{
 			CombatPawn->SetActorHiddenInGame(true);

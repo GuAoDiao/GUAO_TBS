@@ -29,5 +29,5 @@ public:
 
 	FCombatTeam AllCombatPawn;
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<ACombatPawn> OwnerCombatPawnClass;
+	FString OwnerCombatPawnName;
 };

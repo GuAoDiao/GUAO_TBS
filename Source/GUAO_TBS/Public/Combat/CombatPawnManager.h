@@ -7,6 +7,8 @@
 
 #include "TBSTypes.h"
 
+class ACombatPawn;
+
 /**
  * 
  */
@@ -21,9 +23,14 @@ private:
 
 protected:
 	UPROPERTY()
-	class UDataTable* BaseCombatPawnAnimationDT;
-
+	class UDataTable* AllBaseCombatDisplayInfoDT;
+	UPROPERTY()
+	class UDataTable* AllCombatPawnClassInfoDT;
+	UPROPERTY()
+	class UDataTable* AllBaseCombatPawnFightInfoDT;
 
 public:
-	bool GetBaseAnimationFromName(const FString& InCombatPawnName, FBaseCombatPawnAnimation& OutBaseCombatPawnAnimation);
+	bool GetBaseCombatDisplayInfo(const FString& InCombatPawnName, FBaseCombatPawnDisplayInfo& OutBaseCombatDisplayInfo);
+	TSubclassOf<ACombatPawn> GetCombatPawnClassFromName(const FString& InCombatPawnName);
+	bool GetBaseCombatPawnFightInfo(const FString& InCombatPawnName, FBaseCombatPawnFightInfo& OutBaseCombatPawnDisplayInfo);
 };

@@ -74,12 +74,14 @@ public:
 
 
 USTRUCT(BlueprintType)
-struct FBaseCombatPawnAnimation : public FTableRowBase
+struct FBaseCombatPawnDisplayInfo : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditDefaultsOnly)
 	FString CombatPawnName;
+	UPROPERTY(EditDefaultsOnly)
+	class USkeletalMesh* SkeletalMesh;
 	UPROPERTY(EditDefaultsOnly)
 	class UAnimationAsset* IdleAnimAsset;
 	UPROPERTY(EditDefaultsOnly)
@@ -96,6 +98,37 @@ public:
 	class UAnimationAsset* DeathAnimAsset;
 };
 
+USTRUCT(BlueprintType)
+struct FCombatPawnClassInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly)
+	FString CombatPawnName;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class ACombatPawn> CombatPawnClass;
+};
+
+USTRUCT(BlueprintType)
+struct FBaseCombatPawnFightInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly)
+	FString CombatPawnName;
+	UPROPERTY(EditDefaultsOnly)
+	int32 Level;
+	UPROPERTY(EditDefaultsOnly)
+	float MHP;
+	UPROPERTY(EditDefaultsOnly)
+	float MMP;
+	UPROPERTY(EditDefaultsOnly)
+	float Attack;
+	UPROPERTY(EditDefaultsOnly)
+	float Defence;
+	UPROPERTY(EditDefaultsOnly)
+	float Luck;
+};
 
 
 USTRUCT(BlueprintType)

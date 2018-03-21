@@ -8,13 +8,21 @@
 #include "TBSPlayerState.h"
 #include "Combat/CombatManager.h"
 #include "Combat/CombatPawn.h"
+#include "TilePawn/Enemy/EnemyTilePawn.h"
 
 ATBSGameState::ATBSGameState()
 {
 	CombatLocation = FVector(4000.f, 4000.f, 20.f);
 }
 
-
+void ATBSGameState::BeginCombatFromEnemyTilePawn(AEnemyTilePawn* EnemyTilePawn)
+{
+	if (EnemyTilePawn)
+	{
+		CurrentFightWithEnemyTilePawn = EnemyTilePawn;
+		CurrentFightWithEnemyTilePawn->BeginCombat();
+	}
+}
 
 void ATBSGameState::BeginCombat(FCombatTeam& EnemyTeam)
 {
@@ -47,7 +55,7 @@ void ATBSGameState::BeginCombat(FCombatTeam& EnemyTeam)
 	}
 }
 
-void ATBSGameState::CloseCombat()
+void ATBSGameState::CloseCombat(int32 WinTeam, bool bIsPlayerWin)
 {
 	if (CombatManager) { CombatManager->Destroy(); }
 
@@ -70,6 +78,18 @@ void ATBSGameState::CloseCombat()
 			{
 				CombatPawn->Destroy();
 			}
+		}
+	}
+
+	if (CurrentFightWithEnemyTilePawn)
+	{
+		if (bIsPlayerWin)
+		{
+			CurrentFightWithEnemyTilePawn->FightSuccess();
+		}
+		else
+		{
+			CurrentFightWithEnemyTilePawn->FightFailure();
 		}
 	}
 }

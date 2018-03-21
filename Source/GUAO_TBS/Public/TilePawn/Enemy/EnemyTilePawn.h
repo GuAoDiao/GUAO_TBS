@@ -21,7 +21,13 @@ public:
 	AEnemyTilePawn();
 
 	void FightWith(ATBSCharacter* InPlayer);
+
+	void BeginCombat();
+
+	void FightSuccess();
+
+	void FightFailure();
 	
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<ACombatPawn> OwnerCombatEnemyClass;
+	TArray<FString> AllCombatEnemy;
 };
