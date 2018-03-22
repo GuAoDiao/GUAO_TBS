@@ -22,23 +22,27 @@ public:
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 
-
-	USceneComponent* GetGridAnchor() const { return GridAnchor; }
-
+	//////////////////////////////////////////////////////////////////////////
+	/// Grid Info
 public:
-	UPROPERTY()
-	int32 Index;
-	ETBSTileType TileType;
-
-	
-	UPROPERTY(BlueprintReadOnly)
-	float CurrentSpeed;
+	int32 GetTileIndex() const { return TileIndex; }
+	void SetTileIndex(int32 InTileIndex) { TileIndex = InTileIndex; }
+	ETBSTileType GetTileType() const { return TileType; }
+	USceneComponent* GetGridAnchor() const { return GridAnchor; }
 protected:
 	UPROPERTY()
 	AGridManager* GridManager;
+	UPROPERTY()
+	int32 TileIndex;
+
+	ETBSTileType TileType;
 
 	UPROPERTY(VisibleAnywhere)
 	class USceneComponent* GridAnchor;
+	
+	//////////////////////////////////////////////////////////////////////////
+	/// Base Comp
+protected:
 	UPROPERTY(VisibleAnywhere)
 	class USkeletalMeshComponent* PawnSkeletalMeshComp;	
 };

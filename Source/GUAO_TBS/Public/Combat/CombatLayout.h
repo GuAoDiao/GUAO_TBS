@@ -18,12 +18,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnChangeBount(int32 NewBount);
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnChangeTeam(int32 NewTeam);
+	void OnChangeTeam(const FString& TeamName);
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnChangePawn(int32 NewPawn);
+	void OnChangePawn(const FString& PawnName);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnGameOver(int32 WinTeam, bool bIsPlayerWin);
+	void OnGameOver(const FString& WinTeamName, bool bIsPlayerWin);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnRunAwayFailured();

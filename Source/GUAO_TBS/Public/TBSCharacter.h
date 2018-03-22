@@ -20,6 +20,9 @@ public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 	void RebindInputComponent(UInputComponent* InInputComp);
 	virtual void Tick(float DeltaSeconds) override;
+
+	//////////////////////////////////////////////////////////////////////////
+	/// Base Comp
 protected:
 	UPROPERTY(VisibleAnywhere)
 	class USpringArmComponent* SpringArmComp;
@@ -47,7 +50,8 @@ private:
 	float CameraMoveSpeed;
 	float CameraRotateSpeed;
 
-
+	//////////////////////////////////////////////////////////////////////////
+	/// Clicked Tile To Move or Talk With NPC or Fight With Enemy
 protected:
 	void ClickedTile();
 
@@ -55,16 +59,22 @@ protected:
 
 	bool bDisableClickTile;
 	int32 SelectTilePawnIndex;
-	float SplineHeight;
 
 	FGridPathFinding* GridPathFinding;
+	//////////////////////////////////////////////////////////////////////////
+	/// Movement 
+protected:
+	void StartMovement();
+	void TickMovement(float DeltaSeconds);
+	void EndMovement();
+
+	UPROPERTY(BlueprintReadOnly)
+	float CurrentSpeed;
 
 	bool bIsMoving;
 	float CurrentSplineDistance;
+	float SplineHeight;
+
 	float PawnMovementSpeedAcceleration;
 	float PawnMaxSpeed;
-
-	virtual void StartMovement();
-	virtual void TickMovement(float DeltaSeconds);
-	virtual void EndMovement();
 };

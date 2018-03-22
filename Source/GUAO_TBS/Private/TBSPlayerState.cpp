@@ -8,38 +8,39 @@
 
 ATBSPlayerState::ATBSPlayerState()
 {
-	OwnerCombatPawnName = TEXT("LeadingRole");
+	CombatPawnNameInPlayerTeam.Add(TEXT("LeadingRole"));
+	CombatPawnNameInPlayerTeam.Add(TEXT("LeadingRole"));
+	CombatPawnNameInPlayerTeam.Add(TEXT("LeadingRole"));
 }
 
 void ATBSPlayerState::BeginPlay()
 {
 	Super::BeginPlay();
 
+	InitializePlayerCombatTeam();
+}
+
+void ATBSPlayerState::InitializePlayerCombatTeam()
+{
 	UWorld* World = GetWorld();
-	
-	if(World)
+	if (World)
 	{
 		FActorSpawnParameters ActorSpawnParameters;
 		ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		TSubclassOf<ACombatPawn> OwnerCombatPawnClass = FCombatPawnManager::GetCombatPawnManagerInstance()->GetCombatPawnClassFromName(OwnerCombatPawnName);
+		FCombatPawnManager* CombatPawnManager = FCombatPawnManager::GetCombatPawnManagerInstance();
 
-		if (OwnerCombatPawnClass)
+		for (const FString& CombatPawnName : CombatPawnNameInPlayerTeam)
 		{
-			for (int32 i = 0; i < 3; ++i)
+			TSubclassOf<ACombatPawn> OwnerCombatPawnClass = CombatPawnManager->GetCombatPawnClassFromName(CombatPawnName);
+			ACombatPawn* CombatPawn = OwnerCombatPawnClass ? World->SpawnActor<ACombatPawn>(OwnerCombatPawnClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters) : nullptr;
+			if (CombatPawn)
 			{
-				ACombatPawn* CombatPawn = World->SpawnActor<ACombatPawn>(OwnerCombatPawnClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters);
-				if (CombatPawn)
-				{
-					CombatPawn->SetCombatPawnName(OwnerCombatPawnName);
-					AllCombatPawn.AllCombatPawns.Add(CombatPawn);
-				}
+				CombatPawn->SetCombatPawnName(CombatPawnName);
+				CombatPawn->SetActorHiddenInGame(true);
+				PlayerCombatTeam.AllCombatPawns.Add(CombatPawn);
 			}
 		}
-		
-		for (ACombatPawn* CombatPawn : AllCombatPawn.AllCombatPawns)
-		{
-			CombatPawn->SetActorHiddenInGame(true);
-		}
 	}
+	PlayerCombatTeam.TeamName = TEXT("PlayerTeam");
 }

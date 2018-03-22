@@ -28,6 +28,9 @@ public:
 
 	void FightFailure();
 	
+protected:
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FString> AllCombatEnemy;
+	UPROPERTY(EditDefaultsOnly)
+	FString TeamName;
 };

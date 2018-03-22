@@ -144,14 +144,14 @@ void ATBSCharacter::ClickedTile()
 	
 	if (!GridManager->FieldLocationArray.IsValidIndex(CurrentClickedTileIndex)) { return; }
 
-	if (CurrentClickedTileIndex == Index) { return; }
+	if (CurrentClickedTileIndex == TileIndex) { return; }
 
 	bDisableClickTile = true;
 	SelectTilePawnIndex = -1;
 	
 	if (GridManager->AllTilePawns.Contains(CurrentClickedTileIndex) && GridManager->AllTilePawns[CurrentClickedTileIndex])
 	{
-		switch (GridManager->AllTilePawns[CurrentClickedTileIndex]->TileType)
+		switch (GridManager->AllTilePawns[CurrentClickedTileIndex]->GetTileType())
 		{
 			case ETBSTileType::Enemy:
 			case ETBSTileType::NPC:
@@ -165,7 +165,7 @@ void ATBSCharacter::ClickedTile()
 
 	if (GridPathFinding)
 	{
-		GridPathFinding->Pathfinding(Index, CurrentClickedTileIndex);
+		GridPathFinding->Pathfinding(TileIndex, CurrentClickedTileIndex);
 
 		if (GridPathFinding->bFound)
 		{
@@ -264,13 +264,13 @@ void ATBSCharacter::EndMovement()
 	bDisableClickTile = false;
 	CurrentSpeed = 0.f;
 
-	GridManager->AllTilePawns.Remove(Index);
-	Index = GridPathFinding->CurrentPathEnd;
-	GridManager->AllTilePawns.Add(Index, this);
+	GridManager->AllTilePawns.Remove(TileIndex);
+	TileIndex = GridPathFinding->CurrentPathEnd;
+	GridManager->AllTilePawns.Add(TileIndex, this);
 
 	if (SelectTilePawnIndex != -1 && GridManager->AllTilePawns.Contains(SelectTilePawnIndex) && GridManager->AllTilePawns[SelectTilePawnIndex])
 	{
-		switch (GridManager->AllTilePawns[SelectTilePawnIndex]->TileType)
+		switch (GridManager->AllTilePawns[SelectTilePawnIndex]->GetTileType())
 		{
 			case  ETBSTileType::Enemy:
 			{

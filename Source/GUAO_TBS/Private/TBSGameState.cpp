@@ -40,7 +40,7 @@ void ATBSGameState::BeginCombat(FCombatTeam& EnemyTeam)
 		APlayerController* OnwerPC = GetWorld()->GetFirstPlayerController();
 		ATBSPlayerState* OwnerTBSPS = OnwerPC ? Cast<ATBSPlayerState>(OnwerPC->PlayerState) : nullptr;
 
-		FCombatTeam& PlayerTeam = OwnerTBSPS->GetPlayerCombatPawnTeam();
+		FCombatTeam& PlayerTeam = OwnerTBSPS->GetPlayerCombatTeam();
 		for (ACombatPawn* CombatPawn : PlayerTeam.AllCombatPawns)
 		{
 			CombatPawn->SetActorHiddenInGame(false);

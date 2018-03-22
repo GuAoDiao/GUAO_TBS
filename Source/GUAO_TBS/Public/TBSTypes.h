@@ -34,6 +34,7 @@ enum class ECombatState : uint8
 
 	FightEnd,
 	RunAway,
+
 	Results
 };
 
@@ -81,10 +82,12 @@ struct FBaseCombatPawnDisplayInfo : public FTableRowBase
 public:
 	UPROPERTY(EditDefaultsOnly)
 	FString CombatPawnName;
+
 	UPROPERTY(EditDefaultsOnly)
 	class USkeletalMesh* SkeletalMesh;
 	UPROPERTY(EditDefaultsOnly)
 	FVector SkeletalMeshScale;
+
 	UPROPERTY(EditDefaultsOnly)
 	class UAnimationAsset* IdleAnimAsset;
 	UPROPERTY(EditDefaultsOnly)
@@ -141,6 +144,8 @@ struct FCombatTeam
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<class ACombatPawn*> AllCombatPawns;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FString TeamName;
 };
 
 struct FCombatPawnInfo;
@@ -171,6 +176,8 @@ public:
 	TArray<FCombatPawnInfo> AllCombatPawnInfo;
 	UPROPERTY(BlueprintReadOnly)
 	USceneComponent* TeamBaseComps;
+	UPROPERTY(BlueprintReadOnly)
+	FString TeamName;
 };
 
 

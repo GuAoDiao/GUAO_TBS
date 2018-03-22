@@ -24,10 +24,13 @@ public:
 
 	virtual void BeginPlay() override;
 
+	//////////////////////////////////////////////////////////////////////////
+	/// Player Combat Pawn
 public:
-	FCombatTeam& GetPlayerCombatPawnTeam() { return AllCombatPawn; }
+	void InitializePlayerCombatTeam();
+	FCombatTeam& GetPlayerCombatTeam() { return PlayerCombatTeam; }
 
-	FCombatTeam AllCombatPawn;
+	FCombatTeam PlayerCombatTeam;
 	UPROPERTY(EditDefaultsOnly)
-	FString OwnerCombatPawnName;
+	TArray<FString> CombatPawnNameInPlayerTeam;
 };

@@ -104,11 +104,11 @@ void AGridManager::OnConstruction(const FTransform& Transform)
 		}
 	}
 
-	if (bPregenerateGameplayGrids) { PregenerateGameplayGrids(); }
+	if (bPregenerateGameplayGrids) { InitializeGridEdgeArray(); }
 }
 
 
-void AGridManager::PregenerateGameplayGrids()
+void AGridManager::InitializeGridEdgeArray()
 {
 	int32 Size = GridSizeX * GridSizeY;
 
@@ -128,7 +128,7 @@ void AGridManager::BeginPlay()
 {	
 	Super::BeginPlay();
 
-	if (!bPregenerateGameplayGrids) { PregenerateGameplayGrids(); }
+	if (!bPregenerateGameplayGrids) { InitializeGridEdgeArray(); }
 
 	AddViewportTerrainToArrays();
 
@@ -145,10 +145,10 @@ void AGridManager::AddViewportTerrainToArrays()
 	{
 		for (TActorIterator<ABasedTile> BasedTileIterator(GetWorld()); BasedTileIterator; ++BasedTileIterator)
 		{
-			if (GridEdgeArray.IsValidIndex(BasedTileIterator->Index))
+			if (GridEdgeArray.IsValidIndex(BasedTileIterator->TileIndex))
 			{
 
-				GridEdgeArray[BasedTileIterator->Index] = FGridEdgesCost::FullGridEdge;
+				GridEdgeArray[BasedTileIterator->TileIndex] = FGridEdgesCost::FullGridEdge;
 			}
 		}
 	}
@@ -156,7 +156,7 @@ void AGridManager::AddViewportTerrainToArrays()
 	for (TActorIterator<ABasedTile> BasedTileIterator(GetWorld()); BasedTileIterator; ++BasedTileIterator)
 	{
 
-		int32 Index = BasedTileIterator->Index;
+		int32 Index = BasedTileIterator->TileIndex;
 		if (GridEdgeArray.IsValidIndex(Index))
 		{
 			GridEdgeArray[Index].East = GetMaxValueWhenAllNotZero(BasedTileIterator->EdgeCosts.East, GridEdgeArray[Index].East);
@@ -172,7 +172,7 @@ void AGridManager::AddViewportTerrainToArrays()
 				float ActorHeight = BasedTileIterator->GetActorLocation().Z;
 				if (ActorHeight != 0.f)
 				{
-					int32 Index = BasedTileIterator->Index;
+					int32 Index = BasedTileIterator->TileIndex;
 					if (FieldLocationArray.IsValidIndex(Index)) { FieldLocationArray[Index].Z = ActorHeight; }
 				}
 			}
@@ -191,7 +191,7 @@ void AGridManager::AddAllTilePawnToArrays()
 			TilePawnIterator->SetActorLocation(Location);
 			TilePawnIterator->GetGridAnchor()->SetWorldLocation(Location);
 
-			AllTilePawns.Add(TilePawnIterator->Index, *TilePawnIterator);
+			AllTilePawns.Add(TilePawnIterator->GetTileIndex(), *TilePawnIterator);
 		}
 	}
 }

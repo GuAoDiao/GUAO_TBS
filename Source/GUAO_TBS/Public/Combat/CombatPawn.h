@@ -44,39 +44,41 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	/// Combat
+public:
 	virtual void BeginMakeDecision();
 	bool MakeDecision(float DeltaSeconds);
 	void BeginExecuteAction();
 	bool ExecuteAction(float DeltaSeconds);
-
-	void AcceptDamage(float Damage, ACombatPawn* Causer);
-
-	void UpdateHealth();
-
-	void OnDeath();
-
-	bool bIsDead;
-public:
-	DECLARE_MULTICAST_DELEGATE(FOnCombatPawnDeathDelegate);
-	FOnCombatPawnDeathDelegate& GetOnCombatPawnDeathDelegate() {return OnCombatPawnDeathDelegate;}
-protected:
-	FOnCombatPawnDeathDelegate OnCombatPawnDeathDelegate;
 
 public:
 	UFUNCTION(BlueprintCallable)
 	ACombatManager* GetCombatManager() const { return CombatManager; }
 	void SetCombatManager(ACombatManager* InCombatManager) { CombatManager = InCombatManager; }
 	void SetCombatAction(ICombatAction* InCombatAction) { CombatAction = InCombatAction; }
+	
 	int32 CombatTeam;
-
 protected:
 	IDecisionMaker* DecisionMaker;
 	ICombatAction* CombatAction;
 	ACombatManager* CombatManager;
 
+	//////////////////////////////////////////////////////////////////////////
+	/// Damage , Health, Death;
 public:
+	void AcceptDamage(float Damage, ACombatPawn* Causer);
+	void UpdateHealth();
+	void OnDeath();
+	UFUNCTION(BlueprintPure)
+	bool IsCombatPawnDead() const { return bIsDead; }
 
-
+protected:
+	bool bIsDead;
+public:
+	DECLARE_MULTICAST_DELEGATE(FOnCombatPawnDeathDelegate);
+	FOnCombatPawnDeathDelegate& GetOnCombatPawnDeathDelegate() {return OnCombatPawnDeathDelegate;}
+protected:
+	FOnCombatPawnDeathDelegate OnCombatPawnDeathDelegate;
+	
 	//////////////////////////////////////////////////////////////////////////
 	/// Attribute
 public:
@@ -96,6 +98,8 @@ public:
 	void ResetPawnState();
 protected:
 	FBaseCombatPawnFightInfo BaseFightInfo;
+
+
 	//////////////////////////////////////////////////////////////////////////
 	/// Combat Pawn State
 public:

@@ -36,11 +36,11 @@ void ABasedTile::OnConstruction(const FTransform& Transform)
 
 	if (GridManager)
 	{
-		Index = GridManager->VectorToIndex(GetActorLocation());
+		TileIndex = GridManager->VectorToIndex(GetActorLocation());
 
 		if (GridManager->bSnapToCustomGrid && !bIgnoreSnapToCustomGrid)
 		{
-			FVector Location = GridManager->GetVectorFromIndex(Index);
+			FVector Location = GridManager->GetVectorFromIndex(TileIndex);
 
 			if (bPlaceActorAtAnchor) { SetActorLocation(Location); }
 

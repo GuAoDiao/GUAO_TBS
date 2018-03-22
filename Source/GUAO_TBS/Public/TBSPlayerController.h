@@ -30,13 +30,15 @@ protected:
 	ATBSCharacter* OwnerTBSCharacter;
 
 	//////////////////////////////////////////////////////////////////////////
-	/// Adjust Viewport Position
+	/// Viewport
 public:
-	void GetViewportRightBottomPosition();
-
+	/// Toggle View
 	void TurnViewportToCombat(class ACombatManager* CombatManager);
 	void TurnViewportToCharacter();
+
+	/// Adjust Viewport Position
 protected:
+	void GetViewportRightBottomPosition();
 	void MoveViewportFromMouse();
 private:
 	bool bCanMoveViewport;

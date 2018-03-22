@@ -62,7 +62,7 @@ public:
 	TArray<FVector> FieldLocationArray;
 
 protected:
-	void PregenerateGameplayGrids();
+	void InitializeGridEdgeArray();
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	bool bPregenerateGameplayGrids;

@@ -24,7 +24,7 @@ public:
 
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	int32 Index;
+	int32 TileIndex;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bIgnoreSnapToCustomGrid;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

@@ -30,8 +30,8 @@ void ATilePawn::OnConstruction(const FTransform& Transform)
 
 	if (GridManager)
 	{
-		Index = GridManager->VectorToIndex(GetActorLocation());
+		TileIndex = GridManager->VectorToIndex(GetActorLocation());
 
-		GridAnchor->SetWorldLocation(GridManager->GetVectorFromIndex(Index));
+		GridAnchor->SetWorldLocation(GridManager->GetVectorFromIndex(TileIndex));
 	}
 }

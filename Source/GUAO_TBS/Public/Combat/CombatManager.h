@@ -27,11 +27,28 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitiallizeCombat(const TArray<FCombatTeam>& InAllTeams, int32 InPlayerTeam);
 
+	//////////////////////////////////////////////////////////////////////////
+	/// Base Combat Info
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	int32 TeamNums;
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FVector> TeamBasePosition;
+	UPROPERTY(EditDefaultsOnly)
+	int32 CharacterMargin;
+	UPROPERTY(EditDefaultsOnly)
+	int32 CommonAttackMargin;
+	UPROPERTY(EditDefaultsOnly)
+	TArray<class UArrowComponent*> TeamArrowPositionComp;
 
+	//////////////////////////////////////////////////////////////////////////
+	/// Base Comp
+public:
 	UPROPERTY(VisibleAnywhere)
 	class USpringArmComponent* SpringArmComp;
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* CameraComp;
+
 	//////////////////////////////////////////////////////////////////////////
 	/// Combat State
 public:
@@ -41,15 +58,9 @@ public:
 protected:
 	ECombatState CurrentCombatState;
 
+	//////////////////////////////////////////////////////////////////////////
+	/// Combat Run
 protected:
-	UPROPERTY(EditDefaultsOnly)
-	int32 TeamNums;
-	UPROPERTY(EditDefaultsOnly)
-	TArray<FVector> TeamBasePosition;
-
-	UPROPERTY(EditDefaultsOnly)
-	TArray<class UArrowComponent*> TeamArrowPositionComp;
-
 	void Startup();
 	void BeginCombat();
 	void ChooseNextPawn();
@@ -73,8 +84,6 @@ protected:
 public:
 	bool TryToRunAway(ACombatPawn* InCombatPawn);
 
-	bool bWantedAndCanRunAway;
-
 	UFUNCTION(BlueprintCallable)
 	int32 GetPlayerTeam() const { return PlayerTeam; }
 protected:
@@ -86,17 +95,18 @@ protected:
 	int32 WinTeam;
 
 	bool bWaitingForPawn;
+	bool bWantedAndCanRunAway;
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<FCombatTeamInfo> AllTeamsInfo;
 
-	UPROPERTY(EditDefaultsOnly)
-	int32 CharacterMargin;
-	UPROPERTY(EditDefaultsOnly)
-	int32 CommonAttackMargin;
 
+	//////////////////////////////////////////////////////////////////////////
+	/// UI Display
+
+protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UCombatLayout> CombatLayoutClass;
 	UPROPERTY(Transient)
 	class UCombatLayout* CombatLayout;
-public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TArray<FCombatTeamInfo> AllTeamsInfo;
 };

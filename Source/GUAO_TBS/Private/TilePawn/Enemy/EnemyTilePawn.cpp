@@ -14,6 +14,8 @@ AEnemyTilePawn::AEnemyTilePawn()
 	TileType = ETBSTileType::Enemy;
 
 	AllCombatEnemy.Add(TEXT("Rebels"));
+
+	TeamName = TEXT("EnemyTeam");
 }
 
 void AEnemyTilePawn::FightWith(ATBSCharacter* InPlayer)
@@ -46,6 +48,7 @@ void AEnemyTilePawn::BeginCombat()
 				EnemyTeam.AllCombatPawns.Add(ComatPawn);
 			}
 		}
+		EnemyTeam.TeamName = TeamName;
 
 		OnwerTBSGS->BeginCombat(EnemyTeam);
 	}

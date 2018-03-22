@@ -25,7 +25,7 @@ void FTestDecisionMaker::BeginMakeDecision(class ACombatPawn* CombatPawn)
 			for (int32 j = 0; j < CombatManager->AllTeamsInfo[i].AllCombatPawnInfo.Num(); ++j)
 			{
 				ACombatPawn* TargetCombatPawn = CombatManager->AllTeamsInfo[i].AllCombatPawnInfo[j].CombatPawn;
-				if (TargetCombatPawn && !TargetCombatPawn->bIsDead)
+				if (TargetCombatPawn && !TargetCombatPawn->IsCombatPawnDead())
 				{
 					if (TargetCombatPawn->Health < MinHP)
 					{

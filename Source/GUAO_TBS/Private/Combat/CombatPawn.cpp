@@ -93,6 +93,30 @@ void ACombatPawn::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 }
 
+//////////////////////////////////////////////////////////////////////////
+/// Attribute
+void ACombatPawn::InitializeCombatPawnAttribute()
+{
+	Level = BaseFightInfo.Level;
+	MaxHealth = BaseFightInfo.MHP;
+	MaxMana = BaseFightInfo.MMP;
+	Attack = BaseFightInfo.Attack;
+	Defence = BaseFightInfo.Defence;
+	Luck = BaseFightInfo.Luck;
+
+	if (CombatPawnInfoDisplay)
+	{
+		CombatPawnInfoDisplay->InitializeCombatPawnInfoDisplay(Level, CombatPawnName, MaxHealth, MaxMana);
+	}
+}
+void ACombatPawn::ResetPawnState()
+{
+	Health = MaxHealth;
+	Mana = MaxMana;
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// Combat Info
 void ACombatPawn::BeginMakeDecision()
 {
 	DecisionMaker = new FTestDecisionMaker();
@@ -135,7 +159,8 @@ bool ACombatPawn::ExecuteAction(float DeltaSeconds)
 }
 
 
-
+//////////////////////////////////////////////////////////////////////////
+/// Damage , Health, Death;
 void ACombatPawn::AcceptDamage(float Damage, ACombatPawn* Causer)
 {
 	if (Damage < 0.f) { Damage = 0.f; }
@@ -162,25 +187,7 @@ void ACombatPawn::UpdateHealth()
 {
 	if (CombatPawnInfoDisplay) { CombatPawnInfoDisplay->UpdateHealthBarPercent(Health, MaxHealth); }
 }
-void ACombatPawn::InitializeCombatPawnAttribute()
-{
-	Level = BaseFightInfo.Level;
-	MaxHealth = BaseFightInfo.MHP;
-	MaxMana = BaseFightInfo.MMP;
-	Attack = BaseFightInfo.Attack;
-	Defence = BaseFightInfo.Defence;
-	Luck = BaseFightInfo.Luck;
 
-	if (CombatPawnInfoDisplay)
-	{
-		CombatPawnInfoDisplay->InitializeCombatPawnInfoDisplay(Level, CombatPawnName, MaxHealth, MaxMana);
-	}
-}
-void ACombatPawn::ResetPawnState()
-{
-	Health = MaxHealth;
-	Mana = MaxMana;
-}
 
 void ACombatPawn::OnDeath()
 {
@@ -191,7 +198,8 @@ void ACombatPawn::OnDeath()
 	ToggleToTargetCombatPawnState(ECombatPawnState::OnDeath);
 }
 
-
+//////////////////////////////////////////////////////////////////////////
+/// Toggle Combat Pawn State And Update Pawn Display
 void ACombatPawn::ToggleToTargetCombatPawnState(ECombatPawnState::Type TargetCombatPawnState)
 {
 	CurrentCombatPawnState = TargetCombatPawnState;

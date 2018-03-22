@@ -132,6 +132,7 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 		}
 
 		CombatTeamInfo.TeamBaseComps = TeamBaseComp;
+		CombatTeamInfo.TeamName = InAllTeamsInfo[i].TeamName;
 
 		AllTeamsInfo.Add(CombatTeamInfo);
 	}
@@ -148,7 +149,7 @@ void ACombatManager::CheckCombatState()
 	{
 		for (const FCombatPawnInfo& CombatPawnInfo : AllTeamsInfo[i].AllCombatPawnInfo)
 		{
-			if (CombatPawnInfo.CombatPawn && !CombatPawnInfo.CombatPawn->bIsDead)
+			if (CombatPawnInfo.CombatPawn && !CombatPawnInfo.CombatPawn->IsCombatPawnDead())
 			{
 				if (SurvivingTeams == i) { continue; }
 				else if (SurvivingTeams == -1) { SurvivingTeams = i; continue; }
@@ -243,9 +244,9 @@ void ACombatManager::ChooseNextPawn()
 		else
 		{
 			ACombatPawn* CombatPawn = AllTeamsInfo[CurrentTeamNum].AllCombatPawnInfo[CurrentPawnNum].CombatPawn;
-			if (CombatPawn && !CombatPawn->bIsDead)
+			if (CombatPawn && !CombatPawn->IsCombatPawnDead())
 			{
-				if (CombatLayout) { CombatLayout->OnChangePawn(CurrentPawnNum); }
+				if (CombatLayout) { CombatLayout->OnChangePawn(AllTeamsInfo[CurrentTeamNum].AllCombatPawnInfo[CurrentPawnNum].CombatPawn->CombatPawnName); }
 				ToggleToTargetState(ECombatState::BeginPawnTurn);
 				return;
 			}
@@ -264,7 +265,7 @@ void ACombatManager::TurnTeam()
 	}
 	else
 	{
-		if (CombatLayout) { CombatLayout->OnChangeTeam(CurrentTeamNum); }
+		if (CombatLayout) { CombatLayout->OnChangeTeam(AllTeamsInfo[CurrentTeamNum].TeamName); }
 		ToggleToTargetState(ECombatState::ChoosePawn);
 	}
 }
@@ -335,12 +336,14 @@ void ACombatManager::Action(float DeltaSeconds)
 void ACombatManager::RunAway()
 {
 	if (CombatLayout) { CombatLayout->OnRunAwaySuccess(); }
+
+	WinTeam = -1;
 	ToggleToTargetState(ECombatState::Results);
 }
 
 void ACombatManager::FightEnd()
 {
-	if (CombatLayout) { CombatLayout->OnGameOver(WinTeam, WinTeam == PlayerTeam); }
+	if (CombatLayout) { CombatLayout->OnGameOver(AllTeamsInfo[WinTeam].TeamName, WinTeam == PlayerTeam); }
 	ToggleToTargetState(ECombatState::Results);
 }
 

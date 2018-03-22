@@ -27,20 +27,10 @@ void ATBSPlayerController::Tick(float DeltaSeconds)
 	if (bCanMoveViewport) { MoveViewportFromMouse(); }
 }
 
-void ATBSPlayerController::TurnViewportToCombat(ACombatManager* CombatManager)
-{
-	SetViewTarget(CombatManager);
-	if (OwnerTBSCharacter) { OwnerTBSCharacter->bCanMoveViewport = false; }
-}
 
-void ATBSPlayerController::TurnViewportToCharacter()
-{
-	if (OwnerTBSCharacter)
-	{
-		OwnerTBSCharacter->bCanMoveViewport = true;
-		SetViewTarget(OwnerTBSCharacter);
-	}
-}
+//////////////////////////////////////////////////////////////////////////
+/// Set Pawn And Rebind Input
+
 
 void ATBSPlayerController::SetPawn(APawn* InPawn)
 {
@@ -65,6 +55,27 @@ void ATBSPlayerController::RebindInputComponent(UInputComponent* InInputComp)
 }
 
 
+//////////////////////////////////////////////////////////////////////////
+/// Viewport
+
+/// Toggle View
+
+void ATBSPlayerController::TurnViewportToCombat(ACombatManager* CombatManager)
+{
+	SetViewTarget(CombatManager);
+	if (OwnerTBSCharacter) { OwnerTBSCharacter->bCanMoveViewport = false; }
+}
+
+void ATBSPlayerController::TurnViewportToCharacter()
+{
+	if (OwnerTBSCharacter)
+	{
+		OwnerTBSCharacter->bCanMoveViewport = true;
+		SetViewTarget(OwnerTBSCharacter);
+	}
+}
+
+/// Adjust Viewport Position
 void ATBSPlayerController::GetViewportRightBottomPosition()
 {
 	int32 ViewportWidth, ViewportHeight;
