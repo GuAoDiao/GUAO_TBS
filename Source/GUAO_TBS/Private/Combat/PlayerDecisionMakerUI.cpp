@@ -11,7 +11,7 @@ void UPlayerDecisionMakerUI::BeginMakeDecision(class ACombatPawn* CombatPawn)
 {
 	OwnerCombatPawn = CombatPawn;
 
-	RemainingTime = 30.f;
+	RemainingTime = 15.f;
 	bHasMadeDecision = false;
 }
 
@@ -20,6 +20,7 @@ bool UPlayerDecisionMakerUI::MakeDecision(float DeltaSeconds)
 	RemainingTime -= DeltaSeconds;
 	if (RemainingTime <= 0.f)
 	{
+		MakeDoNothingAction();
 		return true;
 	}
 

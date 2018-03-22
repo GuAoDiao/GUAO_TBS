@@ -84,8 +84,12 @@ protected:
 public:
 	bool TryToRunAway(ACombatPawn* InCombatPawn);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	int32 GetPlayerTeam() const { return PlayerTeam; }
+	UFUNCTION(BlueprintPure)
+	bool IsAutoAttack() const { return bIsAutoAttack; }
+	UFUNCTION(BlueprintCallable)
+	void SetIsAutoAttack(bool bInIsAutoAttack) { bIsAutoAttack = bInIsAutoAttack; }
 protected:
 
 	int32 CurrentTeamNum;
@@ -96,10 +100,10 @@ protected:
 
 	bool bWaitingForPawn;
 	bool bWantedAndCanRunAway;
+	bool bIsAutoAttack;
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<FCombatTeamInfo> AllTeamsInfo;
-
 
 	//////////////////////////////////////////////////////////////////////////
 	/// UI Display

@@ -27,6 +27,7 @@ ACombatManager::ACombatManager()
 	CurrentCombatState = ECombatState::Startup;
 	bWaitingForPawn = false;
 	bWantedAndCanRunAway = false;
+	bIsAutoAttack = false;
 
 	TeamNums = 2;
 	TeamBasePosition.Add(FVector(250.f, 0.f, 0.f));
@@ -214,6 +215,7 @@ void ACombatManager::Startup()
 		if (CombatLayout)
 		{
 			CombatLayout->CombatManager = this;
+			CombatLayout->UpdateAutoAttackToggleDisplay(bIsAutoAttack);
 			CombatLayout->AddToViewport();
 		}
 	}

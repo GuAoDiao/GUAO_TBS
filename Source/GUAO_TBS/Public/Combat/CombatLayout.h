@@ -22,6 +22,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnChangePawn(const FString& PawnName);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void UpdateAutoAttackToggleDisplay(bool bIsAutoAttack);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnGameOver(const FString& WinTeamName, bool bIsPlayerWin);
 
