@@ -26,6 +26,7 @@ ACombatManager::ACombatManager()
 	CommonAttackMargin = 100.f;
 	CurrentCombatState = ECombatState::Startup;
 	bWaitingForPawn = false;
+	bWantedAndCanRunAway = false;
 
 	TeamNums = 2;
 	TeamBasePosition.Add(FVector(250.f, 0.f, 0.f));
@@ -157,7 +158,7 @@ void ACombatManager::CheckCombatState()
 	}
 
 	WinTeam = SurvivingTeams;
-	ToggleToTargetState(ECombatState::GameOver);
+	ToggleToTargetState(ECombatState::FightEnd);
 }
 
 void ACombatManager::Tick(float DeltaSeconds)
@@ -193,8 +194,11 @@ void ACombatManager::Tick(float DeltaSeconds)
 		case ECombatState::TurnBout:
 			TurnBout();
 			break;
-		case ECombatState::GameOver:
-			GameOver();
+		case ECombatState::RunAway:
+			RunAway();
+			break;
+		case ECombatState::FightEnd:
+			FightEnd();
 			break;
 		case ECombatState::Results:
 			break;
@@ -282,6 +286,13 @@ void ACombatManager::BeginPawnTurn()
 
 void ACombatManager::EndPawnTurn()
 {
+	if (bWantedAndCanRunAway)
+	{
+		ToggleToTargetState(ECombatState::RunAway);
+		return;
+	}
+
+
 	AllTeamsInfo[CurrentTeamNum].AllCombatPawnInfo[CurrentPawnNum].OnEndTurnDelegate.Broadcast(AllTeamsInfo[CurrentTeamNum].AllCombatPawnInfo[CurrentPawnNum]);
 	ToggleToTargetState(ECombatState::ChoosePawn);
 }
@@ -321,7 +332,13 @@ void ACombatManager::Action(float DeltaSeconds)
 }
 
 
-void ACombatManager::GameOver()
+void ACombatManager::RunAway()
+{
+	if (CombatLayout) { CombatLayout->OnRunAwaySuccess(); }
+	ToggleToTargetState(ECombatState::Results);
+}
+
+void ACombatManager::FightEnd()
 {
 	if (CombatLayout) { CombatLayout->OnGameOver(WinTeam, WinTeam == PlayerTeam); }
 	ToggleToTargetState(ECombatState::Results);
@@ -337,4 +354,24 @@ void ACombatManager::CloseCombat()
 	{
 		OwnerTBSGameState->CloseCombat(WinTeam, WinTeam == PlayerTeam);
 	}
+}
+
+bool ACombatManager::TryToRunAway(ACombatPawn* InCombatPawn)
+{
+	if (InCombatPawn)
+	{
+		if (FMath::RandRange(0.f, 1000.f) / 10.f < InCombatPawn->Luck)
+		{
+			bWantedAndCanRunAway = true;
+		}
+		else
+		{
+			bWantedAndCanRunAway = false;
+			if (CombatLayout) { CombatLayout->OnRunAwayFailured(); }
+		}
+
+		return true;
+	}
+
+	return false;
 }

@@ -9,9 +9,9 @@
 #include "Combat/Actions/AttackAction.h"
 #include "Combat/Actions/DoNothingAction.h"
 
-void FTestDecisionMaker::BeginMakeDecision(class ACombatPawn* Character)
+void FTestDecisionMaker::BeginMakeDecision(class ACombatPawn* CombatPawn)
 {
-	ACombatManager* CombatManager =Character->GetCombatManager();
+	ACombatManager* CombatManager = CombatPawn->GetCombatManager();
 
 	if (CombatManager)
 	{
@@ -20,18 +20,18 @@ void FTestDecisionMaker::BeginMakeDecision(class ACombatPawn* Character)
 		float MinHP = FLT_MAX;
 		for (int32 i = 0; i < CombatManager->AllTeamsInfo.Num(); ++i)
 		{
-			if (i == Character->CombatTeam) { continue; }
+			if (i == CombatPawn->CombatTeam) { continue; }
 
 			for (int32 j = 0; j < CombatManager->AllTeamsInfo[i].AllCombatPawnInfo.Num(); ++j)
 			{
-				ACombatPawn* CombatPawn = CombatManager->AllTeamsInfo[i].AllCombatPawnInfo[j].CombatPawn;
-				if (CombatPawn && !CombatPawn->bIsDead)
+				ACombatPawn* TargetCombatPawn = CombatManager->AllTeamsInfo[i].AllCombatPawnInfo[j].CombatPawn;
+				if (TargetCombatPawn && !TargetCombatPawn->bIsDead)
 				{
-					if (CombatPawn->Health < MinHP)
+					if (TargetCombatPawn->Health < MinHP)
 					{
 						MinHPTeam = i;
 						MinHPEnemy = j;
-						MinHP = CombatPawn->Health;
+						MinHP = TargetCombatPawn->Health;
 					}
 				}
 			}
@@ -39,12 +39,12 @@ void FTestDecisionMaker::BeginMakeDecision(class ACombatPawn* Character)
 
 		if (MinHPTeam != -1 && MinHPEnemy != -1)
 		{
-			Character->SetCombatAction(new FAttackAction(MinHPTeam, MinHPEnemy));
+			CombatPawn->SetCombatAction(new FAttackAction(MinHPTeam, MinHPEnemy));
 			return;
 		}
 	}
 
-	Character->SetCombatAction(new FDoNothingAction());
+	CombatPawn->SetCombatAction(new FDoNothingAction());
 }
 bool FTestDecisionMaker::MakeDecision(float DeltaSeconds)
 {

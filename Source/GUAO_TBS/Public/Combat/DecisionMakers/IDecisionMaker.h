@@ -5,6 +5,6 @@
 class IDecisionMaker
 {
 public:
-	virtual void BeginMakeDecision(class ACombatPawn* Character) = 0;
+	virtual void BeginMakeDecision(class ACombatPawn* CombatPawn) = 0;
 	virtual bool MakeDecision(float DeltaSeconds) = 0;
 };

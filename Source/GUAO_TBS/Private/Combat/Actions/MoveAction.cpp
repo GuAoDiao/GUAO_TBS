@@ -10,9 +10,9 @@ FMoveAction::FMoveAction(const FVector& InTargetLocation)
 	MoveSpeed = 5.f;
 }
 
-void FMoveAction::BeginExecuteAction(class ACombatPawn* Character)
+void FMoveAction::BeginExecuteAction(class ACombatPawn* CombatPawn)
 {
-	OwnerCombatPawn = Character;
+	OwnerCombatPawn = CombatPawn;
 	if (OwnerCombatPawn)
 	{			
 		OwnerCombatPawn->SetActorRotation(FRotationMatrix::MakeFromX(TargetLocation - OwnerCombatPawn->GetActorLocation()).Rotator());

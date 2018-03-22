@@ -18,20 +18,24 @@ class GUAO_TBS_API UPlayerDecisionMakerUI : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	void BeginMakeDecision(class ACombatPawn* Character);
+	void BeginMakeDecision(class ACombatPawn* CombatPawn);
 	bool MakeDecision(float DeltaSeconds);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void InitializePlayerDecisionMakerUIDisplay(ACombatPawn* Character);
+	void InitializePlayerDecisionMakerUIDisplay(ACombatPawn* CombatPawn);
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateRemainintTimeDisplay(int32 RemainingSeconds);
 
+	//////////////////////////////////////////////////////////////////////////
+	/// Make Decision
 	UFUNCTION(BlueprintCallable)
 	void MakeCommonAttackAction(int32 TargetTeam, int32 TargetEnemy);
-	
 	UFUNCTION(BlueprintCallable)
 	void MakeDoNothingAction();
+	UFUNCTION(BlueprintCallable)
+	void MakeRunAwayAction();
 
+protected:
 	UPROPERTY(BlueprintReadOnly)
 	class ACombatPawn* OwnerCombatPawn;
 

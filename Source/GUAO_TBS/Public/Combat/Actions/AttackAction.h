@@ -22,7 +22,7 @@ class FAttackAction : public ICombatAction
 public:
 	FAttackAction(int32 InTargetTeam, int32 InTargetIndex);
 
-	virtual void BeginExecuteAction(class ACombatPawn* Character) override;
+	virtual void BeginExecuteAction(class ACombatPawn* CombatPawn) override;
 	virtual bool ExecuteAction(float DeltaSeconds) override;
 
 protected:

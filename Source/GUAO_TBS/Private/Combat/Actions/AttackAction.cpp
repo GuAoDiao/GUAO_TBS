@@ -15,24 +15,24 @@ FAttackAction::FAttackAction(int32 InTargetTeam, int32 InTargetIndex)
 }
 
 
-void FAttackAction::BeginExecuteAction(class ACombatPawn* Character)
+void FAttackAction::BeginExecuteAction(class ACombatPawn* CombatPawn)
 {
 	TempTime = 1.f;
 	CurrentAttackState = EAttackState::Ready;
 
-	ACombatManager* CombatManager = Character ? Character->GetCombatManager() : nullptr;
+	ACombatManager* CombatManager = CombatPawn ? CombatPawn->GetCombatManager() : nullptr;
 	if (CombatManager)
 	{
-		ACombatPawn* CombatPawn = 
+		ACombatPawn* TargetCombatPawn = 
 			CombatManager->AllTeamsInfo.IsValidIndex(TargetTeam) && CombatManager->AllTeamsInfo[TargetTeam].AllCombatPawnInfo.IsValidIndex(TargetIndex)
 			? CombatManager->AllTeamsInfo[TargetTeam].AllCombatPawnInfo[TargetIndex].CombatPawn : nullptr;
 		
-		if (CombatPawn)
+		if (TargetCombatPawn)
 		{
-			TargetPawn = CombatPawn;
+			TargetPawn = TargetCombatPawn;
 			
 
-			OwnerCombatPawn = Character;
+			OwnerCombatPawn = CombatPawn;
 			OriginLocation = OwnerCombatPawn->GetActorLocation();
 			OriginRotatiton = OwnerCombatPawn->GetActorRotation();
 			

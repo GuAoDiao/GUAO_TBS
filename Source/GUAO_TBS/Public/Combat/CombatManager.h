@@ -63,13 +63,17 @@ protected:
 
 	void EndPawnTurn();
 	void CheckCombatState();
-	void GameOver();
+
+	void FightEnd();
+	void RunAway();
 	UFUNCTION(BlueprintCallable)
 	void CloseCombat();
 
-
 	
 public:
+	bool TryToRunAway(ACombatPawn* InCombatPawn);
+
+	bool bWantedAndCanRunAway;
 
 	UFUNCTION(BlueprintCallable)
 	int32 GetPlayerTeam() const { return PlayerTeam; }

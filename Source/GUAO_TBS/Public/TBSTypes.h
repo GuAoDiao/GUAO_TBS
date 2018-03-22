@@ -32,7 +32,8 @@ enum class ECombatState : uint8
 
 	TurnBout,
 
-	GameOver,
+	FightEnd,
+	RunAway,
 	Results
 };
 

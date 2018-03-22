@@ -4,9 +4,12 @@
 
 #include "Combat/Actions/ICombatAction.h"
 
-class FDoNothingAction : public ICombatAction
+class FRunAwayAction : public ICombatAction
 {
 public:
 	virtual void BeginExecuteAction(class ACombatPawn* CombatPawn) override;
 	virtual bool ExecuteAction(float DeltaSeconds) override;
+
+protected:
+	ACombatPawn* OwnerCombatPawn;
 };

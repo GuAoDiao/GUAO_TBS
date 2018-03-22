@@ -16,7 +16,7 @@ class FPlayerDecisionMaker : public IDecisionMaker
 public:
 	FPlayerDecisionMaker();
 
-	virtual void BeginMakeDecision(class ACombatPawn* Character) override;
+	virtual void BeginMakeDecision(class ACombatPawn* CombatPawn) override;
 	virtual bool MakeDecision(float DeltaSeconds) override;
 protected:
 	TSubclassOf<UPlayerDecisionMakerUI> DecisionMakeUIClass;

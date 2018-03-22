@@ -5,6 +5,6 @@
 class ICombatAction
 {
 public:
-	virtual void BeginExecuteAction(class ACombatPawn* Character) = 0;
+	virtual void BeginExecuteAction(class ACombatPawn* CombatPawn) = 0;
 	virtual bool ExecuteAction(float DeltaSeconds) = 0;
 };

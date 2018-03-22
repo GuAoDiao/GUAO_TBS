@@ -25,6 +25,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnGameOver(int32 WinTeam, bool bIsPlayerWin);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnRunAwayFailured();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnRunAwaySuccess();
+
 	UPROPERTY(BlueprintReadOnly)
 	class ACombatManager* CombatManager;
 };

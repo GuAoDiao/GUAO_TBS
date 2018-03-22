@@ -5,11 +5,11 @@
 #include "Combat/CombatPawn.h"
 #include "Combat/Actions/AttackAction.h"
 #include "Combat/Actions/DoNothingAction.h"
+#include "Combat/Actions/RunAwayAction.h"
 
-
-void UPlayerDecisionMakerUI::BeginMakeDecision(class ACombatPawn* Character)
+void UPlayerDecisionMakerUI::BeginMakeDecision(class ACombatPawn* CombatPawn)
 {
-	OwnerCombatPawn = Character;
+	OwnerCombatPawn = CombatPawn;
 
 	RemainingTime = 30.f;
 	bHasMadeDecision = false;
@@ -42,6 +42,15 @@ void UPlayerDecisionMakerUI::MakeCommonAttackAction(int32 TargetTeam, int32 Targ
 	if (OwnerCombatPawn)
 	{
 		OwnerCombatPawn->SetCombatAction(new FAttackAction(TargetTeam, TargetEnemy));
+		bHasMadeDecision = true;
+	}
+}
+
+void UPlayerDecisionMakerUI::MakeRunAwayAction()
+{
+	if (OwnerCombatPawn)
+	{
+		OwnerCombatPawn->SetCombatAction(new FRunAwayAction());
 		bHasMadeDecision = true;
 	}
 }

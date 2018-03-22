@@ -10,7 +10,7 @@ class FMoveAction : public ICombatAction
 public:
 	FMoveAction(const FVector& InTargetLocation);
 
-	virtual void BeginExecuteAction(class ACombatPawn* Character) override;
+	virtual void BeginExecuteAction(class ACombatPawn* CombatPawn) override;
 	virtual bool ExecuteAction(float DeltaSeconds) override;
 
 protected:

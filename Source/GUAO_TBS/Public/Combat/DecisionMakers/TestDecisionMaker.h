@@ -7,6 +7,6 @@
 class FTestDecisionMaker : public IDecisionMaker
 {
 public:
-	virtual void BeginMakeDecision(class ACombatPawn* Character) override;
+	virtual void BeginMakeDecision(class ACombatPawn* CombatPawn) override;
 	virtual bool MakeDecision(float DeltaSeconds) override;
 };

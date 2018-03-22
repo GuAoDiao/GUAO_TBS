@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-void FDoNothingAction::BeginExecuteAction(class ACombatPawn* Character)
+void FDoNothingAction::BeginExecuteAction(class ACombatPawn* CombatPawn)
 {
 }
 
