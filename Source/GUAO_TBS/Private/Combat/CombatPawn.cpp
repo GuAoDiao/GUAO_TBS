@@ -29,6 +29,8 @@ ACombatPawn::ACombatPawn()
 
 	CombatPawnInfoDisplayClass = LoadClass<UCombatPawnInfoDisplay>(this, TEXT("WidgetBlueprint'/Game/GUAO_TBS/Blueprints/Combat/W_CombatPawnDisplayInfo.W_CombatPawnDisplayInfo_C'"));
 
+	AutoPossessAI = EAutoPossessAI::Disabled;
+
 	bIsDead = false;
 
 	Level = 1;
@@ -78,7 +80,7 @@ void ACombatPawn::BeginPlay()
 	if (CombatPawnInfoDisplayClass)
 	{
 		CombatPawnInfoDisplayComp->SetWidgetClass(CombatPawnInfoDisplayClass);
-		CombatPawnInfoDisplayComp->SetWidgetSpace(EWidgetSpace::World);
+		CombatPawnInfoDisplayComp->SetWidgetSpace(EWidgetSpace::Screen);
 		
 		CombatPawnInfoDisplay = Cast<UCombatPawnInfoDisplay>(CombatPawnInfoDisplayComp->GetUserWidgetObject());
 		if (CombatPawnInfoDisplay)

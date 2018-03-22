@@ -27,11 +27,11 @@ ACombatManager::ACombatManager()
 	CurrentCombatState = ECombatState::Startup;
 	bWaitingForPawn = false;
 	bWantedAndCanRunAway = false;
-	bIsAutoAttack = false;
+	bIsAutoAttack = true;
 
 	TeamNums = 2;
-	TeamBasePosition.Add(FVector(250.f, 0.f, 0.f));
-	TeamBasePosition.Add(FVector(-250.f, 0.f, 0.f));
+	TeamBasePosition.Add(FVector(300.f, 0.f, 0.f));
+	TeamBasePosition.Add(FVector(-300.f, 0.f, 0.f));
 
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -88,8 +88,8 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 	MiddleLocation += CurrentLocation;
 
 	SpringArmComp->SetWorldLocation(MiddleLocation);
-	SpringArmComp->TargetArmLength=  800.f;
-	SpringArmComp->SetRelativeRotation(FRotator(-60.f, -105.f, 0.f));
+	SpringArmComp->TargetArmLength=  1000.f;
+	SpringArmComp->SetRelativeRotation(FRotator(-60.f, -120.f, 0.f));
 
 	// set current player team
 	PlayerTeam = InPlayerTeam;
@@ -110,6 +110,10 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 			const FRotator BaseRotation = FRotationMatrix::MakeFromX(MiddleLocation - (CurrentLocation + TeamBasePosition[i])).Rotator();
 			const FVector CharacterMarginVector = CharacterMargin * BaseRotation.Quaternion().GetAxisY();
 			const FVector CommonAttackMarginVector = CommonAttackMargin * BaseRotation.Quaternion().GetAxisX();
+			
+			CombatTeamInfo.TeamCommonAttackLocation = TeamBaseComp->GetComponentLocation() + CommonAttackMarginVector;
+			CombatTeamInfo.TeamBaseComps = TeamBaseComp;
+			CombatTeamInfo.TeamName = InAllTeamsInfo[i].TeamName;
 
 			const FVector PawnBaseLocation = CurrentLocation + TeamBasePosition[i] - (float)(CombatPawnsNum - 1) / 2.f * CharacterMarginVector;
 			
@@ -131,9 +135,6 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 				CombatTeamInfo.AllCombatPawnInfo.Add(CombatPawnInfo);
 			}
 		}
-
-		CombatTeamInfo.TeamBaseComps = TeamBaseComp;
-		CombatTeamInfo.TeamName = InAllTeamsInfo[i].TeamName;
 
 		AllTeamsInfo.Add(CombatTeamInfo);
 	}

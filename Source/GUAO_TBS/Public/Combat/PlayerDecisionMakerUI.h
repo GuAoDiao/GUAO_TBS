@@ -31,10 +31,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MakeCommonAttackAction(int32 TargetTeam, int32 TargetEnemy);
 	UFUNCTION(BlueprintCallable)
+	void MakeTeamAttackAction(int32 TargetTeam);
+	UFUNCTION(BlueprintCallable)
 	void MakeDoNothingAction();
 	UFUNCTION(BlueprintCallable)
 	void MakeRunAwayAction();
 
+	void MakeCombatAction(class ICombatAction* CombatAction);
 protected:
 	UPROPERTY(BlueprintReadOnly)
 	class ACombatPawn* OwnerCombatPawn;

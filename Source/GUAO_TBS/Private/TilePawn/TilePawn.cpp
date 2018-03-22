@@ -17,6 +17,8 @@ ATilePawn::ATilePawn()
 
 	PawnSkeletalMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("PawnSkeletalMeshComp"));
 	PawnSkeletalMeshComp->SetupAttachment(GridAnchor);
+
+	AutoPossessAI = EAutoPossessAI::Disabled;
 }
 
 void ATilePawn::OnConstruction(const FTransform& Transform)

@@ -9,4 +9,14 @@ class FTestDecisionMaker : public IDecisionMaker
 public:
 	virtual void BeginMakeDecision(class ACombatPawn* CombatPawn) override;
 	virtual bool MakeDecision(float DeltaSeconds) override;
+
+
+	bool FindMinHPEnemy(int32& OutMinHPTeam, int32& OutMinHPEnemy) const;
+	bool FindTargetEnemy(int32& OutTargetTeam, TArray<int32>& OutTargetEnemy) const;
+
+
+protected:
+	class ACombatPawn* OwnerCombatPawn;
+	class ACombatManager* CombatManager;
+
 };

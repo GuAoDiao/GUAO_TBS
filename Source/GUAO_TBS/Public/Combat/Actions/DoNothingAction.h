@@ -7,6 +7,6 @@
 class FDoNothingAction : public ICombatAction
 {
 public:
-	virtual void BeginExecuteAction(class ACombatPawn* CombatPawn) override;
-	virtual bool ExecuteAction(float DeltaSeconds) override;
+	virtual void BeginExecuteAction(class ACombatPawn* CombatPawn) override {}
+	virtual bool ExecuteAction(float DeltaSeconds) override { return true; }
 };

@@ -3,7 +3,9 @@
 #include "PlayerDecisionMakerUI.h"
 
 #include "Combat/CombatPawn.h"
-#include "Combat/Actions/AttackAction.h"
+#include "Combat/CombatManager.h"
+#include "Combat/Actions/MonomerMoveAttackAction.h"
+#include "Combat/Actions/MultiMoveAttackAction.h"
 #include "Combat/Actions/DoNothingAction.h"
 #include "Combat/Actions/RunAwayAction.h"
 
@@ -29,29 +31,35 @@ bool UPlayerDecisionMakerUI::MakeDecision(float DeltaSeconds)
 	return bHasMadeDecision;
 }
 
-void UPlayerDecisionMakerUI::MakeDoNothingAction()
+void UPlayerDecisionMakerUI::MakeCombatAction(class ICombatAction* CombatAction)
 {
-	if (OwnerCombatPawn)
-	{
-		OwnerCombatPawn->SetCombatAction(new FDoNothingAction());
-		bHasMadeDecision = true;
-	}
+	checkf(OwnerCombatPawn, TEXT("-_- Owner Combat Pawn must exists."));
+	OwnerCombatPawn->SetCombatAction(CombatAction);
+	bHasMadeDecision = true;
 }
 
-void UPlayerDecisionMakerUI::MakeCommonAttackAction(int32 TargetTeam, int32 TargetEnemy)
-{
-	if (OwnerCombatPawn)
-	{
-		OwnerCombatPawn->SetCombatAction(new FAttackAction(TargetTeam, TargetEnemy));
-		bHasMadeDecision = true;
-	}
-}
+void UPlayerDecisionMakerUI::MakeDoNothingAction() { MakeCombatAction(new FDoNothingAction()); }
 
-void UPlayerDecisionMakerUI::MakeRunAwayAction()
+void UPlayerDecisionMakerUI::MakeCommonAttackAction(int32 TargetTeam, int32 TargetEnemy) { MakeCombatAction(new FMonomerMoveAttackAction(TargetTeam, TargetEnemy)); }
+
+void UPlayerDecisionMakerUI::MakeRunAwayAction() { MakeCombatAction(new FRunAwayAction()); }
+
+void UPlayerDecisionMakerUI::MakeTeamAttackAction(int32 TargetTeam)
 {
-	if (OwnerCombatPawn)
+	ACombatManager* CombatManager = OwnerCombatPawn ? OwnerCombatPawn->GetCombatManager() : nullptr;
+	checkf(OwnerCombatPawn, TEXT("-_- Owner Combat Manager must exists."));
+	checkf(CombatManager->AllTeamsInfo.IsValidIndex(TargetTeam), TEXT("-_- The Attack Team must exists."));
+	
+
+	TArray<int32> AttackEnemys;
+	for (int32 i = 0; i < CombatManager->AllTeamsInfo[TargetTeam].AllCombatPawnInfo.Num(); ++i)
 	{
-		OwnerCombatPawn->SetCombatAction(new FRunAwayAction());
-		bHasMadeDecision = true;
+		ACombatPawn* TargetCombatPawn = CombatManager->AllTeamsInfo[TargetTeam].AllCombatPawnInfo[i].CombatPawn;
+		if (TargetCombatPawn && !TargetCombatPawn->IsCombatPawnDead())
+		{
+			AttackEnemys.Add(i);
+		}
 	}
+
+	MakeCombatAction(new FMultiMoveAttackAction(TargetTeam, AttackEnemys));
 }

@@ -177,6 +177,8 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	USceneComponent* TeamBaseComps;
 	UPROPERTY(BlueprintReadOnly)
+	FVector TeamCommonAttackLocation;
+	UPROPERTY(BlueprintReadOnly)
 	FString TeamName;
 };
 

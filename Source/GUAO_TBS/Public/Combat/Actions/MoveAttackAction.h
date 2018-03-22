@@ -17,24 +17,23 @@ namespace EAttackState
 	};
 }
 
-class FAttackAction : public ICombatAction
+class FMoveAttackAction : public ICombatAction
 {
 public:
-	FAttackAction(int32 InTargetTeam, int32 InTargetIndex);
+	virtual void BeginExecuteAction(class ACombatPawn* CombatPawn) override final;
+	virtual bool ExecuteAction(float DeltaSeconds) override final;
 
-	virtual void BeginExecuteAction(class ACombatPawn* CombatPawn) override;
-	virtual bool ExecuteAction(float DeltaSeconds) override;
 
+	virtual FVector GetTargetLocation() = 0;
+	virtual void AttackImplementation() = 0;
 protected:
-	float TempTime;
-	int32 TargetTeam;
-	int32 TargetIndex;
-	ACombatPawn* OwnerCombatPawn;
-	ACombatPawn* TargetPawn;
+	float AttackAnimationTime;
+	
 	FVector OriginLocation;
 	FRotator OriginRotatiton;
 
 	EAttackState::Type CurrentAttackState;
-
+	class ACombatPawn* OwnerCombatPawn;
 	class FMoveAction* MoveAction;
+	class ACombatManager* CombatManager;
 };

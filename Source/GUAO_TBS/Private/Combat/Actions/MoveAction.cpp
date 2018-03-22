@@ -26,7 +26,7 @@ bool FMoveAction::ExecuteAction(float DeltaSeconds)
 	if (OwnerCombatPawn)
 	{
 		FVector CurrentLocation = OwnerCombatPawn->GetActorLocation();
-		if ((TargetLocation - CurrentLocation).Size() < 10.f)
+		if ((TargetLocation - CurrentLocation).Size() < 3.f)
 		{
 			OwnerCombatPawn->SetActorLocation(TargetLocation);
 
