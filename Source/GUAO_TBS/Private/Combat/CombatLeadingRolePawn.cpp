@@ -17,4 +17,3 @@ void ACombatLeadingRolePawn::BeginMakeDecision()
 		if (DecisionMaker) { DecisionMaker->BeginMakeDecision(this); }
 	}
 }
-

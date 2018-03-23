@@ -4,6 +4,7 @@
 
 #include "TBSCharacter.h"
 #include "Combat/CombatManager.h"
+#include "TBSHUD.h"
 
 ATBSPlayerController::ATBSPlayerController()
 {
@@ -51,7 +52,15 @@ void ATBSPlayerController::SetPawn(APawn* InPawn)
 
 void ATBSPlayerController::RebindInputComponent(UInputComponent* InInputComp)
 {
+	if (InInputComp)
+	{
+		OwnerTBSHUD = Cast<ATBSHUD>(GetHUD());
 
+		if (OwnerTBSHUD)
+		{
+			InInputComp->BindAction("TogglePlayerBackpack", IE_Pressed, this, &ATBSPlayerController::TogglePlayerBackPackDisplay);
+		}
+	}
 }
 
 
@@ -113,3 +122,8 @@ void ATBSPlayerController::MoveViewportFromMouse()
 		}
 	}
 }
+
+
+//////////////////////////////////////////////////////////////////////////
+/// UI
+void ATBSPlayerController::TogglePlayerBackPackDisplay() { if (OwnerTBSHUD) { OwnerTBSHUD->TogglePlayerBackPackDisplay(); } }

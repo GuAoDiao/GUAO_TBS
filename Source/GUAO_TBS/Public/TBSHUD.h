@@ -6,6 +6,8 @@
 #include "GameFramework/HUD.h"
 #include "TBSHUD.generated.h"
 
+class UGameLayout;
+
 /**
  * 
  */
@@ -14,7 +16,17 @@ class GUAO_TBS_API ATBSHUD : public AHUD
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void BeginPlay() override;
 	
-	
-	
+
+
+public:
+	void TogglePlayerBackPackDisplay();
+
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameLayout> GameLayoutClass;
+	UPROPERTY(Transient)
+	UGameLayout* GameLayout;
 };

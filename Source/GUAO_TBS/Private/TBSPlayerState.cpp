@@ -6,11 +6,17 @@
 #include "Combat/CombatPawn.h"
 #include "Combat/CombatPawnManager.h"
 
+#include "GameProps/GamePropsComponent.h"
+
 ATBSPlayerState::ATBSPlayerState()
 {
+	Gold = 1000;
+
 	CombatPawnNameInPlayerTeam.Add(TEXT("LeadingRole"));
 	CombatPawnNameInPlayerTeam.Add(TEXT("LeadingRole"));
 	CombatPawnNameInPlayerTeam.Add(TEXT("LeadingRole"));
+
+	GamePropsComponent = CreateDefaultSubobject<UGamePropsComponent>(TEXT("GamePropsComponent"));
 }
 
 void ATBSPlayerState::BeginPlay()

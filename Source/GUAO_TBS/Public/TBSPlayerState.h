@@ -10,6 +10,8 @@
 #include "TBSPlayerState.generated.h"
 
 class ACombatPawn;
+class UGamePropsComponent;
+
 
 /**
  * 
@@ -33,4 +35,16 @@ public:
 	FCombatTeam PlayerCombatTeam;
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FString> CombatPawnNameInPlayerTeam;
+
+	UFUNCTION(BlueprintPure)
+	int32 GetGold() const { return Gold; }
+	UFUNCTION(BlueprintCallable)
+	void AddGold(int32 InOffset) { Gold += InOffset; }
+
+
+	UGamePropsComponent* GetGamePropsComponent() const { return GamePropsComponent; }
+protected:
+	UPROPERTY()
+	UGamePropsComponent* GamePropsComponent;
+	int32 Gold;
 };

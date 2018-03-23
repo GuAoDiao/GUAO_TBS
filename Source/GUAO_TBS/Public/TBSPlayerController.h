@@ -7,6 +7,7 @@
 #include "TBSPlayerController.generated.h"
 
 class ATBSCharacter;
+class ATBSHUD;
 
 /**
  * 
@@ -44,4 +45,13 @@ private:
 	bool bCanMoveViewport;
 	float ViewportRightPosition;
 	float ViewportBottomPosition;	
+
+
+	//////////////////////////////////////////////////////////////////////////
+	/// UI
+protected:
+	void TogglePlayerBackPackDisplay();
+
+	UPROPERTY(Transient)
+	ATBSHUD* OwnerTBSHUD;
 };
