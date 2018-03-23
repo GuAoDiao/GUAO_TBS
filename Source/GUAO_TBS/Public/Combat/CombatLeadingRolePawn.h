@@ -15,8 +15,7 @@ class GUAO_TBS_API ACombatLeadingRolePawn : public ACombatPawn
 	GENERATED_BODY()
 	
 public:
-	virtual void BeginMakeDecision() override;
-	
+	virtual void MakeDecisionImplementation() override;	
 	
 	
 };

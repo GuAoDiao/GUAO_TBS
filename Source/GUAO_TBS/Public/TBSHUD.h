@@ -7,6 +7,7 @@
 #include "TBSHUD.generated.h"
 
 class UGameLayout;
+class UCombatLayout;
 
 /**
  * 
@@ -16,17 +17,24 @@ class GUAO_TBS_API ATBSHUD : public AHUD
 {
 	GENERATED_BODY()
 	
-protected:
+public:
 	virtual void BeginPlay() override;
 	
+	void ShowGameLayout();
+	void ShowCombatLayout();
 
-
+	UCombatLayout* GetCombatLayout() const { return CombatLayout; }
 public:
 	void TogglePlayerBackPackDisplay();
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameLayout> GameLayoutClass;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UCombatLayout> CombatLayoutClass;
+
+	UPROPERTY(Transient)
+	UCombatLayout* CombatLayout;
 	UPROPERTY(Transient)
 	UGameLayout* GameLayout;
 };

@@ -17,9 +17,10 @@ class GUAO_TBS_API UGameLayout : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 	
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintNativeEvent)
 	void InitializeGameLayoutWidget();
 
+	UFUNCTION(BlueprintCallable)
 	void TogglePlayerBackPackDisplay();
 protected:
 	UPROPERTY(BlueprintReadWrite)

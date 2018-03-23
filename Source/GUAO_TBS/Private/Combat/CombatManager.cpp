@@ -2,17 +2,18 @@
 
 #include "CombatManager.h"
 
-#include "Components/ArrowComponent.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "Engine/World.h"
-#include "GameFramework/PlayerController.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Camera/CameraComponent.h"
+#include "Components/ArrowComponent.h"
+#include "GameFramework/PlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
 
 #include "Combat/CombatPawn.h"
 #include "Combat/CombatLayout.h"
 #include "TBSPlayerController.h"
 #include "TBSGameState.h"
+#include "TBSHUD.h"
 
 ACombatManager::ACombatManager()
 {
@@ -210,14 +211,16 @@ void ACombatManager::Tick(float DeltaSeconds)
 
 void ACombatManager::Startup()
 {
-	if (!CombatLayout && CombatLayoutClass)
+	APlayerController* OwnerPC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr;
+	ATBSHUD* OwnerTBSHUD = OwnerPC ? Cast<ATBSHUD>(OwnerPC->GetHUD()) : nullptr;
+	if (OwnerTBSHUD)
 	{
-		CombatLayout = CreateWidget<UCombatLayout>(GetGameInstance(), CombatLayoutClass);
+		OwnerTBSHUD->ShowCombatLayout();
+		CombatLayout = OwnerTBSHUD->GetCombatLayout();
 		if (CombatLayout)
 		{
 			CombatLayout->CombatManager = this;
 			CombatLayout->UpdateAutoAttackToggleDisplay(bIsAutoAttack);
-			CombatLayout->AddToViewport();
 		}
 	}
 
@@ -353,12 +356,23 @@ void ACombatManager::FightEnd()
 
 void ACombatManager::CloseCombat()
 {
-	if (CombatLayout) { CombatLayout->RemoveFromParent(); }
+	CombatLayout = nullptr;
 
-	ATBSGameState* OwnerTBSGameState = GetWorld() ? GetWorld()->GetGameState<ATBSGameState>() : nullptr;
-	if (OwnerTBSGameState)
+	UWorld* World = GetWorld();
+	if (World)
 	{
-		OwnerTBSGameState->CloseCombat(WinTeam, WinTeam == PlayerTeam);
+		APlayerController* OwnerPC = World->GetFirstPlayerController();
+		ATBSHUD* OwnerTBSHUD = OwnerPC ? Cast<ATBSHUD>(OwnerPC->GetHUD()) : nullptr;
+		if (OwnerTBSHUD)
+		{
+			OwnerTBSHUD->ShowGameLayout();
+		}
+
+		ATBSGameState* OwnerTBSGameState = World->GetGameState<ATBSGameState>();
+		if (OwnerTBSGameState)
+		{
+			OwnerTBSGameState->CloseCombat(WinTeam, WinTeam == PlayerTeam);
+		}
 	}
 }
 

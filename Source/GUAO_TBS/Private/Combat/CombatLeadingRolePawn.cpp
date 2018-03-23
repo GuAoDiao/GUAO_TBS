@@ -5,11 +5,11 @@
 #include "Combat/DecisionMakers/PlayerDecisionMaker.h"
 #include "Combat/CombatManager.h"
 
-void ACombatLeadingRolePawn::BeginMakeDecision()
+void ACombatLeadingRolePawn::MakeDecisionImplementation()
 {
 	if (CombatManager && CombatManager->IsAutoAttack())
 	{
-		Super::BeginMakeDecision();
+		Super::MakeDecisionImplementation();
 	}
 	else
 	{

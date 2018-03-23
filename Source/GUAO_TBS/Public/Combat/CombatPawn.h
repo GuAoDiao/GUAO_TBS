@@ -45,7 +45,8 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	/// Combat
 public:
-	virtual void BeginMakeDecision();
+	void BeginMakeDecision();
+	virtual void MakeDecisionImplementation();
 	bool MakeDecision(float DeltaSeconds);
 	void BeginExecuteAction();
 	bool ExecuteAction(float DeltaSeconds);

@@ -15,6 +15,9 @@ class GUAO_TBS_API UCombatLayout : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION(BlueprintNativeEvent)
+	void InitializeGameLayoutWidget();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnChangeBount(int32 NewBount);
 	UFUNCTION(BlueprintImplementableEvent)

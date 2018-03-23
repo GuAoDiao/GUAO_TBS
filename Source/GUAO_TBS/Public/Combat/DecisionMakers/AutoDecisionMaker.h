@@ -4,7 +4,9 @@
 
 #include "Combat/DecisionMakers/IDecisionMaker.h"
 
-class FTestDecisionMaker : public IDecisionMaker
+#include "CoreMinimal.h"
+
+class FAutoDecisionMaker : public IDecisionMaker
 {
 public:
 	virtual void BeginMakeDecision(class ACombatPawn* CombatPawn) override;
@@ -19,4 +21,5 @@ protected:
 	class ACombatPawn* OwnerCombatPawn;
 	class ACombatManager* CombatManager;
 
+	float RemainingTime;
 };

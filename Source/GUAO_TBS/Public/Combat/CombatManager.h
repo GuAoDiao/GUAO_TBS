@@ -109,8 +109,6 @@ public:
 	/// UI Display
 
 protected:
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class UCombatLayout> CombatLayoutClass;
 	UPROPERTY(Transient)
 	class UCombatLayout* CombatLayout;
 };

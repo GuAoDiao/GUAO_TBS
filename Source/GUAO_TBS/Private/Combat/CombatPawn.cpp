@@ -8,7 +8,7 @@
 #include "WidgetComponent.h"
 #include "GameFramework/PlayerController.h"
 
-#include "Combat/DecisionMakers/TestDecisionMaker.h"
+#include "Combat/DecisionMakers/AutoDecisionMaker.h"
 #include "Combat/Actions/ICombatAction.h"
 #include "Combat/CombatManager.h"
 #include "Combat/CombatPawnInfoDisplay.h"
@@ -30,8 +30,6 @@ ACombatPawn::ACombatPawn()
 	CombatPawnInfoDisplayClass = LoadClass<UCombatPawnInfoDisplay>(this, TEXT("WidgetBlueprint'/Game/GUAO_TBS/Blueprints/Combat/W_CombatPawnDisplayInfo.W_CombatPawnDisplayInfo_C'"));
 
 	AutoPossessAI = EAutoPossessAI::Disabled;
-
-	bIsDead = false;
 
 	Level = 1;
 	MaxHealth = 50.f;
@@ -69,8 +67,7 @@ void ACombatPawn::SetCombatPawnName(const FString& InCombatPawnName)
 		if (CombatPawnManager->GetBaseCombatPawnFightInfo(CombatPawnName, BaseFightInfo)) { InitializeCombatPawnAttribute(); }
 	}
 	
-	Health = MaxHealth;
-	Mana = MaxMana;
+	ResetPawnState();
 }
 
 void ACombatPawn::BeginPlay()
@@ -115,13 +112,23 @@ void ACombatPawn::ResetPawnState()
 {
 	Health = MaxHealth;
 	Mana = MaxMana;
+	bIsDead = false;
+	UpdateHealth();
+	ToggleToTargetCombatPawnState(ECombatPawnState::Idle);
 }
 
 //////////////////////////////////////////////////////////////////////////
 /// Combat Info
 void ACombatPawn::BeginMakeDecision()
 {
-	DecisionMaker = new FTestDecisionMaker();
+	ToggleToTargetCombatPawnState(ECombatPawnState::ReadFight);
+
+	MakeDecisionImplementation();
+}
+
+void ACombatPawn::MakeDecisionImplementation()
+{
+	DecisionMaker = new FAutoDecisionMaker();
 	if (DecisionMaker) { DecisionMaker->BeginMakeDecision(this); }
 }
 

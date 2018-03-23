@@ -2,6 +2,7 @@
 
 #include "CombatLayout.h"
 
-
-
-
+void UCombatLayout::InitializeGameLayoutWidget_Implementation()
+{
+	CombatManager = nullptr;
+}

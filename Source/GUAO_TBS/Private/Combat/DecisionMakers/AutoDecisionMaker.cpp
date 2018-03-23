@@ -1,8 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TestDecisionMaker.h"
-
-#include "CoreMinimal.h"
+#include "AutoDecisionMaker.h"
 
 #include "Combat/CombatPawn.h"
 #include "Combat/CombatManager.h"
@@ -10,8 +8,10 @@
 #include "Combat/Actions/MultiMoveAttackAction.h"
 #include "Combat/Actions/DoNothingAction.h"
 
-void FTestDecisionMaker::BeginMakeDecision(class ACombatPawn* CombatPawn)
+void FAutoDecisionMaker::BeginMakeDecision(class ACombatPawn* CombatPawn)
 {
+	RemainingTime = 1.f;
+
 	OwnerCombatPawn = CombatPawn;
 	CombatManager = CombatPawn->GetCombatManager();
 
@@ -40,12 +40,18 @@ void FTestDecisionMaker::BeginMakeDecision(class ACombatPawn* CombatPawn)
 
 	CombatPawn->SetCombatAction(new FDoNothingAction());
 }
-bool FTestDecisionMaker::MakeDecision(float DeltaSeconds)
+bool FAutoDecisionMaker::MakeDecision(float DeltaSeconds)
 {
-	return true;
+	RemainingTime -= DeltaSeconds;
+	if (RemainingTime <= 0.f)
+	{
+		return true;
+	}
+
+	return false;
 }
 
-bool FTestDecisionMaker::FindMinHPEnemy(int32& OutMinHPTeam, int32& OutMinHPEnemy) const
+bool FAutoDecisionMaker::FindMinHPEnemy(int32& OutMinHPTeam, int32& OutMinHPEnemy) const
 {
 	if (!CombatManager) { return false; }
 
@@ -69,7 +75,7 @@ bool FTestDecisionMaker::FindMinHPEnemy(int32& OutMinHPTeam, int32& OutMinHPEnem
 	return MinHP != FLT_MAX;
 }
 
-bool FTestDecisionMaker::FindTargetEnemy(int32& OutTargetTeam, TArray<int32>& OutTargetEnemy) const
+bool FAutoDecisionMaker::FindTargetEnemy(int32& OutTargetTeam, TArray<int32>& OutTargetEnemy) const
 {
 	if (!CombatManager) { return false; }
 

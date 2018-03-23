@@ -12,6 +12,12 @@ void UGameLayout::NativeConstruct()
 	Super::NativeConstruct();
 }
 
+
+void UGameLayout::InitializeGameLayoutWidget_Implementation()
+{
+
+}
+
 void UGameLayout::TogglePlayerBackPackDisplay()
 {
 	if (PlayerBackPack)

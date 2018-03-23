@@ -6,11 +6,17 @@
 
 
 #include "UI/GameLayout.h"
+#include "Combat/CombatLayout.h"
 
 void ATBSHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
+	ShowGameLayout();
+}
+
+void ATBSHUD::ShowGameLayout()
+{
 	APlayerController* OwnerPC = GetOwningPlayerController();
 	if (OwnerPC)
 	{
@@ -18,9 +24,14 @@ void ATBSHUD::BeginPlay()
 		{
 			GameLayout = CreateWidget<UGameLayout>(GetGameInstance(), GameLayoutClass);
 		}
+
 		if (GameLayout)
 		{
-			GameLayout->AddToViewport();
+			GameLayout->InitializeGameLayoutWidget();
+			
+			if(!GameLayout->IsInViewport()){ GameLayout->AddToViewport(); }
+			if (CombatLayout && CombatLayout->IsInViewport()) { CombatLayout->RemoveFromViewport(); }
+			
 
 			FInputModeGameAndUI InputMode;
 			InputMode.SetWidgetToFocus(GameLayout->TakeWidget());
@@ -31,5 +42,29 @@ void ATBSHUD::BeginPlay()
 	}
 }
 
+void ATBSHUD::ShowCombatLayout()
+{
+	APlayerController* OwnerPC = GetOwningPlayerController();
+	if (OwnerPC)
+	{
+		if (!CombatLayout && CombatLayoutClass)
+		{
+			CombatLayout = CreateWidget<UCombatLayout>(GetGameInstance(), CombatLayoutClass);
+		}
+		if (CombatLayout)
+		{
+			CombatLayout->InitializeGameLayoutWidget();
+			
+			if (GameLayout && GameLayout->IsInViewport()) { GameLayout->RemoveFromViewport(); }
+			if (!CombatLayout->IsInViewport()) { CombatLayout->AddToViewport(); }
 
-void ATBSHUD::TogglePlayerBackPackDisplay() { if (GameLayout) { GameLayout->TogglePlayerBackPackDisplay(); } }
+			FInputModeGameAndUI InputMode;
+			InputMode.SetWidgetToFocus(CombatLayout->TakeWidget());
+			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
+
+			OwnerPC->SetInputMode(InputMode);
+		}
+	}
+}
+
+void ATBSHUD::TogglePlayerBackPackDisplay() { if (GameLayout && GameLayout->IsInViewport()) { GameLayout->TogglePlayerBackPackDisplay(); } }
