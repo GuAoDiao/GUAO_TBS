@@ -9,6 +9,8 @@
 
 #include "NPCShop.generated.h"
 
+class UShopPropsItem;
+
 /**
  * 
  */
@@ -23,12 +25,16 @@ public:
 	void InitializeNPCShop(class AShopNPCTilePawn* ShopNPC);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void AddShopPropsItem(class UShopPropsItem* ShopPropsItem);
+	void AddShopPropsItem(UShopPropsItem* ShopPropsItem);
 
 	void AddShopPropsItemFromInfo(const FPropsShopItemInfo& InInfo);
+
+	void OnShopPropsItemNumsChange(int32 PropsIndex, int32 PropsNum);
 protected:
 	UPROPERTY(BlueprintReadOnly)
 	class AShopNPCTilePawn* OwnerShopNPC;
 	
 	TSubclassOf<class UShopPropsItem> ShopPropsItemClass;
+
+	TArray<UShopPropsItem*> AllShopPropsItem;
 };

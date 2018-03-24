@@ -18,11 +18,15 @@ void UNPCShop::InitializeNPCShop(class AShopNPCTilePawn* ShopNPC)
 	OwnerShopNPC = ShopNPC;
 
 	ShopPropsItemClass = LoadClass<UShopPropsItem>(this, TEXT("WidgetBlueprint'/Game/GUAO_TBS/UI/W_ShopPropsItem.W_ShopPropsItem_C'"));
-
-	const FPropsShopInfo& PropsShopInfo = OwnerShopNPC->GetPropsShopInfo();
-	for (const FPropsShopItemInfo& PropsShopItemInfo : PropsShopInfo.AllShopItems)
+	if (OwnerShopNPC)
 	{
-		AddShopPropsItemFromInfo(PropsShopItemInfo);
+		OwnerShopNPC->OnShopPropsItemNumsChangeDelegate.AddUObject(this, &UNPCShop::OnShopPropsItemNumsChange);
+
+		const FPropsShopInfo& PropsShopInfo = OwnerShopNPC->GetPropsShopInfo();
+		for (const FPropsShopItemInfo& PropsShopItemInfo : PropsShopInfo.AllShopItems)
+		{
+			AddShopPropsItemFromInfo(PropsShopItemInfo);
+		}
 	}
 }
 
@@ -35,7 +39,16 @@ void UNPCShop::AddShopPropsItemFromInfo(const FPropsShopItemInfo& InInfo)
 		if (ShopPropsItem)
 		{
 			ShopPropsItem->InitializeShopPropsItem(OwnerShopNPC, InInfo.ID, InInfo.Nums, InInfo.Gold);
+			AllShopPropsItem.Add(ShopPropsItem);
 			AddShopPropsItem(ShopPropsItem);
 		}
+	}
+}
+
+void UNPCShop::OnShopPropsItemNumsChange(int32 PropsIndex, int32 PropsNum)
+{
+	if (AllShopPropsItem.IsValidIndex(PropsIndex) && AllShopPropsItem[PropsIndex])
+	{
+		AllShopPropsItem[PropsIndex]->UpdatePropsNum(PropsNum);
 	}
 }

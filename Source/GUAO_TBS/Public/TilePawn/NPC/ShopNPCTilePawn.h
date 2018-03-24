@@ -30,6 +30,9 @@ public:
 	const FPropsShopInfo& GetPropsShopInfo() const { return PropsShopInfo; }
 	bool GetPropsShopItemInfo(int32 ID, FPropsShopItemInfo& OutPropsShopItemInfo) const;
 	int32 GetPropsShopItemIndex(int32 ID) const;
+
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnShopPropsItemNumsChangeDelegate, int32 /* PropsIndex */, int32 /* PropsNums */);
+	FOnShopPropsItemNumsChangeDelegate OnShopPropsItemNumsChangeDelegate;
 protected:
 
 	UPROPERTY(EditDefaultsOnly)

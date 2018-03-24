@@ -44,6 +44,8 @@ void AShopNPCTilePawn::BuyItem(int32 ID)
 			if (GamePropsComp) { GamePropsComp->AddProps(ID, 1); }
 
 			--PropsShopInfo.AllShopItems[PropsShopItemIndex].Nums;
+
+			OnShopPropsItemNumsChangeDelegate.Broadcast(PropsShopItemIndex, PropsShopInfo.AllShopItems[PropsShopItemIndex].Nums);
 		}
 		else
 		{

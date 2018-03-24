@@ -11,7 +11,7 @@ void UPropsItem::InitializePropsItemDisplay(int32 PropsID, int32 PropsNum)
 	CurrentPropsID = PropsID;
 	CurrentPropsNum = PropsNum;
 
-	if (CurrentPropsID != -1)
+	if (CurrentPropsID != -1 && PropsNum > 0)
 	{
 		UpdatePropsItemDisplay();
 	}
