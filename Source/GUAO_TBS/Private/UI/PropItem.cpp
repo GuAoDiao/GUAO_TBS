@@ -3,18 +3,45 @@
 #include "PropItem.h"
 
 #include "GameProps/PropsManager.h"
-
+#include "TBSPlayerState.h"
+#include "GameProps/GamePropsComponent.h"
 
 void UPropsItem::InitializePropsItemDisplay(int32 PropsID, int32 PropsNum)
 {
 	CurrentPropsID = PropsID;
+	CurrentPropsNum = PropsNum;
 
-	if (PropsID != -1)
+	if (CurrentPropsID != -1)
 	{
-		UpdatePropsItemDisplay(FPropsManager::GetPropsManagerInstance()->GetPropsInfoFormID(PropsID), PropsNum);
+		UpdatePropsItemDisplay();
 	}
 	else
 	{
 		ShowEmptyPropsItem();
 	}
+}
+
+const FGamePropsInfo& UPropsItem::GetGamePropsInfo() const
+{
+	return FPropsManager::GetPropsManagerInstance()->GetPropsInfoFormID(CurrentPropsID);
+}
+
+
+
+void UPropsItem::UseProps()
+{
+	APlayerController* OwnerPC = GetOwningPlayer();
+	ATBSPlayerState* OwnerTBSPS = OwnerPC ? Cast<ATBSPlayerState>(OwnerPC->PlayerState) : nullptr;
+	UGamePropsComponent* GamePropsComponent = OwnerTBSPS ? OwnerTBSPS->GetGamePropsComponent() : nullptr;
+	if (GamePropsComponent) { GamePropsComponent->UseSingleProps(CurrentPropsID); }
+
+	UpdatePropsNum();
+}
+
+void UPropsItem::UpdatePropsNum_Implementation()
+{
+	APlayerController* OwnerPC = GetOwningPlayer();
+	ATBSPlayerState* OwnerTBSPS = OwnerPC ? Cast<ATBSPlayerState>(OwnerPC->PlayerState) : nullptr;
+	UGamePropsComponent* GamePropsComponent = OwnerTBSPS ? OwnerTBSPS->GetGamePropsComponent() : nullptr;
+	if (GamePropsComponent) { CurrentPropsNum = GamePropsComponent->GetPropsNum(CurrentPropsID); }
 }

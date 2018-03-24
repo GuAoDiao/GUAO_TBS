@@ -65,7 +65,16 @@ void UGamePropsComponent::UseSingleProps(int32 PropsID)
 	{
 		if (PropsStoreBag[i].ID == PropsID)
 		{
-			--PropsStoreBag[i].Nums;
+			if (PropsStoreBag[i].Nums > 0)
+			{
+				UE_LOG(LogTemp, Log, TEXT("-_- use prop"));
+				--PropsStoreBag[i].Nums;
+			}
+			else
+			{
+				UE_LOG(LogTemp, Log, TEXT("-_- don't have prop"));
+			}
+
 			return;
 		}
 	}

@@ -21,11 +21,24 @@ class GUAO_TBS_API UPropsItem : public UUserWidget
 public:
 	void InitializePropsItemDisplay(int32 PropsID, int32 PropsNum);
 	
-	UFUNCTION(BlueprintImplementableEvent)
-	void UpdatePropsItemDisplay(const FGamePropsInfo& GamePropsInfo, int32 PropsNum);
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void UpdatePropsItemDisplay();
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void ShowEmptyPropsItem();
+
+	UFUNCTION(BlueprintCallable)
+	const FGamePropsInfo& GetGamePropsInfo() const;
+
+	UFUNCTION(BlueprintCallable)
+	void UseProps();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void UpdatePropsNum();
+
 protected:
+	UPROPERTY(BlueprintReadOnly)
 	int32 CurrentPropsID;
+	UPROPERTY(BlueprintReadOnly)
+	int32 CurrentPropsNum;
 };
