@@ -22,9 +22,6 @@ UGamePropsComponent::UGamePropsComponent()
 	PropsStoreBag[1].ID = 2;
 	PropsStoreBag[1].Nums = 3;
 
-	PropsStoreBag[1].ID = 2;
-	PropsStoreBag[1].Nums = 3;
-
 	PropsStoreBag[2].ID = 3;
 	PropsStoreBag[2].Nums = 3;
 
@@ -91,14 +88,14 @@ void UGamePropsComponent::UseSingleProps(int32 PropsID)
 				if (PropsInfo.Type == EGamePropsType::Consumables)
 				{
 					const FConsumablesPropsInfo& ConsumablesPropsInfo = PropsManager->GetConsumablesPropsInfoFormID(PropsStoreBag[i].ID);
-					if (ConsumablesPropsInfo.Type == EConsumablesType::Common)
+					if (ConsumablesPropsInfo.Type == EConsumablesType::Game || ConsumablesPropsInfo.Type == EConsumablesType::All)
 					{
 						for (TMap<EGameCapabilitiesType, FString>::TConstIterator It(ConsumablesPropsInfo.GameCapabilities); It; ++It)
 						{
 							UGameCapabilities* GameCapabilities = PropsManager->GetGameCapabilities(It.Key());
 							if (GameCapabilities)
 							{
-								GameCapabilities->InitializeGameCapabilities(It.Value());
+								GameCapabilities->InitializeGameCapabilities(GetWorld(), It.Value());
 								GameCapabilities->UseGameCapabilities();
 							}
 							
@@ -106,6 +103,10 @@ void UGamePropsComponent::UseSingleProps(int32 PropsID)
 						UE_LOG(LogTemp, Log, TEXT("-_- use prop"));
 						--PropsStoreBag[i].Nums;
 					}
+				}
+				else
+				{
+					UE_LOG(LogTemp, Log, TEXT("-_- don't use combat prop"));
 				}
 			}
 			else

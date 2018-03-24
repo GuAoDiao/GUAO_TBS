@@ -24,5 +24,7 @@ public:
 	void TogglePlayerBackPackDisplay();
 protected:
 	UPROPERTY(BlueprintReadWrite)
+	class UPlayerInfo* PlayerInfo;
+	UPROPERTY(BlueprintReadWrite)
 	class UPlayerBackpack* PlayerBackPack;
 };

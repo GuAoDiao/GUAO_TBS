@@ -15,6 +15,12 @@ class GUAO_TBS_API UMoneyRandomOffsetCapabilities : public UGameCapabilities
 	GENERATED_BODY()
 	
 	
-	
+public:
+	virtual void ParseStringToInfo(const FString& Info) override;
+	virtual void OnUseGameCapabilities() override;
+
+protected:
+	int32 MoneyMinOffset;
+	int32 MoneyMaxOffset;
 	
 };

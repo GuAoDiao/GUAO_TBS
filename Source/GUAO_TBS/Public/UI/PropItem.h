@@ -33,8 +33,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UseProps();
 
-	UFUNCTION(BlueprintNativeEvent)
 	void UpdatePropsNum();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdatePropsNumDisplay();
 
 protected:
 	UPROPERTY(BlueprintReadOnly)

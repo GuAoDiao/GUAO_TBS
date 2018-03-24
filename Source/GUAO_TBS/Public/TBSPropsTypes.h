@@ -87,8 +87,9 @@ public:
 UENUM(BlueprintType)
 enum class EConsumablesType : uint8
 {
-	Common,
-	Combat
+	Game,
+	Combat,
+	All
 };
 
 USTRUCT(BlueprintType)
@@ -98,7 +99,7 @@ struct FConsumablesPropsInfo : public FTableRowBase
 public:
 	static const FConsumablesPropsInfo EmptyConsumablesProps;
 
-	FConsumablesPropsInfo() : ID(-1), Type(EConsumablesType::Common){}
+	FConsumablesPropsInfo() : ID(-1), Type(EConsumablesType::Game){}
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	int32 ID;

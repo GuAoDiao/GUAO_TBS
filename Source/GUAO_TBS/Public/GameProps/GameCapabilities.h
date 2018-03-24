@@ -15,10 +15,14 @@ class GUAO_TBS_API UGameCapabilities : public UObject
 	GENERATED_BODY()
 
 public:
-	void InitializeGameCapabilities(const FString& Info);
+	UGameCapabilities();
+
+	void InitializeGameCapabilities(UWorld* World, const FString& Info);
 	void UseGameCapabilities();
 
+	virtual UWorld* GetWorld() const override { return CurrentWorld; }
 protected:
 	virtual void ParseStringToInfo(const FString& Info) {}
 	virtual void OnUseGameCapabilities() {}
+	UWorld* CurrentWorld;
 };

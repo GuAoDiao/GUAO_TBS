@@ -10,6 +10,7 @@
 
 ATBSPlayerState::ATBSPlayerState()
 {
+	PlayerName = TEXT("GUAO");
 	Gold = 1000;
 
 	CombatPawnNameInPlayerTeam.Add(TEXT("LeadingRole"));

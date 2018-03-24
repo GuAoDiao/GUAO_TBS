@@ -3,7 +3,10 @@
 #include "MoneyOffsetCapabilities.h"
 
 #include "Engine/World.h"
+#include "Engine/Engine.h"
 #include "GameFramework/PlayerController.h"
+
+#include "Kismet/GameplayStatics.h"
 
 #include "TBSPlayerState.h"
 

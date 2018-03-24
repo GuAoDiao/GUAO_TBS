@@ -2,11 +2,14 @@
 
 #include "GameCapabilities.h"
 
-
-
-
-void UGameCapabilities::InitializeGameCapabilities(const FString& Info)
+UGameCapabilities::UGameCapabilities()
 {
+	SetFlags(RF_Standalone);
+}
+
+void UGameCapabilities::InitializeGameCapabilities(UWorld* World, const FString& Info)
+{
+	CurrentWorld = World;
 	ParseStringToInfo(Info);
 }
 

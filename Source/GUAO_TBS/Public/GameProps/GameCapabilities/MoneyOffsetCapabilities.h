@@ -19,6 +19,6 @@ public:
 	virtual void OnUseGameCapabilities() override;
 	
 protected:
-	float MoneyOffset;
+	int32 MoneyOffset;
 	
 };
