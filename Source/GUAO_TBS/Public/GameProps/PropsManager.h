@@ -6,6 +6,9 @@
 
 #include "TBSPropsTypes.h"
 
+class UCombatCapabilities;
+class UGameCapabilities;
+
 /**
  * 
  */
@@ -19,12 +22,24 @@ public:
 	
 public:
 	const FGamePropsInfo& GetPropsInfoFormID(int32 PropsID);
+	const FConsumablesPropsInfo& GetConsumablesPropsInfoFormID(int32 PropsID);
+
+	UCombatCapabilities* GetCombatCapabilities(ECombatCapabilitiesType InConsumablesType);
+	UGameCapabilities* GetGameCapabilities(EGameCapabilitiesType InGameCapabilitiesType);
 
 protected:
 	UPROPERTY()
 	class UDataTable* GamePropsInfoDT;
 	UPROPERTY()
 	class UDataTable* ConsumablesPropsInfoDT;
+	UPROPERTY()
+	class UDataTable* GameCapabilitiesClassInfoDT;
+	UPROPERTY()
+	class UDataTable* CombatCapabilitiesClassInfoDT;
 
 	TMap<int32, FGamePropsInfo> AllGamePropsInfo;
+	TMap<int32, FConsumablesPropsInfo> AllConsumablesPropsInfo;
+
+	TMap<ECombatCapabilitiesType, UCombatCapabilities*> AllCombatCapabilities;
+	TMap<EGameCapabilitiesType, UGameCapabilities*> AllGameCapabilities;
 };

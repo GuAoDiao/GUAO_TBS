@@ -2,6 +2,9 @@
 
 #include "GamePropsComponent.h"
 
+#include "GameProps/PropsManager.h"
+#include "GameProps/GameCapabilities.h"
+
 UGamePropsComponent::UGamePropsComponent()
 {
 	MaxPropsNum = 20;
@@ -18,6 +21,21 @@ UGamePropsComponent::UGamePropsComponent()
 
 	PropsStoreBag[1].ID = 2;
 	PropsStoreBag[1].Nums = 3;
+
+	PropsStoreBag[1].ID = 2;
+	PropsStoreBag[1].Nums = 3;
+
+	PropsStoreBag[2].ID = 3;
+	PropsStoreBag[2].Nums = 3;
+
+	PropsStoreBag[3].ID = 4;
+	PropsStoreBag[3].Nums = 3;
+
+	PropsStoreBag[4].ID = 5;
+	PropsStoreBag[4].Nums = 3;
+
+	PropsStoreBag[5].ID = 6;
+	PropsStoreBag[5].Nums = 3;
 }
 
 int32 UGamePropsComponent::GetPropsNum(int32 PropsID) const
@@ -67,8 +85,28 @@ void UGamePropsComponent::UseSingleProps(int32 PropsID)
 		{
 			if (PropsStoreBag[i].Nums > 0)
 			{
-				UE_LOG(LogTemp, Log, TEXT("-_- use prop"));
-				--PropsStoreBag[i].Nums;
+				FPropsManager* PropsManager = FPropsManager::GetPropsManagerInstance();
+				const FGamePropsInfo& PropsInfo = PropsManager->GetPropsInfoFormID(PropsStoreBag[i].ID);
+
+				if (PropsInfo.Type == EGamePropsType::Consumables)
+				{
+					const FConsumablesPropsInfo& ConsumablesPropsInfo = PropsManager->GetConsumablesPropsInfoFormID(PropsStoreBag[i].ID);
+					if (ConsumablesPropsInfo.Type == EConsumablesType::Common)
+					{
+						for (TMap<EGameCapabilitiesType, FString>::TConstIterator It(ConsumablesPropsInfo.GameCapabilities); It; ++It)
+						{
+							UGameCapabilities* GameCapabilities = PropsManager->GetGameCapabilities(It.Key());
+							if (GameCapabilities)
+							{
+								GameCapabilities->InitializeGameCapabilities(It.Value());
+								GameCapabilities->UseGameCapabilities();
+							}
+							
+						}
+						UE_LOG(LogTemp, Log, TEXT("-_- use prop"));
+						--PropsStoreBag[i].Nums;
+					}
+				}
 			}
 			else
 			{

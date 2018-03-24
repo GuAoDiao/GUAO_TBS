@@ -2,6 +2,11 @@
 
 #include "PropsManager.h"
 
+#include "Package.h"
+
+#include "GameProps/GameCapabilities.h"
+#include "GameProps/CombatCapabilities.h"
+
 FPropsManager* FPropsManager::PropsManagerInstance = nullptr;
 
 FPropsManager* FPropsManager::GetPropsManagerInstance()
@@ -14,6 +19,39 @@ FPropsManager* FPropsManager::GetPropsManagerInstance()
 FPropsManager::FPropsManager()
 {
 	GamePropsInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_GamePropsInfo.DT_GamePropsInfo'"));
+	ConsumablesPropsInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_ConsumablesPropsInfo.DT_ConsumablesPropsInfo'"));
+
+	
+	GameCapabilitiesClassInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_GameCapabilitiesClassInfo.DT_GameCapabilitiesClassInfo'"));
+	if (GameCapabilitiesClassInfoDT)
+	{
+		TArray<FGameCapabilitiesClassInfo*> AllGameCapabilitiesClassInfo;
+		GameCapabilitiesClassInfoDT->GetAllRows<FGameCapabilitiesClassInfo>(TEXT("-_- find all game capabilities class info"), AllGameCapabilitiesClassInfo);
+		for (FGameCapabilitiesClassInfo* GameCapabilitiesClassInfo : AllGameCapabilitiesClassInfo)
+		{
+			if (GameCapabilitiesClassInfo && GameCapabilitiesClassInfo->ClassInfo)
+			{
+				AllGameCapabilities.Add(GameCapabilitiesClassInfo->Type, NewObject<UGameCapabilities>(GetTransientPackage(), GameCapabilitiesClassInfo->ClassInfo));
+			}
+		}
+	}
+
+
+	CombatCapabilitiesClassInfoDT = nullptr;
+
+	if (CombatCapabilitiesClassInfoDT)
+	{
+		TArray<FCombatCapabilitiesClassInfo*> AllCombatCapabilitiesClassInfo;
+		CombatCapabilitiesClassInfoDT->GetAllRows<FCombatCapabilitiesClassInfo>(TEXT("-_- find all game capabilities class info"), AllCombatCapabilitiesClassInfo);
+		for (FCombatCapabilitiesClassInfo* CombatCapabilitiesClassInfo : AllCombatCapabilitiesClassInfo)
+		{
+			if (CombatCapabilitiesClassInfo && CombatCapabilitiesClassInfo->ClassInfo)
+			{
+				AllCombatCapabilities.Add(CombatCapabilitiesClassInfo->Type, NewObject<UCombatCapabilities>(GetTransientPackage(), CombatCapabilitiesClassInfo->ClassInfo));
+			}
+		}
+	}
+
 }
 
 const FGamePropsInfo& FPropsManager::GetPropsInfoFormID(int32 PropsID)
@@ -33,5 +71,44 @@ const FGamePropsInfo& FPropsManager::GetPropsInfoFormID(int32 PropsID)
 		}
 	}
 
-	return FGamePropsInfo::EmpeyProps;
+	return FGamePropsInfo::EmptyProps;
+}
+
+
+const FConsumablesPropsInfo& FPropsManager::GetConsumablesPropsInfoFormID(int32 PropsID)
+{
+	if (AllConsumablesPropsInfo.Contains(PropsID))
+	{
+		return AllConsumablesPropsInfo[PropsID];
+	}
+
+	if (ConsumablesPropsInfoDT)
+	{
+		FConsumablesPropsInfo* ConsumablesPropsInfo = ConsumablesPropsInfoDT->FindRow<FConsumablesPropsInfo>(FName(*FString::FromInt(PropsID)), TEXT("-_- find consumables props info"));
+		if (ConsumablesPropsInfo)
+		{
+			AllConsumablesPropsInfo.Add(PropsID, *ConsumablesPropsInfo);
+			return AllConsumablesPropsInfo[PropsID];
+		}
+	}
+
+	return FConsumablesPropsInfo::EmptyConsumablesProps;
+}
+
+UCombatCapabilities* FPropsManager::GetCombatCapabilities(ECombatCapabilitiesType InConsumablesType)
+{
+	if (AllCombatCapabilities.Contains(InConsumablesType))
+	{
+		return AllCombatCapabilities[InConsumablesType];
+	}
+	return nullptr;
+}
+
+UGameCapabilities* FPropsManager::GetGameCapabilities(EGameCapabilitiesType InGameCapabilitiesType)
+{
+	if (AllGameCapabilities.Contains(InGameCapabilitiesType))
+	{
+		return AllGameCapabilities[InGameCapabilitiesType];
+	}
+	return nullptr;
 }

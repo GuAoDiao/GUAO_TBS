@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Abstract)
 class GUAO_TBS_API UCombatCapabilities : public UObject
 {
 	GENERATED_BODY()

@@ -2,4 +2,5 @@
 
 #include "TBSPropsTypes.h"
 
-const FGamePropsInfo FGamePropsInfo::EmpeyProps{};
+const FGamePropsInfo FGamePropsInfo::EmptyProps{};
+const FConsumablesPropsInfo FConsumablesPropsInfo::EmptyConsumablesProps{};

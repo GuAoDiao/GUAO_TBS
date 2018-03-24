@@ -39,9 +39,14 @@ public:
 	UFUNCTION(BlueprintPure)
 	int32 GetGold() const { return Gold; }
 	UFUNCTION(BlueprintCallable)
-	void AddGold(int32 InOffset) { Gold += InOffset; }
+	void AddGold(int32 InOffset) { Gold += InOffset; UpdateGold(); }
 
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnGoldUpdateDelegate, int32 /* Gold */)
+	FOnGoldUpdateDelegate OnGoldUpdateDelegate;
+protected:
+	void UpdateGold() { OnGoldUpdateDelegate.Broadcast(Gold); UE_LOG(LogTemp, Log, TEXT("-_- Gold : %f"), Gold); }
 
+public:
 	UGamePropsComponent* GetGamePropsComponent() const { return GamePropsComponent; }
 protected:
 	UPROPERTY()

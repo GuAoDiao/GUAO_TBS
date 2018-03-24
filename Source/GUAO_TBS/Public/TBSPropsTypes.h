@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "SubclassOf.h"
 
 #include "TBSPropsTypes.generated.h"
 
@@ -17,9 +18,10 @@ enum class EGamePropsType : uint8
 };
 
 UENUM(BlueprintType)
-enum class ENormalCapabilitiesType : uint8
+enum class EGameCapabilitiesType : uint8
 {
 	MoneyOffset,
+	MoneyRandomOffset,
 	ExperienceOffset
 };
 
@@ -45,7 +47,7 @@ struct FGamePropsInfo : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 public:
-	static const FGamePropsInfo EmpeyProps;
+	static const FGamePropsInfo EmptyProps;
 
 	FGamePropsInfo() : ID(-1), Type(EGamePropsType::Consumables), Icon(nullptr) {}
 
@@ -94,14 +96,18 @@ struct FConsumablesPropsInfo : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 public:
+	static const FConsumablesPropsInfo EmptyConsumablesProps;
+
+	FConsumablesPropsInfo() : ID(-1), Type(EConsumablesType::Common){}
+
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	int32 ID;
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	EConsumablesType Type;
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TMap<ECombatCapabilitiesType, float> CombatCapabilities;
+	TMap<ECombatCapabilitiesType, FString> CombatCapabilities;
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TMap<ENormalCapabilitiesType, float> NormalCapabilities;
+	TMap<EGameCapabilitiesType, FString> GameCapabilities;
 };
 
 
@@ -116,4 +122,26 @@ public:
 	int32 ID;
 	UPROPERTY(BlueprintReadOnly)
 	int32 Nums;
+};
+
+USTRUCT(BlueprintType)
+struct FGameCapabilitiesClassInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	EGameCapabilitiesType Type;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<class UGameCapabilities> ClassInfo;
+};
+
+USTRUCT(BlueprintType)
+struct FCombatCapabilitiesClassInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	ECombatCapabilitiesType Type;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TSubclassOf<class UCombatCapabilities> ClassInfo;
 };
