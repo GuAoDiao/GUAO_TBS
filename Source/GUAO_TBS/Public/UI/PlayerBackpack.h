@@ -9,6 +9,9 @@
 
 #include "PlayerBackpack.generated.h"
 
+
+class UPropsItem;
+
 /**
  * 
  */
@@ -21,10 +24,14 @@ public:
 	virtual void NativeConstruct() override;
 	
 	void OnPropsStoreInfoUpdate(const TArray<FPropsStoreItemInfo>& PropsStoreBag);
-	
+	void OnPropsStoreItemChange(int32  PropsIndex, int32  PropsID, int32  PropsNum);
+
+
 	UFUNCTION(BlueprintNativeEvent)
 	void UpdatePlayerBackpackDisplay(const TArray<FPropsStoreItemInfo>& PropsStoreBag);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void AddPropsItem(class UPropsItem* PropsItem);
+	void AddPropsItem(UPropsItem* PropsItem);
+
+	TArray<UPropsItem*> AllPropsItem;
 };

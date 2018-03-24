@@ -56,6 +56,8 @@ void UGamePropsComponent::AddProps(int32 PropsID, int32 PropsNum)
 		if (PropsStoreBag[i].ID == PropsID)
 		{
 			PropsStoreBag[i].Nums += PropsNum;
+
+			OnPropsStoreItemChangeDelegate.Broadcast(i, PropsID, PropsStoreBag[i].Nums);
 			return;
 		}
 		
@@ -69,6 +71,8 @@ void UGamePropsComponent::AddProps(int32 PropsID, int32 PropsNum)
 	{
 		PropsStoreBag[EmptyID].ID = PropsID;
 		PropsStoreBag[EmptyID].Nums = PropsNum;
+
+		OnPropsStoreItemChangeDelegate.Broadcast(EmptyID, PropsID, PropsStoreBag[EmptyID].Nums);
 	}
 }
 
@@ -102,6 +106,8 @@ void UGamePropsComponent::UseSingleProps(int32 PropsID)
 						}
 						UE_LOG(LogTemp, Log, TEXT("-_- use prop"));
 						--PropsStoreBag[i].Nums;
+
+						OnPropsStoreItemChangeDelegate.Broadcast(i, PropsID, PropsStoreBag[i].Nums);
 					}
 				}
 				else
@@ -126,6 +132,9 @@ void UGamePropsComponent::UseMultiProps(int32 PropsID, int32 PropsNum)
 		if (PropsStoreBag[i].ID == PropsID)
 		{
 			PropsStoreBag[i].Nums -= PropsNum;
+
+			OnPropsStoreItemChangeDelegate.Broadcast(i, PropsID, PropsStoreBag[i].Nums);
+
 			return;
 		}
 	}
@@ -138,6 +147,9 @@ void UGamePropsComponent::RemoveProps(int32 PropsID, int32 PropsNum)
 		if (PropsStoreBag[i].ID == PropsID)
 		{
 			PropsStoreBag[i].Nums -= PropsNum;
+
+			OnPropsStoreItemChangeDelegate.Broadcast(i, PropsID, PropsStoreBag[i].Nums);
+
 			return;
 		}
 	}

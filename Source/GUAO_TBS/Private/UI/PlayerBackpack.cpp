@@ -17,7 +17,8 @@ void UPlayerBackpack::NativeConstruct()
 	if(GamePropsComp)
 	{
 		UpdatePlayerBackpackDisplay(GamePropsComp->GetPropsStoreInfo());
-		GamePropsComp->OnPropsStoreInfoUpdate.AddUObject(this, &UPlayerBackpack::OnPropsStoreInfoUpdate);
+		GamePropsComp->OnPropsStoreInfoUpdateDelegate.AddUObject(this, &UPlayerBackpack::OnPropsStoreInfoUpdate);
+		GamePropsComp->OnPropsStoreItemChangeDelegate.AddUObject(this, &UPlayerBackpack::OnPropsStoreItemChange);
 	}
 }
 
@@ -36,8 +37,18 @@ void UPlayerBackpack::UpdatePlayerBackpackDisplay_Implementation(const TArray<FP
 		{
 			UPropsItem* PropsItem = CreateWidget<UPropsItem>(OwnerPC, PropsItemClass);
 			PropsItem->InitializePropsItemDisplay(PropsStoreBag[i].ID, PropsStoreBag[i].Nums);
+			
+			AllPropsItem.Add(PropsItem);
 
 			AddPropsItem(PropsItem);
 		}
+	}
+}
+
+void UPlayerBackpack::OnPropsStoreItemChange(int32  PropsIndex, int32  PropsID, int32  PropsNum)
+{
+	if (AllPropsItem.IsValidIndex(PropsIndex) && AllPropsItem[PropsIndex])
+	{
+		AllPropsItem[PropsIndex]->InitializePropsItemDisplay(PropsID, PropsNum);
 	}
 }

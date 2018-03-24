@@ -34,26 +34,4 @@ void UPropsItem::UseProps()
 	ATBSPlayerState* OwnerTBSPS = OwnerPC ? Cast<ATBSPlayerState>(OwnerPC->PlayerState) : nullptr;
 	UGamePropsComponent* GamePropsComponent = OwnerTBSPS ? OwnerTBSPS->GetGamePropsComponent() : nullptr;
 	if (GamePropsComponent) { GamePropsComponent->UseSingleProps(CurrentPropsID); }
-
-	UpdatePropsNum();
-}
-
-void UPropsItem::UpdatePropsNum()
-{
-	APlayerController* OwnerPC = GetOwningPlayer();
-	ATBSPlayerState* OwnerTBSPS = OwnerPC ? Cast<ATBSPlayerState>(OwnerPC->PlayerState) : nullptr;
-	UGamePropsComponent* GamePropsComponent = OwnerTBSPS ? OwnerTBSPS->GetGamePropsComponent() : nullptr;
-	if (GamePropsComponent)
-	{
-		CurrentPropsNum = GamePropsComponent->GetPropsNum(CurrentPropsID);
-		if (CurrentPropsNum > 0)
-		{
-			UpdatePropsNumDisplay();
-		}
-		else
-		{
-			CurrentPropsID = -1;
-			ShowEmptyPropsItem();
-		}
-	}
 }
