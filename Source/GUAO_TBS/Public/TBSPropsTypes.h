@@ -113,19 +113,6 @@ public:
 
 
 USTRUCT(BlueprintType)
-struct FPropsStoreInfo
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	FPropsStoreInfo() : ID(-1), Nums(0) {}
-
-	UPROPERTY(BlueprintReadOnly)
-	int32 ID;
-	UPROPERTY(BlueprintReadOnly)
-	int32 Nums;
-};
-
-USTRUCT(BlueprintType)
 struct FGameCapabilitiesClassInfo : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
@@ -145,4 +132,48 @@ public:
 	ECombatCapabilitiesType Type;
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TSubclassOf<class UCombatCapabilities> ClassInfo;
+};
+
+USTRUCT(BlueprintType)
+struct FPropsStoreItemInfo
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FPropsStoreItemInfo() : ID(-1), Nums(0) {}
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 ID;
+	UPROPERTY(BlueprintReadOnly)
+	int32 Nums;
+};
+
+
+USTRUCT(BlueprintType)
+struct FPropsShopItemInfo
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FPropsShopItemInfo() : ID(-1), Nums(0), Gold(0) {}
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	int32 ID;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	int32 Nums;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	int32 Gold;
+};
+
+USTRUCT(BlueprintType)
+struct FPropsShopInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	static const FPropsShopInfo EmptyFPropsShopInfo;
+
+	FPropsShopInfo() {}
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	FString ShopNPCName;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	TArray<FPropsShopItemInfo> AllShopItems;
 };

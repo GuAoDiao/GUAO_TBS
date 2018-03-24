@@ -4,3 +4,4 @@
 
 const FGamePropsInfo FGamePropsInfo::EmptyProps{};
 const FConsumablesPropsInfo FConsumablesPropsInfo::EmptyConsumablesProps{};
+const FPropsShopInfo FPropsShopInfo::EmptyFPropsShopInfo{};

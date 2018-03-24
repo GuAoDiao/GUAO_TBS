@@ -8,7 +8,7 @@
 UGamePropsComponent::UGamePropsComponent()
 {
 	MaxPropsNum = 20;
-	FPropsStoreInfo PropsStoreInfo;
+	FPropsStoreItemInfo PropsStoreInfo;
 
 	PropsStoreBag.SetNum(MaxPropsNum);
 	for(int32 i = 0 ; i < MaxPropsNum; ++i)

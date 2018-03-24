@@ -21,12 +21,12 @@ void UPlayerBackpack::NativeConstruct()
 	}
 }
 
-void UPlayerBackpack::OnPropsStoreInfoUpdate(const TArray<FPropsStoreInfo>& PropsStoreBag)
+void UPlayerBackpack::OnPropsStoreInfoUpdate(const TArray<FPropsStoreItemInfo>& PropsStoreBag)
 {
 	UpdatePlayerBackpackDisplay(PropsStoreBag);
 }
 
-void UPlayerBackpack::UpdatePlayerBackpackDisplay_Implementation(const TArray<FPropsStoreInfo>& PropsStoreBag)
+void UPlayerBackpack::UpdatePlayerBackpackDisplay_Implementation(const TArray<FPropsStoreItemInfo>& PropsStoreBag)
 {
 	TSubclassOf<UPropsItem> PropsItemClass = LoadClass<UPropsItem>(nullptr, TEXT("WidgetBlueprint'/Game/GUAO_TBS/UI/W_PropsItem.W_PropsItem_C'"));
 	APlayerController* OwnerPC = GetOwningPlayer();

@@ -20,10 +20,10 @@ class GUAO_TBS_API UPlayerBackpack : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 	
-	void OnPropsStoreInfoUpdate(const TArray<FPropsStoreInfo>& PropsStoreBag);
+	void OnPropsStoreInfoUpdate(const TArray<FPropsStoreItemInfo>& PropsStoreBag);
 	
 	UFUNCTION(BlueprintNativeEvent)
-	void UpdatePlayerBackpackDisplay(const TArray<FPropsStoreInfo>& PropsStoreBag);
+	void UpdatePlayerBackpackDisplay(const TArray<FPropsStoreItemInfo>& PropsStoreBag);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void AddPropsItem(class UPropsItem* PropsItem);

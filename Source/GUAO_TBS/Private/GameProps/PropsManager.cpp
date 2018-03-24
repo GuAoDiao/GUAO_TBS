@@ -52,6 +52,7 @@ FPropsManager::FPropsManager()
 		}
 	}
 
+	PropsShopInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_PropsShopInfo.DT_PropsShopInfo'"));
 }
 
 const FGamePropsInfo& FPropsManager::GetPropsInfoFormID(int32 PropsID)
@@ -111,4 +112,19 @@ UGameCapabilities* FPropsManager::GetGameCapabilities(EGameCapabilitiesType InGa
 		return AllGameCapabilities[InGameCapabilitiesType];
 	}
 	return nullptr;
+}
+
+
+const FPropsShopInfo& FPropsManager::GetShopInfo(const FString& InShopNPCName) const
+{
+	if (PropsShopInfoDT)
+	{
+		FPropsShopInfo* PropsShopInfo = PropsShopInfoDT->FindRow<FPropsShopInfo>(FName(*InShopNPCName), TEXT("-_- find PropsShop info"));
+		if (PropsShopInfo)
+		{
+			return *PropsShopInfo;
+		}
+	}
+
+	return FPropsShopInfo::EmptyFPropsShopInfo;
 }

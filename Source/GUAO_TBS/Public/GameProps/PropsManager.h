@@ -23,9 +23,11 @@ public:
 public:
 	const FGamePropsInfo& GetPropsInfoFormID(int32 PropsID);
 	const FConsumablesPropsInfo& GetConsumablesPropsInfoFormID(int32 PropsID);
+	const FPropsShopInfo& GetShopInfo(const FString& InShopNPCName) const;
 
 	UCombatCapabilities* GetCombatCapabilities(ECombatCapabilitiesType InConsumablesType);
 	UGameCapabilities* GetGameCapabilities(EGameCapabilitiesType InGameCapabilitiesType);
+
 
 protected:
 	UPROPERTY()
@@ -36,6 +38,8 @@ protected:
 	class UDataTable* GameCapabilitiesClassInfoDT;
 	UPROPERTY()
 	class UDataTable* CombatCapabilitiesClassInfoDT;
+	UPROPERTY()
+	class UDataTable* PropsShopInfoDT;
 
 	TMap<int32, FGamePropsInfo> AllGamePropsInfo;
 	TMap<int32, FConsumablesPropsInfo> AllConsumablesPropsInfo;

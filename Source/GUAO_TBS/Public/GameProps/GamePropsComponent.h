@@ -24,12 +24,12 @@ public:
 	void UseSingleProps(int32 PropsID);
 	void UseMultiProps(int32 PropsID, int32 PropsNum);
 	void RemoveProps(int32 PropsID, int32 PropsNum);
-	const TArray<FPropsStoreInfo>& GetPropsStoreInfo() const { return PropsStoreBag; }
+	const TArray<FPropsStoreItemInfo>& GetPropsStoreInfo() const { return PropsStoreBag; }
 
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnPropsStoreInfoUpdate, const TArray<FPropsStoreInfo>& /* PropsStoreBag */);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnPropsStoreInfoUpdate, const TArray<FPropsStoreItemInfo>& /* PropsStoreBag */);
 	FOnPropsStoreInfoUpdate OnPropsStoreInfoUpdate;
 
 protected:
 	int32 MaxPropsNum;
-	TArray<FPropsStoreInfo> PropsStoreBag;
+	TArray<FPropsStoreItemInfo> PropsStoreBag;
 };
