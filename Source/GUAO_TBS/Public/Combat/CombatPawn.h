@@ -76,16 +76,14 @@ protected:
 	bool bIsDead;
 public:
 	DECLARE_MULTICAST_DELEGATE(FOnCombatPawnDeathDelegate);
-	FOnCombatPawnDeathDelegate& GetOnCombatPawnDeathDelegate() {return OnCombatPawnDeathDelegate;}
-protected:
 	FOnCombatPawnDeathDelegate OnCombatPawnDeathDelegate;
 	
 	//////////////////////////////////////////////////////////////////////////
 	/// Attribute
 public:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	FString CombatPawnName;
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	int32 Level;
 	float MaxHealth;
 	float Health;

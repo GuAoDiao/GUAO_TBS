@@ -128,7 +128,7 @@ void ACombatManager::InitiallizeCombat(const TArray<FCombatTeam>& InAllTeamsInfo
 				
 				CombatPawnInfo.CombatPawn->SetCombatManager(this);
 				CombatPawnInfo.CombatPawn->CombatTeam = i;
-				CombatPawnInfo.CombatPawn->GetOnCombatPawnDeathDelegate().AddUObject(this, &ACombatManager::CheckCombatState);
+				CombatPawnInfo.CombatPawn->OnCombatPawnDeathDelegate.AddUObject(this, &ACombatManager::CheckCombatState);
 
 				FVector CombatPawnLocation = PawnBaseLocation + CharacterMarginVector * j;
 				CombatPawnInfo.CommonAttackLocation = CombatPawnLocation + CommonAttackMarginVector;
