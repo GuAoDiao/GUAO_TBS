@@ -160,6 +160,9 @@ bool ACombatPawn::ExecuteAction(float DeltaSeconds)
 		{
 			delete CombatAction;
 			CombatAction = nullptr;
+
+			ToggleToTargetCombatPawnState(ECombatPawnState::Idle);
+
 			return true;
 		}
 		return false;
