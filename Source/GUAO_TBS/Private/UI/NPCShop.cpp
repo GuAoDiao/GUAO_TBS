@@ -2,7 +2,7 @@
 
 #include "NPCShop.h"
 
-#include "GameProps/PropsManager.h"
+#include "PropAndCapabilitiesManager.h"
 #include "UI/ShopPropsItem.h"
 #include "TilePawn/NPC/ShopNPCTilePawn.h"
 

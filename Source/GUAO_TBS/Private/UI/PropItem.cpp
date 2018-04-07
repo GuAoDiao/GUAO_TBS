@@ -2,8 +2,8 @@
 
 #include "PropItem.h"
 
-#include "GameProps/PropsManager.h"
 #include "TBSPlayerState.h"
+#include "PropAndCapabilitiesManager.h"
 #include "GameProps/GamePropsComponent.h"
 
 void UPropsItem::InitializePropsItemDisplay(int32 PropsID, int32 PropsNum)
@@ -23,7 +23,7 @@ void UPropsItem::InitializePropsItemDisplay(int32 PropsID, int32 PropsNum)
 
 const FGamePropsInfo& UPropsItem::GetGamePropsInfo() const
 {
-	return FPropsManager::GetPropsManagerInstance()->GetPropsInfoFormID(CurrentPropsID);
+	return FPropAndCapabilitiesManager::GetInstance()->GetPropsInfoFormID(CurrentPropsID);
 }
 
 

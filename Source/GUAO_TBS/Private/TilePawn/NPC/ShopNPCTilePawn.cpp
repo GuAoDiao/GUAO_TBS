@@ -3,7 +3,7 @@
 #include "ShopNPCTilePawn.h"
 
 
-#include "GameProps/PropsManager.h"
+#include "PropAndCapabilitiesManager.h"
 #include "UI/NPCShop.h"
 #include "TBSPlayerState.h"
 #include "GameProps/GamePropsComponent.h"
@@ -13,7 +13,7 @@ void AShopNPCTilePawn::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 
 
-	PropsShopInfo = FPropsManager::GetPropsManagerInstance()->GetShopInfo(NPCName);
+	PropsShopInfo = FPropAndCapabilitiesManager::GetInstance()->GetShopInfo(NPCName);
 }
 
 

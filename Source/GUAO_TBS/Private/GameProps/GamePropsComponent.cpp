@@ -2,7 +2,7 @@
 
 #include "GamePropsComponent.h"
 
-#include "GameProps/PropsManager.h"
+#include "PropAndCapabilitiesManager.h"
 #include "GameProps/GameCapabilities.h"
 
 UGamePropsComponent::UGamePropsComponent()
@@ -86,7 +86,7 @@ void UGamePropsComponent::UseSingleProps(int32 PropsID)
 		{
 			if (PropsStoreBag[i].Nums > 0)
 			{
-				FPropsManager* PropsManager = FPropsManager::GetPropsManagerInstance();
+				FPropAndCapabilitiesManager* PropsManager = FPropAndCapabilitiesManager::GetInstance();
 				const FGamePropsInfo& PropsInfo = PropsManager->GetPropsInfoFormID(PropsStoreBag[i].ID);
 
 				if (PropsInfo.Type == EGamePropsType::Consumables)

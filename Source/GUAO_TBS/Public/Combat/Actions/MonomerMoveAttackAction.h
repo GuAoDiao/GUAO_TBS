@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
 #include "Combat/Actions/MoveAttackAction.h"
 
-#include "CoreMinimal.h"
 
 class FMonomerMoveAttackAction : public FMoveAttackAction
 {

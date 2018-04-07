@@ -1,25 +1,26 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "PropsManager.h"
+#include "PropAndCapabilitiesManager.h"
 
 #include "Package.h"
 
 #include "GameProps/GameCapabilities.h"
-#include "GameProps/CombatCapabilities.h"
+#include "Combat/CombatCapabilities.h"
 
-FPropsManager* FPropsManager::PropsManagerInstance = nullptr;
+FPropAndCapabilitiesManager* FPropAndCapabilitiesManager::PropAndCapabilitiesManagerInstance = nullptr;
 
-FPropsManager* FPropsManager::GetPropsManagerInstance()
+FPropAndCapabilitiesManager* FPropAndCapabilitiesManager::GetInstance()
 {
-	if (!PropsManagerInstance) { PropsManagerInstance = new FPropsManager(); }
-	check(PropsManagerInstance);
-	return PropsManagerInstance;
+	if (!PropAndCapabilitiesManagerInstance) { PropAndCapabilitiesManagerInstance = new FPropAndCapabilitiesManager(); }
+	check(PropAndCapabilitiesManagerInstance);
+	return PropAndCapabilitiesManagerInstance;
 }
 
-FPropsManager::FPropsManager()
+FPropAndCapabilitiesManager::FPropAndCapabilitiesManager()
 {
 	GamePropsInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_GamePropsInfo.DT_GamePropsInfo'"));
 	ConsumablesPropsInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_ConsumablesPropsInfo.DT_ConsumablesPropsInfo'"));
+	PropsShopInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_PropsShopInfo.DT_PropsShopInfo'"));
 
 	
 	GameCapabilitiesClassInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_GameCapabilitiesClassInfo.DT_GameCapabilitiesClassInfo'"));
@@ -36,8 +37,7 @@ FPropsManager::FPropsManager()
 		}
 	}
 
-
-	CombatCapabilitiesClassInfoDT = nullptr;
+	CombatCapabilitiesClassInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_CombatCapabilitiesClassInfo.DT_CombatCapabilitiesClassInfo'"));
 
 	if (CombatCapabilitiesClassInfoDT)
 	{
@@ -52,10 +52,9 @@ FPropsManager::FPropsManager()
 		}
 	}
 
-	PropsShopInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_PropsShopInfo.DT_PropsShopInfo'"));
 }
 
-const FGamePropsInfo& FPropsManager::GetPropsInfoFormID(int32 PropsID)
+const FGamePropsInfo& FPropAndCapabilitiesManager::GetPropsInfoFormID(int32 PropsID)
 {
 	if (AllGamePropsInfo.Contains(PropsID))
 	{
@@ -76,7 +75,7 @@ const FGamePropsInfo& FPropsManager::GetPropsInfoFormID(int32 PropsID)
 }
 
 
-const FConsumablesPropsInfo& FPropsManager::GetConsumablesPropsInfoFormID(int32 PropsID)
+const FConsumablesPropsInfo& FPropAndCapabilitiesManager::GetConsumablesPropsInfoFormID(int32 PropsID)
 {
 	if (AllConsumablesPropsInfo.Contains(PropsID))
 	{
@@ -96,7 +95,7 @@ const FConsumablesPropsInfo& FPropsManager::GetConsumablesPropsInfoFormID(int32 
 	return FConsumablesPropsInfo::EmptyConsumablesProps;
 }
 
-UCombatCapabilities* FPropsManager::GetCombatCapabilities(ECombatCapabilitiesType InConsumablesType)
+UCombatCapabilities* FPropAndCapabilitiesManager::GetCombatCapabilities(ECombatCapabilitiesType InConsumablesType)
 {
 	if (AllCombatCapabilities.Contains(InConsumablesType))
 	{
@@ -105,7 +104,7 @@ UCombatCapabilities* FPropsManager::GetCombatCapabilities(ECombatCapabilitiesTyp
 	return nullptr;
 }
 
-UGameCapabilities* FPropsManager::GetGameCapabilities(EGameCapabilitiesType InGameCapabilitiesType)
+UGameCapabilities* FPropAndCapabilitiesManager::GetGameCapabilities(EGameCapabilitiesType InGameCapabilitiesType)
 {
 	if (AllGameCapabilities.Contains(InGameCapabilitiesType))
 	{
@@ -115,7 +114,7 @@ UGameCapabilities* FPropsManager::GetGameCapabilities(EGameCapabilitiesType InGa
 }
 
 
-const FPropsShopInfo& FPropsManager::GetShopInfo(const FString& InShopNPCName) const
+const FPropsShopInfo& FPropAndCapabilitiesManager::GetShopInfo(const FString& InShopNPCName) const
 {
 	if (PropsShopInfoDT)
 	{

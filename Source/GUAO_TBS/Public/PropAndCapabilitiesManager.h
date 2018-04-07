@@ -12,13 +12,13 @@ class UGameCapabilities;
 /**
  * 
  */
-class GUAO_TBS_API FPropsManager
+class GUAO_TBS_API FPropAndCapabilitiesManager
 {	
 protected:
-	FPropsManager();
-	static FPropsManager* PropsManagerInstance;
+	FPropAndCapabilitiesManager();
+	static FPropAndCapabilitiesManager* PropAndCapabilitiesManagerInstance;
 public:
-	static FPropsManager* GetPropsManagerInstance();
+	static FPropAndCapabilitiesManager* GetInstance();
 	
 public:
 	const FGamePropsInfo& GetPropsInfoFormID(int32 PropsID);

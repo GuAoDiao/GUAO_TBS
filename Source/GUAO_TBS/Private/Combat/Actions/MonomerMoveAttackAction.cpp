@@ -8,6 +8,9 @@
 #include "Combat/CombatManager.h"
 #include "Combat/Actions/MoveAction.h"
 
+#include "PropAndCapabilitiesManager.h"
+#include "Combat/CombatCapabilities/MonomerDamageCapabilities.h"
+
 FMonomerMoveAttackAction::FMonomerMoveAttackAction(int32 InTargetTeam, int32 InTargetIndex)
 {
 	TargetTeam = InTargetTeam;
@@ -30,15 +33,13 @@ void FMonomerMoveAttackAction::AttackImplementation()
 {
 	if (OwnerCombatPawn && TargetPawn)
 	{
-		float Damage = OwnerCombatPawn->Attack - TargetPawn->Defence;
-
-		float Luck = OwnerCombatPawn->Luck - TargetPawn->Luck;
-		if (FMath::RandRange(0.f, 1000.f) / 10.f < Luck)
+		FPropAndCapabilitiesManager* PropsManager = FPropAndCapabilitiesManager::GetInstance();
+		UMonomerDamageCapabilities* MonomerAttackCapabilities = Cast<UMonomerDamageCapabilities>(PropsManager->GetCombatCapabilities(ECombatCapabilitiesType::MonomerDamage));
+		if (MonomerAttackCapabilities)
 		{
-			Damage *= 2.f;
-			UE_LOG(LogTemp, Warning, TEXT("-_- good luck, critical attack"));
+			MonomerAttackCapabilities->InitializeCombatCapabilities(OwnerCombatPawn->GetWorld(), TEXT("1"));
+			MonomerAttackCapabilities->SetOwnerAndAttackTarget(OwnerCombatPawn, TargetPawn);
+			MonomerAttackCapabilities->UseCombatCapabilities();
 		}
-
-		TargetPawn->AcceptDamage(Damage, OwnerCombatPawn);
 	}
 }

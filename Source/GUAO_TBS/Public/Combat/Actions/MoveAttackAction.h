@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
 #include "Combat/Actions/ICombatAction.h"
 
 namespace EAttackState
