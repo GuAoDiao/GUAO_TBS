@@ -19,11 +19,18 @@ class GUAO_TBS_API ANPCTilePawn : public ATilePawn
 public:
 	ANPCTilePawn();
 
-	virtual void TalkWith(ATBSCharacter* InPlayer);
-	
+	void TalkWith(ATBSCharacter* InPlayer);
 
+	virtual void OnTalkWithImplementation(ATBSCharacter* InPlayer);
+	
+	DECLARE_DELEGATE_OneParam(FOnTalkWithDelegate, ATBSCharacter* /*InPlayer*/);
+	FOnTalkWithDelegate OnTalkWithDelegate;
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	FString NPCName;
+
+	// Talk when more than zero.
+	UPROPERTY(EditDefaultsOnly)
+	int32 CurrentDialogueID;
 };

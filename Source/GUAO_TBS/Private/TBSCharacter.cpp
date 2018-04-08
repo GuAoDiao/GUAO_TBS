@@ -13,6 +13,8 @@
 #include "GridPathFinding.h"
 #include "TilePawn/NPC/NPCTilePawn.h"
 #include "TilePawn/Enemy/EnemyTilePawn.h"
+#include "TBSGameAssetManager.h"
+#include "Dialogue/NPCDialogue.h"
 
 ATBSCharacter::ATBSCharacter()
 {
@@ -291,5 +293,27 @@ void ATBSCharacter::EndMovement()
 		}
 
 		SelectTilePawnIndex = -1;
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+/// _Dialogue
+void ATBSCharacter::OpenDialogue(int32 DialogueID)
+{
+	const FDialogueInfo* DialogueInfo = FTBSGameAssetManager::GetInstance()->GetDialogueInfo(DialogueID);
+	if (DialogueInfo)
+	{
+		APlayerController* OwnerPC = Cast<APlayerController>(GetController());
+		TSubclassOf<UNPCDialogue> DialogueClass =  FTBSGameAssetManager::GetInstance()->GetDialogueClass(DialogueInfo->Type);
+		if (OwnerPC && DialogueClass)
+		{
+			UNPCDialogue* Dialogue = CreateWidget<UNPCDialogue>(OwnerPC, DialogueClass);
+			if (Dialogue)
+			{
+				Dialogue->DisplayDialogue(DialogueID);
+				Dialogue->AddToViewport();
+			}
+		}
 	}
 }

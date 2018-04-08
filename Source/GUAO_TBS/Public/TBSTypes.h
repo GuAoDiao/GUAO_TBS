@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "Templates/SubclassOf.h"
 
 #include "TBSTypes.generated.h"
 
@@ -111,8 +112,9 @@ struct FCombatPawnClassInfo : public FTableRowBase
 public:
 	UPROPERTY(EditDefaultsOnly)
 	FString CombatPawnName;
+	
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<class ACombatPawn> CombatPawnClass;
+	TSubclassOf<class ACombatPawn > CombatPawnClass;
 };
 
 USTRUCT(BlueprintType)
@@ -182,6 +184,102 @@ public:
 	FString TeamName;
 };
 
+
+UENUM(BlueprintType)
+enum class EDialogueType : uint8
+{
+	Common,
+	Final,
+	Choice,
+	Task,
+};
+
+USTRUCT(BlueprintType)
+struct FDialogueInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 ID;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	FText Content;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 NextID;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	EDialogueType Type;
+};
+
+USTRUCT(BlueprintType)
+struct FDialogueClassInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	EDialogueType Type;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TSubclassOf<class UNPCDialogue > DialogueClass;
+};
+
+USTRUCT(BlueprintType)
+struct FDialogueTaskInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 DialogueID;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 TaskID;
+};
+
+
+USTRUCT(BlueprintType)
+struct FDialogueChoiceInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 DialogueID;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TMap<int32 /*NextDialogueID*/, FText/*SelectOption*/> SelectOptions;
+};
+
+UENUM(BlueprintType)
+enum class EGameTaskType : uint8
+{
+	KillTask,
+	DialogueTask,
+	Colleetion
+};
+
+USTRUCT(BlueprintType)
+struct FGameTaskInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 ID;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	FText Title;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	FText Description;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	EGameTaskType Type;
+	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TSubclassOf<class UGameTask > TaskClass;
+};
+
+USTRUCT(BlueprintType)
+struct FGameKillTaskInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 ID;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TMap<int32/*EnemyID*/, int32/*Nums*/> TaskInfo;
+};
 
 #define ECC_PathTrace ECC_GameTraceChannel1
 #define ECC_RangeTrace ECC_GameTraceChannel1

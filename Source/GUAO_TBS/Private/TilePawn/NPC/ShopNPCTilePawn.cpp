@@ -17,7 +17,7 @@ void AShopNPCTilePawn::OnConstruction(const FTransform& Transform)
 }
 
 
-void AShopNPCTilePawn::TalkWith(ATBSCharacter* InPlayer)
+void AShopNPCTilePawn::OnTalkWithImplementation(ATBSCharacter* InPlayer)
 {
 	if (!NPCShop && NPCShopClass)
 	{

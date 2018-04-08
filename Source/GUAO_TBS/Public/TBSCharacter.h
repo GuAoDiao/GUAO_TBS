@@ -77,4 +77,9 @@ protected:
 
 	float PawnMovementSpeedAcceleration;
 	float PawnMaxSpeed;
+
+	//////////////////////////////////////////////////////////////////////////
+	/// _Dialogue
+public:
+	void OpenDialogue(int32 DialogueID);
 };

@@ -23,7 +23,7 @@ public:
 
 	virtual void OnConstruction(const FTransform& Transform) override;
 	
-	virtual void TalkWith(ATBSCharacter* InPlayer) override;
+	virtual void OnTalkWithImplementation(ATBSCharacter* InPlayer) override;
 
 	void BuyItem(int32 ID);
 
