@@ -15,7 +15,12 @@ class GUAO_TBS_API ACombatLeadingRolePawn : public ACombatPawn
 	GENERATED_BODY()
 	
 public:
+	ACombatLeadingRolePawn();
+
 	virtual void MakeDecisionImplementation() override;	
 	
-	
+	void ToggleCurentDecisionToAutoAttack();
+
+protected:
+	class FPlayerDecisionMaker* PlayerDecisionMaker;
 };

@@ -3,7 +3,6 @@
 #include "PlayerDecisionMaker.h"
 
 #include "Combat/CombatPawn.h"
-#include "Combat/PlayerDecisionMakerUI.h"
 
 FPlayerDecisionMaker::FPlayerDecisionMaker()
 {
@@ -35,4 +34,8 @@ bool FPlayerDecisionMaker::MakeDecision(float DeltaSeconds)
 	return false;
 }
 
+void FPlayerDecisionMaker::InterruptMakeDecision()
+{
+	if (DecisionMakeUI) { DecisionMakeUI->RemoveFromParent(); }
+}
 

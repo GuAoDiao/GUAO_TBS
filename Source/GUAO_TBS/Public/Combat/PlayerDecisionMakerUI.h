@@ -31,14 +31,22 @@ public:
 	void ClearAllDelegate() { SelectTeamDelegate.Unbind(); SelectAttackeDelegate.Unbind(); }
 
 	UFUNCTION(BlueprintPure)
-	bool SelectTeamDelegateIsBind() { return SelectTeamDelegate.IsBound(); }
+	bool SelectTeamDelegateIsBind() const { return SelectTeamDelegate.IsBound(); }
 	UFUNCTION(BlueprintPure)
-	bool SelectAttackeDelegateIsBind() { return SelectAttackeDelegate.IsBound(); }
+	bool SelectAttackeDelegateIsBind() const { return SelectAttackeDelegate.IsBound(); }
+	UFUNCTION(BlueprintPure)
+	bool SelectMultiAttackeDelegateIsBind() const { return SelectMultiAttackeDelegate.IsBound(); }
+
+	UFUNCTION(BlueprintPure)
+	int32 GetMaxMultiSelectNum() const { return MaxMultiSelectNum; }
 
 	UFUNCTION(BlueprintCallable)
 	void CallSelectTeamDelegate(int32 TargetTeam) { SelectTeamDelegate.ExecuteIfBound(TargetTeam); }
 	UFUNCTION(BlueprintCallable)
 	void CallSelectAttackeDelegate(int32 TargetTeam, int32 TargetEnemy) { SelectAttackeDelegate.ExecuteIfBound(TargetTeam, TargetEnemy); }
+	UFUNCTION(BlueprintCallable)
+	void CallSelectMultiAttackeDelegate(int32 TargetTeam, const TArray<int32> TargetEnemy) { SelectMultiAttackeDelegate.ExecuteIfBound(TargetTeam, TargetEnemy); }
+
 
 	DECLARE_DELEGATE_OneParam(FSelectTeamDelegate, int32 /*TargetTeam*/);
 	FSelectTeamDelegate SelectTeamDelegate;
@@ -46,16 +54,26 @@ public:
 	DECLARE_DELEGATE_TwoParams(FSelectAttackeDelegate, int32 /*TargetTeam*/, int32 /*TargetEnemy*/);
 	FSelectAttackeDelegate SelectAttackeDelegate;
 
+	DECLARE_DELEGATE_TwoParams(FSelectMultiAttackeDelegate, int32 /*TargetTeam*/, const TArray<int32>& /*TargetEnemy*/);
+	FSelectMultiAttackeDelegate SelectMultiAttackeDelegate;
+
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowSelectList(bool bDisplayTeammate, bool bDisplayEnemy);
+
 	//////////////////////////////////////////////////////////////////////////
 	/// Make Decision
 protected:
 	UFUNCTION(BlueprintCallable)
-	void WantedToMakeCommonAttackAction() { SelectAttackeDelegate.BindUObject(this, &UPlayerDecisionMakerUI::MakeCommonAttackAction); }
+	void WantedToMakeCommonAttackAction();
 	UFUNCTION(BlueprintCallable)
-	void WantedToMakeTeamAttackAction() { SelectTeamDelegate.BindUObject(this, &UPlayerDecisionMakerUI::MakeTeamAttackAction); }
-	
+	void WantedToMakeTeamAttackAction();
+	UFUNCTION(BlueprintCallable)
+	void WantedToMakeMultiAttackAction();
+
 	void MakeCommonAttackAction(int32 TargetTeam, int32 TargetEnemy);
 	void MakeTeamAttackAction(int32 TargetTeam);
+	void MakeMultiAttackAction(int32 TargetTeam, const TArray<int32>& TargetEnemy);
 
 	UFUNCTION(BlueprintCallable)
 	void MakeDoNothingAction();
@@ -69,4 +87,5 @@ protected:
 
 	float RemainingTime;
 	bool bHasMadeDecision;
+	int32 MaxMultiSelectNum;
 };

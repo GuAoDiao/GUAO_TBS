@@ -89,7 +89,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool IsAutoAttack() const { return bIsAutoAttack; }
 	UFUNCTION(BlueprintCallable)
-	void SetIsAutoAttack(bool bInIsAutoAttack) { bIsAutoAttack = bInIsAutoAttack; }
+	void SetIsAutoAttack(bool bInIsAutoAttack);
 protected:
 
 	int32 CurrentTeamNum;

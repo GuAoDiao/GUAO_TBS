@@ -11,6 +11,7 @@
 
 #include "Combat/CombatPawn.h"
 #include "Combat/CombatLayout.h"
+#include "Combat/CombatLeadingRolePawn.h"
 #include "TBSPlayerController.h"
 #include "TBSGameState.h"
 #include "TBSHUD.h"
@@ -394,4 +395,17 @@ bool ACombatManager::TryToRunAway(ACombatPawn* InCombatPawn)
 	}
 
 	return false;
+}
+
+void ACombatManager::SetIsAutoAttack(bool bInIsAutoAttack)
+{
+	bIsAutoAttack = bInIsAutoAttack;
+
+	if (IsToggleTargetState(ECombatState::Decision))
+	{
+		ACombatLeadingRolePawn* PlayerPawn = Cast<ACombatLeadingRolePawn>(AllTeamsInfo[CurrentTeamNum].AllCombatPawnInfo[CurrentPawnNum].CombatPawn);
+		if (PlayerPawn) { PlayerPawn->ToggleCurentDecisionToAutoAttack(); }
+	}
+
+	if (CombatLayout) { CombatLayout->UpdateAutoAttackToggleDisplay(bIsAutoAttack); }
 }

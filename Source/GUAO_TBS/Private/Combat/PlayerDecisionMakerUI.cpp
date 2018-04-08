@@ -31,6 +31,29 @@ bool UPlayerDecisionMakerUI::MakeDecision(float DeltaSeconds)
 	return bHasMadeDecision;
 }
 
+
+void UPlayerDecisionMakerUI::WantedToMakeCommonAttackAction()
+{
+	ClearAllDelegate();
+	SelectAttackeDelegate.BindUObject(this, &UPlayerDecisionMakerUI::MakeCommonAttackAction);
+	ShowSelectList(false, true);
+}
+
+void UPlayerDecisionMakerUI::WantedToMakeTeamAttackAction()
+{
+	ClearAllDelegate();
+	SelectTeamDelegate.BindUObject(this, &UPlayerDecisionMakerUI::MakeTeamAttackAction);
+	ShowSelectList(false, true);
+}
+void UPlayerDecisionMakerUI::WantedToMakeMultiAttackAction()
+{
+	ClearAllDelegate();
+	MaxMultiSelectNum = 3;
+	SelectMultiAttackeDelegate.BindUObject(this, &UPlayerDecisionMakerUI::MakeMultiAttackAction);
+	ShowSelectList(false, true);
+}
+
+
 void UPlayerDecisionMakerUI::MakeCombatAction(class ICombatAction* CombatAction)
 {
 	checkf(OwnerCombatPawn, TEXT("-_- Owner Combat Pawn must exists."));
@@ -62,4 +85,9 @@ void UPlayerDecisionMakerUI::MakeTeamAttackAction(int32 TargetTeam)
 	}
 
 	MakeCombatAction(new FMultiMoveAttackAction(TargetTeam, AttackEnemys));
+}
+
+void UPlayerDecisionMakerUI::MakeMultiAttackAction(int32 TargetTeam, const TArray<int32>& TargetEnemy)
+{
+	MakeCombatAction(new FMultiMoveAttackAction(TargetTeam, TargetEnemy));
 }
