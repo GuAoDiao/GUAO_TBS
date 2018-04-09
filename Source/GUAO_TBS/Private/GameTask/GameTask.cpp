@@ -2,6 +2,13 @@
 
 #include "GameTask.h"
 
+#include "TBSCharacter.h"
 
-
-
+bool UGameTask::CanAccpet(class ATBSCharacter* Character)
+{
+	return true;
+}
+void UGameTask::BeAccpeted(class ATBSCharacter* Character)
+{
+	UE_LOG(LogTemp, Log, TEXT("-_- the task be accepted."));
+}

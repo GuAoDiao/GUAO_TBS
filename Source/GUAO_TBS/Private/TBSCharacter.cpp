@@ -15,18 +15,19 @@
 #include "TilePawn/Enemy/EnemyTilePawn.h"
 #include "TBSGameAssetManager.h"
 #include "Dialogue/NPCDialogue.h"
+#include "GameTask/GameTaskComponent.h"
 
 ATBSCharacter::ATBSCharacter()
 {
 	bDisableClickTile = false;
 
-	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
+	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
 	SpringArmComp->TargetArmLength = 2000.f;
 	SpringArmComp->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
 	SpringArmComp->bDoCollisionTest = false;
 	SpringArmComp->SetupAttachment(GridAnchor);
 	
-	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
+	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
 
 	ScrollRoof = 2000.f;
@@ -37,7 +38,7 @@ ATBSCharacter::ATBSCharacter()
 	CameraScrollSpeed = 200000.f;
 
 
-	MovePathComp = CreateDefaultSubobject<USplineComponent>(TEXT("MovePathComp"));
+	MovePathComp = CreateDefaultSubobject<USplineComponent>("MovePathComp");
 	SplineHeight = 0.7f;
 
 	CurrentSpeed = 0.f;
@@ -46,6 +47,8 @@ ATBSCharacter::ATBSCharacter()
 	bCanMoveViewport = true;
 
 	TileType = ETBSTileType::Player;
+
+	GameTaskComp = CreateDefaultSubobject<UGameTaskComponent>("GameTask");
 }
 
 void ATBSCharacter::OnConstruction(const FTransform& Transform)

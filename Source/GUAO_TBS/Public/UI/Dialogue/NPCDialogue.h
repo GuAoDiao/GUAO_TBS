@@ -27,6 +27,15 @@ public:
 	void UpdateDisplayContent(const FText& Content);
 
 	UFUNCTION(BlueprintImplementableEvent)
+	void ShowChoiceOptionList();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowTaskList(int32 TaskID);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void AddChoiceOption(const FText& Option, int32 NextID);
+
+	UFUNCTION(BlueprintImplementableEvent)
 	void ShowFinishDialogueButton();
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -37,4 +46,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ShowNextDialogue(int32 NextID);
+
+	UFUNCTION(BlueprintCallable)
+	void AcceptTask(int32 TaskID);
 };

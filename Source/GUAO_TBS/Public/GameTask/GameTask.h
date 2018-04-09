@@ -14,7 +14,18 @@ class GUAO_TBS_API UGameTask : public UObject
 {
 	GENERATED_BODY()
 	
-	
-	
-	
+public:
+	bool CanAccpet(class ATBSCharacter* Character);
+	void BeAccpeted(class ATBSCharacter* Character);
+
+	bool CanFinished();
+	void BeCannelled();
+	void BeFinished();
+
+	void OnGameTaskOrogress();
+
+	void GetGameTaskDisplayInfo();	
+
+protected:
+	class ATBSCharacter* CurrentExcuteCharacter;
 };

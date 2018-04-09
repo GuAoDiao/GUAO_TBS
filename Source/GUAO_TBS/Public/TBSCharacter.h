@@ -8,6 +8,7 @@
 
 class AGridManager;
 class FGridPathFinding;
+class UGameTaskComponent;
 
 UCLASS()
 class GUAO_TBS_API ATBSCharacter : public ATilePawn
@@ -82,4 +83,10 @@ protected:
 	/// _Dialogue
 public:
 	void OpenDialogue(int32 DialogueID);
+	//////////////////////////////////////////////////////////////////////////
+	/// Game Task
+public:
+	UGameTaskComponent* GetGameTaskComp() const { return GameTaskComp; }
+protected:
+	UGameTaskComponent* GameTaskComp;
 };
