@@ -35,7 +35,7 @@ void ATBSPlayerState::InitializePlayerCombatTeam()
 		FActorSpawnParameters ActorSpawnParameters;
 		ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		FCombatPawnManager* CombatPawnManager = FCombatPawnManager::GetCombatPawnManagerInstance();
+		FCombatPawnManager* CombatPawnManager = FCombatPawnManager::GetInstance();
 
 		for (const FString& CombatPawnName : CombatPawnNameInPlayerTeam)
 		{

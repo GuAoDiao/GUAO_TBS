@@ -40,7 +40,7 @@ void AEnemyTilePawn::BeginCombat()
 		FCombatTeam EnemyTeam;
 		for (const FString& CombatEnemyName : AllCombatEnemy)
 		{
-			TSubclassOf<ACombatPawn> CombatEnemyClass = FCombatPawnManager::GetCombatPawnManagerInstance()->GetCombatPawnClassFromName(CombatEnemyName);
+			TSubclassOf<ACombatPawn> CombatEnemyClass = FCombatPawnManager::GetInstance()->GetCombatPawnClassFromName(CombatEnemyName);
 			ACombatPawn* ComatPawn = CombatEnemyClass ? World->SpawnActor<ACombatPawn>(CombatEnemyClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters) : nullptr;
 			if (ComatPawn)
 			{

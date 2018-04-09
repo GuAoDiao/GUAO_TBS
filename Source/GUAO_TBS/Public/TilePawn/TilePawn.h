@@ -19,9 +19,7 @@ class GUAO_TBS_API ATilePawn : public APawn
 public:
 	ATilePawn();
 
-
 	virtual void OnConstruction(const FTransform& Transform) override;
-
 	//////////////////////////////////////////////////////////////////////////
 	/// Grid Info
 public:
@@ -45,4 +43,15 @@ protected:
 protected:
 	UPROPERTY(VisibleAnywhere)
 	class USkeletalMeshComponent* PawnSkeletalMeshComp;	
+
+
+	//////////////////////////////////////////////////////////////////////////
+	/// TilePawn
+public:
+	int32 GetTilePawnID() const { return TilePawnID; }
+protected:
+	UPROPERTY(EditAnywhere)
+	int32 TilePawnID;
+	UPROPERTY(EditAnywhere)
+	FName TilePawnName;
 };

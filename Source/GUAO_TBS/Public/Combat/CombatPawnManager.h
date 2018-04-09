@@ -17,7 +17,7 @@ class GUAO_TBS_API FCombatPawnManager
 public:
 	FCombatPawnManager();
 
-	static FCombatPawnManager* GetCombatPawnManagerInstance();
+	static FCombatPawnManager* GetInstance();
 private:
 	static FCombatPawnManager* CombatPawnManager;
 

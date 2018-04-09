@@ -6,6 +6,7 @@
 #include "EngineUtils.h"
 #include "Components/SkeletalMeshComponent.h"
 
+#include "TilePawn/TilePawnManager.h"
 #include "GridManager.h"
 
 ATilePawn::ATilePawn()
@@ -19,6 +20,8 @@ ATilePawn::ATilePawn()
 	PawnSkeletalMeshComp->SetupAttachment(GridAnchor);
 
 	AutoPossessAI = EAutoPossessAI::Disabled;
+
+	TilePawnID = -1;
 }
 
 void ATilePawn::OnConstruction(const FTransform& Transform)
@@ -35,5 +38,15 @@ void ATilePawn::OnConstruction(const FTransform& Transform)
 		TileIndex = GridManager->VectorToIndex(GetActorLocation());
 
 		GridAnchor->SetWorldLocation(GridManager->GetVectorFromIndex(TileIndex));
+	}
+	
+	const FTilePawnInfo* TilePawnInfo = FTilePawnManager::GetInstance()->GetTilePawnInfo(TilePawnID);
+	if (TilePawnInfo)
+	{
+		TilePawnName = TilePawnInfo->Name;
+
+		PawnSkeletalMeshComp->SetSkeletalMesh(TilePawnInfo->SkeletalMesh);
+		// PawnSkeletalMeshComp->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+		PawnSkeletalMeshComp->PlayAnimation(TilePawnInfo->IdleAnim, true);
 	}
 }

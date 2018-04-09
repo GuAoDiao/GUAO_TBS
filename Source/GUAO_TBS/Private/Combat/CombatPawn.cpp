@@ -54,7 +54,7 @@ void ACombatPawn::SetCombatPawnName(const FString& InCombatPawnName)
 
 	if (!CombatPawnName.IsEmpty())
 	{
-		FCombatPawnManager* CombatPawnManager = FCombatPawnManager::GetCombatPawnManagerInstance();
+		FCombatPawnManager* CombatPawnManager = FCombatPawnManager::GetInstance();
 		CombatPawnManager->GetBaseCombatDisplayInfo(CombatPawnName, BaseDisplayInfo);
 		if (BaseDisplayInfo.SkeletalMesh)
 		{

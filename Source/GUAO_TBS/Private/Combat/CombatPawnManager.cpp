@@ -15,14 +15,14 @@ FCombatPawnManager::FCombatPawnManager()
 	// FBaseCombatPawnFightInfo
 }
 
-FCombatPawnManager* FCombatPawnManager::GetCombatPawnManagerInstance()
+FCombatPawnManager* FCombatPawnManager::GetInstance()
 {
 	if (!CombatPawnManager)
 	{
 		CombatPawnManager = new FCombatPawnManager();
 	}
 
-	check(CombatPawnManager);
+	checkf(CombatPawnManager, TEXT("-_- the Combat Pawn Manager must be exists."));
 
 	return CombatPawnManager;
 }

@@ -114,11 +114,11 @@ UGameCapabilities* FPropAndCapabilitiesManager::GetGameCapabilities(EGameCapabil
 }
 
 
-const FPropsShopInfo& FPropAndCapabilitiesManager::GetShopInfo(const FString& InShopNPCName) const
+const FPropsShopInfo& FPropAndCapabilitiesManager::GetShopInfo(const FName& InShopNPCName) const
 {
 	if (PropsShopInfoDT)
 	{
-		FPropsShopInfo* PropsShopInfo = PropsShopInfoDT->FindRow<FPropsShopInfo>(FName(*InShopNPCName), TEXT("-_- find PropsShop info"));
+		FPropsShopInfo* PropsShopInfo = PropsShopInfoDT->FindRow<FPropsShopInfo>(InShopNPCName, TEXT("-_- find PropsShop info"));
 		if (PropsShopInfo)
 		{
 			return *PropsShopInfo;

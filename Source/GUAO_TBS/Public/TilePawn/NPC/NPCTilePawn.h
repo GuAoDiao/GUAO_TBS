@@ -27,9 +27,6 @@ public:
 	FOnTalkWithDelegate OnTalkWithDelegate;
 
 protected:
-	UPROPERTY(EditDefaultsOnly)
-	FString NPCName;
-
 	// Talk when more than zero.
 	UPROPERTY(EditDefaultsOnly)
 	int32 CurrentDialogueID;

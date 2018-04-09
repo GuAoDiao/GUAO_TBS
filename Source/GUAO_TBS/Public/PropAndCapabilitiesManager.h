@@ -23,7 +23,7 @@ public:
 public:
 	const FGamePropsInfo& GetPropsInfoFormID(int32 PropsID);
 	const FConsumablesPropsInfo& GetConsumablesPropsInfoFormID(int32 PropsID);
-	const FPropsShopInfo& GetShopInfo(const FString& InShopNPCName) const;
+	const FPropsShopInfo& GetShopInfo(const FName& InShopNPCName) const;
 
 	UCombatCapabilities* GetCombatCapabilities(ECombatCapabilitiesType InConsumablesType);
 	UGameCapabilities* GetGameCapabilities(EGameCapabilitiesType InGameCapabilitiesType);

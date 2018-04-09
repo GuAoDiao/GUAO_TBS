@@ -82,7 +82,7 @@ struct FBaseCombatPawnDisplayInfo : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditDefaultsOnly)
-	FString CombatPawnName;
+	int32 ID;
 
 	UPROPERTY(EditDefaultsOnly)
 	class USkeletalMesh* SkeletalMesh;
@@ -111,8 +111,7 @@ struct FCombatPawnClassInfo : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditDefaultsOnly)
-	FString CombatPawnName;
-	
+	int32 ID;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ACombatPawn > CombatPawnClass;
 };
@@ -122,6 +121,8 @@ struct FBaseCombatPawnFightInfo : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 public:
+	UPROPERTY(EditDefaultsOnly)
+	int32 ID;
 	UPROPERTY(EditDefaultsOnly)
 	FString CombatPawnName;
 	UPROPERTY(EditDefaultsOnly)
@@ -138,6 +139,20 @@ public:
 	float Luck;
 };
 
+USTRUCT(BlueprintType)
+struct FTilePawnInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly)
+	int32 ID;
+	UPROPERTY(EditDefaultsOnly)
+	FName Name;
+	UPROPERTY(EditDefaultsOnly)
+	class USkeletalMesh* SkeletalMesh;
+	UPROPERTY(EditDefaultsOnly)
+	class UAnimationAsset* IdleAnim;
+};
 
 USTRUCT(BlueprintType)
 struct FCombatTeam
