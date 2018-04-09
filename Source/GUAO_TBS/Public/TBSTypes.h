@@ -206,7 +206,8 @@ enum class EDialogueType : uint8
 	Common,
 	Final,
 	Choice,
-	Task,
+	AcceptTask,
+	CompleteTask
 };
 
 USTRUCT(BlueprintType)
@@ -274,6 +275,17 @@ struct FGameTaskInfo : public FTableRowBase
 public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	int32 ID;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 AcceptFromNPCID;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 AcceptFromDialogueID;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 FinishedNPCID;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 FinishedDialogueID;
+
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	FText Title;
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)

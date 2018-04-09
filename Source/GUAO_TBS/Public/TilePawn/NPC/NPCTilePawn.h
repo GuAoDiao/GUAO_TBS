@@ -21,13 +21,17 @@ public:
 
 	void TalkWith(ATBSCharacter* InPlayer);
 
+
+
 	virtual void OnTalkWithImplementation(ATBSCharacter* InPlayer);
 	
 	DECLARE_DELEGATE_OneParam(FOnTalkWithDelegate, ATBSCharacter* /*InPlayer*/);
 	FOnTalkWithDelegate OnTalkWithDelegate;
 
+	void SetTaskDialogueID(int32 InTaskDialogueID) {TaskDialogueID = InTaskDialogueID;}
 protected:
 	// Talk when more than zero.
 	UPROPERTY(EditDefaultsOnly)
-	int32 CurrentDialogueID;
+	int32 CommonDialogueID;
+	int32 TaskDialogueID;
 };

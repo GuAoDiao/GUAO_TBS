@@ -7,7 +7,8 @@
 ANPCTilePawn::ANPCTilePawn()
 {
 	TileType = ETBSTileType::NPC;
-	CurrentDialogueID = 0;
+	CommonDialogueID = 0;
+	TaskDialogueID = 0;
 }
 
 void ANPCTilePawn::TalkWith(ATBSCharacter* InPlayer)
@@ -25,8 +26,15 @@ void ANPCTilePawn::TalkWith(ATBSCharacter* InPlayer)
 
 void ANPCTilePawn::OnTalkWithImplementation(ATBSCharacter* InPlayer)
 {
-	if (InPlayer && CurrentDialogueID > 0)
+	if (InPlayer)
 	{
-		InPlayer->OpenDialogue(CurrentDialogueID);
+		if (TaskDialogueID > 0)
+		{
+			InPlayer->OpenDialogue(TaskDialogueID);
+		}
+		else if (CommonDialogueID > 0)
+		{
+			InPlayer->OpenDialogue(CommonDialogueID);
+		}
 	}
 }

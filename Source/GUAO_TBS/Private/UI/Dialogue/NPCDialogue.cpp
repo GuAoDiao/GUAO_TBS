@@ -17,6 +17,10 @@ void UNPCDialogue::DisplayDialogue(int32 DialogueID)
 	{
 		InitializeDialogue(DialogueInfo);
 	}
+	else
+	{
+		FinishDialogue();
+	}
 }
 
 
@@ -45,11 +49,18 @@ void UNPCDialogue::InitializeDialogue(const FDialogueInfo* DialogueInfo)
 			}
 			break;
 		}
-		case EDialogueType::Task:
+		case EDialogueType::AcceptTask:
 		{
 			const FDialogueTaskInfo* TaskInfo = FTBSGameAssetManager::GetInstance()->GetDialogueTaskInfo(DialogueInfo->ID);
 			checkf(TaskInfo, TEXT("-_- the dialogue task info must exists."));
-			ShowTaskList(TaskInfo->TaskID);
+			ShowAcceptTaskList(TaskInfo->TaskID);
+			break;
+		}
+		case EDialogueType::CompleteTask:
+		{
+			const FDialogueTaskInfo* TaskInfo = FTBSGameAssetManager::GetInstance()->GetDialogueTaskInfo(DialogueInfo->ID);
+			checkf(TaskInfo, TEXT("-_- the dialogue task info must exists."));
+			ShowCompleteTaskList(TaskInfo->TaskID);
 			break;
 		}
 		case EDialogueType::Final:
@@ -76,6 +87,18 @@ void UNPCDialogue::AcceptTask(int32 TaskID)
 	if(OwnerGameTaskComp)
 	{
 		OwnerGameTaskComp->AccpetGameTask(TaskID);
+	}
+	FinishDialogue();
+}
+
+void UNPCDialogue::CompleteTask(int32 TaskID)
+{
+	APlayerController* OwnerPC = GetOwningPlayer();
+	ATBSCharacter* OwnerTBSCharacter = OwnerPC ? Cast<ATBSCharacter>(OwnerPC->GetPawn()) : nullptr;
+	UGameTaskComponent* OwnerGameTaskComp = OwnerTBSCharacter ? OwnerTBSCharacter->GetGameTaskComp() : nullptr;
+	if (OwnerGameTaskComp)
+	{
+		OwnerGameTaskComp->CompleteGameTask(TaskID);
 	}
 	FinishDialogue();
 }

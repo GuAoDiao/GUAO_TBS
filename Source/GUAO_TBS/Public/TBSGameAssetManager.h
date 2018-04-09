@@ -37,6 +37,7 @@ protected:
 	//////////////////////////////////////////////////////////////////////////
 	/// Game Task
 public:
+	class UDataTable* GetGameTaskInfoDT() const { return GameTaskInfoDT; }
 	const FGameTaskInfo* GetGameTaskInfo(int32 GameTaskID) const;
 	const FGameKillTaskInfo* GetGameKillTaskInfo(int32 GameTaskID) const;
 

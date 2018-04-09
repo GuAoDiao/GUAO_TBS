@@ -2,11 +2,28 @@
 
 #include "GameTask.h"
 
-#include "TBSCharacter.h"
+#include "Engine/World.h"
+#include "EngineUtils.h"
 
-void UGameTask::Initilaize(int32 InGameTaskID)
+#include "TBSCharacter.h"
+#include "TilePawn/NPC/NPCTilePawn.h"
+
+void UGameTask::Initilaize(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo)
 {
 	GameTaskID = InGameTaskID;
+	checkf(InGameTaskInfo, TEXT("-_- Game Task Info must exists."));
+	GameTaskInfo = *InGameTaskInfo;
+
+	if (GameTaskInfo.AcceptFromNPCID)
+	{
+		for (TActorIterator<ANPCTilePawn> It(GetWorld()); It; ++It)
+		{
+			if (It->GetTilePawnID() == GameTaskInfo.AcceptFromNPCID)
+			{
+				It->SetTaskDialogueID(GameTaskInfo.AcceptFromDialogueID);
+			}
+		}
+	}
 }
 
 bool UGameTask::CanAccpet(class ATBSCharacter* Character)
@@ -15,5 +32,34 @@ bool UGameTask::CanAccpet(class ATBSCharacter* Character)
 }
 void UGameTask::BeAccpeted(class ATBSCharacter* Character)
 {
-	UE_LOG(LogTemp, Log, TEXT("-_- the task be accepted."));
+	if (GameTaskInfo.FinishedNPCID)
+	{
+		for (TActorIterator<ANPCTilePawn> It(GetWorld()); It; ++It)
+		{
+			if (It->GetTilePawnID() == GameTaskInfo.FinishedNPCID)
+			{
+				It->SetTaskDialogueID(GameTaskInfo.FinishedDialogueID);
+			}
+		}
+	}
+}
+
+
+bool UGameTask::CanFinished()
+{
+	return true;
+}
+
+void UGameTask::BeFinished()
+{
+	if (GameTaskInfo.FinishedNPCID)
+	{
+		for (TActorIterator<ANPCTilePawn> It(GetWorld()); It; ++It)
+		{
+			if (It->GetTilePawnID() == GameTaskInfo.FinishedNPCID)
+			{
+				It->SetTaskDialogueID(0);
+			}
+		}
+	}
 }

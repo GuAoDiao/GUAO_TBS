@@ -30,7 +30,11 @@ public:
 	void ShowChoiceOptionList();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void ShowTaskList(int32 TaskID);
+	void ShowAcceptTaskList(int32 TaskID);
+
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShowCompleteTaskList(int32 TaskID);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void AddChoiceOption(const FText& Option, int32 NextID);
@@ -49,4 +53,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AcceptTask(int32 TaskID);
+
+	UFUNCTION(BlueprintCallable)
+	void CompleteTask(int32 TaskID);
 };

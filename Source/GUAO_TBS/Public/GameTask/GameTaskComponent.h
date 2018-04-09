@@ -16,8 +16,13 @@ class GUAO_TBS_API UGameTaskComponent : public UActorComponent
 public:
 	UGameTaskComponent();
 
+	virtual void BeginPlay() override;
+
+	void UpdateAllCanAcceptTask();
+
 	void AccpetGameTask(int32 TaskID);
 	void InterruptTask(int32 TaskID);
+	void CompleteGameTask(int32 TaskID);
 
 	const TMap<int32, UGameTask*>& GetAllAccpetTasks() const { return AllAcceptTask; }
 
@@ -27,5 +32,5 @@ protected:
 	class ATBSCharacter* OwnerCharacter;
 	TArray<int32> AllFinishedTask;
 	TMap<int32 /**TaskID*/, UGameTask*> AllAcceptTask;
-	TArray<int32> AllCanAcceptTask;
+	TMap<int32 /**TaskID*/, UGameTask*> AllCanAcceptTask;
 };
