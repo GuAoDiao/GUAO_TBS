@@ -25,9 +25,11 @@ void UGameTaskComponent::AccpetGameTask(int32 TaskID)
 		UGameTask* GameTask = NewObject<UGameTask>(this, GameTaskInfo->TaskClass);
 		if (GameTask)
 		{
+			GameTask->Initilaize(TaskID);
 			GameTask->BeAccpeted(OwnerCharacter);
 
 			AllAcceptTask.Add(TaskID, GameTask);
+			OnAcceptTaskListUpdateDelegate.Broadcast();
 		}
 	}
 }

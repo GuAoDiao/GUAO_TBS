@@ -68,3 +68,4 @@ void ATBSHUD::ShowCombatLayout()
 }
 
 void ATBSHUD::TogglePlayerBackPackDisplay() { if (GameLayout && GameLayout->IsInViewport()) { GameLayout->TogglePlayerBackPackDisplay(); } }
+void ATBSHUD::ToggleGameTaskListDisplay() { if (GameLayout && GameLayout->IsInViewport()) { GameLayout->ToggleGameTaskListDisplay(); } }

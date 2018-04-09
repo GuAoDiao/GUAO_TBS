@@ -51,6 +51,7 @@ private:
 	/// UI
 protected:
 	void TogglePlayerBackPackDisplay();
+	void ToggleGameTaskListDisplay();
 
 	UPROPERTY(Transient)
 	ATBSHUD* OwnerTBSHUD;

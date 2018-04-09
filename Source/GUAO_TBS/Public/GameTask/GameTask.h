@@ -15,6 +15,7 @@ class GUAO_TBS_API UGameTask : public UObject
 	GENERATED_BODY()
 	
 public:
+	void Initilaize(int32 InGameTaskID);
 	bool CanAccpet(class ATBSCharacter* Character);
 	void BeAccpeted(class ATBSCharacter* Character);
 
@@ -26,6 +27,9 @@ public:
 
 	void GetGameTaskDisplayInfo();	
 
+	int32 GetGameTaskID() const { return GameTaskID; }
 protected:
 	class ATBSCharacter* CurrentExcuteCharacter;
+	
+	int32 GameTaskID;
 };

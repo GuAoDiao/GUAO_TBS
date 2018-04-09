@@ -22,9 +22,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void TogglePlayerBackPackDisplay();
+
+	UFUNCTION(BlueprintCallable)
+	void ToggleGameTaskListDisplay();
 protected:
 	UPROPERTY(BlueprintReadWrite)
 	class UPlayerInfo* PlayerInfo;
 	UPROPERTY(BlueprintReadWrite)
 	class UPlayerBackpack* PlayerBackPack;
+	UPROPERTY(BlueprintReadWrite)
+	class UGameTaskList* GameTaskList;
 };

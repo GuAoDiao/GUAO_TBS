@@ -59,6 +59,7 @@ void ATBSPlayerController::RebindInputComponent(UInputComponent* InInputComp)
 		if (OwnerTBSHUD)
 		{
 			InInputComp->BindAction("TogglePlayerBackpack", IE_Pressed, this, &ATBSPlayerController::TogglePlayerBackPackDisplay);
+			InInputComp->BindAction("ToggleGameTask", IE_Pressed, this, &ATBSPlayerController::ToggleGameTaskListDisplay);
 		}
 	}
 }
@@ -127,3 +128,4 @@ void ATBSPlayerController::MoveViewportFromMouse()
 //////////////////////////////////////////////////////////////////////////
 /// UI
 void ATBSPlayerController::TogglePlayerBackPackDisplay() { if (OwnerTBSHUD) { OwnerTBSHUD->TogglePlayerBackPackDisplay(); } }
+void ATBSPlayerController::ToggleGameTaskListDisplay() { if (OwnerTBSHUD) { OwnerTBSHUD->ToggleGameTaskListDisplay(); } }

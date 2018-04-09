@@ -26,7 +26,7 @@ public:
 	UCombatLayout* GetCombatLayout() const { return CombatLayout; }
 public:
 	void TogglePlayerBackPackDisplay();
-
+	void ToggleGameTaskListDisplay();
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameLayout> GameLayoutClass;

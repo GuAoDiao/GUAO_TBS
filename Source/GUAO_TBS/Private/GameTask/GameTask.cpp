@@ -4,6 +4,11 @@
 
 #include "TBSCharacter.h"
 
+void UGameTask::Initilaize(int32 InGameTaskID)
+{
+	GameTaskID = InGameTaskID;
+}
+
 bool UGameTask::CanAccpet(class ATBSCharacter* Character)
 {
 	return true;

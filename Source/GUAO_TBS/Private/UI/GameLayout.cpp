@@ -3,6 +3,7 @@
 #include "GameLayout.h"
 
 #include "UI/PlayerBackpack.h"
+#include "UI/GameTask/GameTaskList.h"
 
 
 void UGameLayout::NativeConstruct()
@@ -29,6 +30,22 @@ void UGameLayout::TogglePlayerBackPackDisplay()
 		else
 		{
 			PlayerBackPack->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
+}
+
+
+void UGameLayout::ToggleGameTaskListDisplay()
+{
+	if (GameTaskList)
+	{
+		if (GameTaskList->GetVisibility() == ESlateVisibility::Visible)
+		{
+			GameTaskList->SetVisibility(ESlateVisibility::Hidden);
+		}
+		else
+		{
+			GameTaskList->SetVisibility(ESlateVisibility::Visible);
 		}
 	}
 }

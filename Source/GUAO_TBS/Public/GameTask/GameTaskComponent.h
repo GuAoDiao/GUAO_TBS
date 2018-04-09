@@ -19,7 +19,10 @@ public:
 	void AccpetGameTask(int32 TaskID);
 	void InterruptTask(int32 TaskID);
 
-	const TMap<int32, UGameTask*> GetAllAccpetTasks() const { return AllAcceptTask; }
+	const TMap<int32, UGameTask*>& GetAllAccpetTasks() const { return AllAcceptTask; }
+
+	DECLARE_MULTICAST_DELEGATE(FOnAcceptTaskListUpdateDelegate);
+	FOnAcceptTaskListUpdateDelegate OnAcceptTaskListUpdateDelegate;
 protected:
 	class ATBSCharacter* OwnerCharacter;
 	TArray<int32> AllFinishedTask;
