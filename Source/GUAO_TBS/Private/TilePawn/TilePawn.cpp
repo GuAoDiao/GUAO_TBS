@@ -40,13 +40,17 @@ void ATilePawn::OnConstruction(const FTransform& Transform)
 		GridAnchor->SetWorldLocation(GridManager->GetVectorFromIndex(TileIndex));
 	}
 	
-	const FTilePawnInfo* TilePawnInfo = FTilePawnManager::GetInstance()->GetTilePawnInfo(TilePawnID);
-	if (TilePawnInfo)
+	if (TilePawnID > 0)
 	{
-		TilePawnName = TilePawnInfo->Name;
+		const FTilePawnInfo* TilePawnInfo = FTilePawnManager::GetInstance()->GetTilePawnInfo(TilePawnID);
+		if (TilePawnInfo)
+		{
+			TilePawnName = TilePawnInfo->Name;
 
-		PawnSkeletalMeshComp->SetSkeletalMesh(TilePawnInfo->SkeletalMesh);
-		// PawnSkeletalMeshComp->SetAnimationMode(EAnimationMode::AnimationSingleNode);
-		PawnSkeletalMeshComp->PlayAnimation(TilePawnInfo->IdleAnim, true);
+			PawnSkeletalMeshComp->SetSkeletalMesh(TilePawnInfo->SkeletalMesh);
+			PawnSkeletalMeshComp->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+			PawnSkeletalMeshComp->SetAnimation(TilePawnInfo->IdleAnim);
+			PawnSkeletalMeshComp->PlayAnimation(TilePawnInfo->IdleAnim, true);
+		}
 	}
 }

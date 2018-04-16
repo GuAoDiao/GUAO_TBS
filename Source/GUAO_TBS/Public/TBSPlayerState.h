@@ -34,7 +34,7 @@ public:
 
 	FCombatTeam PlayerCombatTeam;
 	UPROPERTY(EditDefaultsOnly)
-	TArray<FString> CombatPawnNameInPlayerTeam;
+	TArray<int32> CombatPawnIDInPlayerTeam;
 
 	UFUNCTION(BlueprintPure)
 	int32 GetGold() const { return Gold; }

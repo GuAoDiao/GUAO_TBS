@@ -13,7 +13,7 @@ AEnemyTilePawn::AEnemyTilePawn()
 {
 	TileType = ETBSTileType::Enemy;
 
-	AllCombatEnemy.Add(TEXT("Rebels"));
+	AllCombatEnemy.Add(2);
 
 	TeamName = TEXT("EnemyTeam");
 }
@@ -38,13 +38,13 @@ void AEnemyTilePawn::BeginCombat()
 		ActorSpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		FCombatTeam EnemyTeam;
-		for (const FString& CombatEnemyName : AllCombatEnemy)
+		for (int32 CombatEnemyID : AllCombatEnemy)
 		{
-			TSubclassOf<ACombatPawn> CombatEnemyClass = FCombatPawnManager::GetInstance()->GetCombatPawnClassFromName(CombatEnemyName);
+			TSubclassOf<ACombatPawn> CombatEnemyClass = FCombatPawnManager::GetInstance()->GetCombatPawnClassFromID(CombatEnemyID);
 			ACombatPawn* ComatPawn = CombatEnemyClass ? World->SpawnActor<ACombatPawn>(CombatEnemyClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters) : nullptr;
 			if (ComatPawn)
 			{
-				ComatPawn->SetCombatPawnName(CombatEnemyName);
+				ComatPawn->SetCombatPawnID(CombatEnemyID);
 				EnemyTeam.AllCombatPawns.Add(ComatPawn);
 			}
 		}

@@ -30,7 +30,7 @@ public:
 	
 protected:
 	UPROPERTY(EditDefaultsOnly)
-	TArray<FString> AllCombatEnemy;
+	TArray<int32> AllCombatEnemy;
 	UPROPERTY(EditDefaultsOnly)
 	FString TeamName;
 };

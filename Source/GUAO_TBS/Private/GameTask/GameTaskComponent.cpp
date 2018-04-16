@@ -42,6 +42,8 @@ void UGameTaskComponent::UpdateAllCanAcceptTask()
 				{
 					GameTask->Initilaize(GameTaskInfo->ID, GameTaskInfo);
 					AllCanAcceptTask.Add(GameTaskInfo->ID, GameTask);
+					
+					OnCanAcceptTaskAddDelegate.Broadcast(GameTaskInfo->ID, GameTask);
 				}
 			}
 		}
@@ -57,7 +59,8 @@ void UGameTaskComponent::AccpetGameTask(int32 TaskID)
 			AllCanAcceptTask[TaskID]->BeAccpeted(OwnerCharacter);
 			AllAcceptTask.Add(TaskID, AllCanAcceptTask[TaskID]);
 			AllCanAcceptTask.Remove(TaskID);
-			OnAcceptTaskListUpdateDelegate.Broadcast();
+
+			OnAcceptTaskDelegate.Broadcast(TaskID, AllAcceptTask[TaskID]);
 		}
 	}
 }
@@ -66,22 +69,26 @@ void UGameTaskComponent::InterruptTask(int32 TaskID)
 {
 	if (AllAcceptTask.Contains(TaskID))
 	{
-		// AllAcceptTask[TaskID];
+		OnInterruptTaskDelegate.Broadcast(TaskID, AllAcceptTask[TaskID]);
+
+		AllAcceptTask[TaskID]->ConditionalBeginDestroy();
+		AllAcceptTask.Remove(TaskID);
 	}
-	AllAcceptTask.Remove(TaskID);
 }
 
 void UGameTaskComponent::CompleteGameTask(int32 TaskID)
 {
 	if (AllAcceptTask.Contains(TaskID))
 	{
-		if (AllAcceptTask[TaskID] && AllAcceptTask[TaskID]->CanFinished())
+		if (AllAcceptTask[TaskID] && AllAcceptTask[TaskID]->IsFinished())
 		{
-			AllAcceptTask[TaskID]->BeFinished();
+			AllAcceptTask[TaskID]->OnFinishedTask();
 
 			AllFinishedTask.Add(TaskID);
+			OnFinishedTaskDelegate.Broadcast(TaskID, AllAcceptTask[TaskID]);
+			
+			AllAcceptTask[TaskID]->ConditionalBeginDestroy();
 			AllAcceptTask.Remove(TaskID);
-			OnAcceptTaskListUpdateDelegate.Broadcast();
 		}
 	}
 }

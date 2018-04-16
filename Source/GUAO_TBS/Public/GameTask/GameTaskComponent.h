@@ -26,8 +26,17 @@ public:
 
 	const TMap<int32, UGameTask*>& GetAllAccpetTasks() const { return AllAcceptTask; }
 
-	DECLARE_MULTICAST_DELEGATE(FOnAcceptTaskListUpdateDelegate);
-	FOnAcceptTaskListUpdateDelegate OnAcceptTaskListUpdateDelegate;
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnCanAcceptTaskAddDelegate, int32 /*TaskID*/, UGameTask* /*GameTask*/);
+	FOnCanAcceptTaskAddDelegate OnCanAcceptTaskAddDelegate;
+
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnAcceptTaskDelegate, int32 /*TaskID*/, UGameTask* /*GameTask*/);
+	FOnAcceptTaskDelegate OnAcceptTaskDelegate;
+	
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInterruptTaskDelegate, int32 /*TaskID*/, UGameTask* /*GameTask*/);
+	FOnInterruptTaskDelegate OnInterruptTaskDelegate;
+
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnFinishedTaskDelegate, int32 /*TaskID*/, UGameTask* /*GameTask*/);
+	FOnFinishedTaskDelegate OnFinishedTaskDelegate;
 protected:
 	class ATBSCharacter* OwnerCharacter;
 	TArray<int32> AllFinishedTask;

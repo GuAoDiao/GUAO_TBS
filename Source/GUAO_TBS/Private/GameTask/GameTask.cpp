@@ -24,14 +24,42 @@ void UGameTask::Initilaize(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo)
 			}
 		}
 	}
+
+	OnInitializeImplementation(InGameTaskID, InGameTaskInfo);
+
+	GameTaskFlow = EGameTaskFlow::CanAccept;
 }
 
 bool UGameTask::CanAccpet(class ATBSCharacter* Character)
 {
 	return true;
 }
+
+
 void UGameTask::BeAccpeted(class ATBSCharacter* Character)
 {
+	CurrentExcuteCharacter = Character;
+
+	if (GameTaskInfo.FinishedNPCID)
+	{
+		for (TActorIterator<ANPCTilePawn> It(GetWorld()); It; ++It)
+		{
+			if (It->GetTilePawnID() == GameTaskInfo.FinishedNPCID)
+			{
+				It->SetTaskDialogueID(GameTaskInfo.WaitingDialogueID);
+			}
+		}
+	}
+
+	OnAcceptImplementation();
+
+	GameTaskFlow = EGameTaskFlow::WaitForComplete;
+}
+
+void UGameTask::OnCanFinishedTask()
+{
+	GameTaskFlow = EGameTaskFlow::CanFinished;
+
 	if (GameTaskInfo.FinishedNPCID)
 	{
 		for (TActorIterator<ANPCTilePawn> It(GetWorld()); It; ++It)
@@ -44,13 +72,7 @@ void UGameTask::BeAccpeted(class ATBSCharacter* Character)
 	}
 }
 
-
-bool UGameTask::CanFinished()
-{
-	return true;
-}
-
-void UGameTask::BeFinished()
+void UGameTask::OnFinishedTask()
 {
 	if (GameTaskInfo.FinishedNPCID)
 	{
@@ -58,7 +80,7 @@ void UGameTask::BeFinished()
 		{
 			if (It->GetTilePawnID() == GameTaskInfo.FinishedNPCID)
 			{
-				It->SetTaskDialogueID(0);
+				It->SetTaskDialogueID(-1);
 			}
 		}
 	}

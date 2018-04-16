@@ -16,11 +16,17 @@ class GUAO_TBS_API UGameTask : public UObject
 	
 public:
 	void Initilaize(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo);
+	virtual void OnInitializeImplementation(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo) {}
 	bool CanAccpet(class ATBSCharacter* Character);
 	void BeAccpeted(class ATBSCharacter* Character);
+	virtual void OnAcceptImplementation() {};
 
-	bool CanFinished();
-	void BeFinished();
+	virtual void UpdateGameState() {};
+	
+	bool IsFinished() const { return GameTaskFlow == EGameTaskFlow::CanFinished; }
+
+	void OnCanFinishedTask();
+	void OnFinishedTask();
 
 	void BeCannelled();
 	void OnGameTaskOrogress();
@@ -32,4 +38,5 @@ protected:
 	class ATBSCharacter* CurrentExcuteCharacter;
 	FGameTaskInfo GameTaskInfo;
 	int32 GameTaskID;
+	EGameTaskFlow GameTaskFlow;
 };

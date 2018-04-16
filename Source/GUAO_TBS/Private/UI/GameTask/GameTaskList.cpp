@@ -12,11 +12,6 @@ void UGameTaskList::NativeConstruct()
 	APlayerController* OnwerPC = GetOwningPlayer();
 	ATBSCharacter* OwnetTBSCharacter = OnwerPC ? Cast<ATBSCharacter>(OnwerPC->GetPawn()) : nullptr;
 	OwnerGameTaskComp = OwnetTBSCharacter ? OwnetTBSCharacter->GetGameTaskComp() : nullptr;
-	if (OwnerGameTaskComp)
-	{
-		OnAcceptTaskListUpdate();
-		OwnerGameTaskComp->OnAcceptTaskListUpdateDelegate.AddUObject(this, &UGameTaskList::OnAcceptTaskListUpdate);
-	}
 }
 
 

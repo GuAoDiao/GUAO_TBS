@@ -14,7 +14,19 @@ class GUAO_TBS_API UKillTask : public UGameTask
 {
 	GENERATED_BODY()
 	
+public:
+	virtual void OnInitializeImplementation(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo) override;
+	virtual void OnAcceptImplementation() override;
+
+	virtual void UpdateGameState() override;
+
+	void OnKillCombatPawn(ACombatPawn* CombatPawn);
 	
-	
-	
+protected:
+	TMap<int32, int32> EnemyInfo;
+	TMap<int32, int32> CurrentKillInfo;
+
+	FDelegateHandle KillCombatDelegate;
+
+	bool bIsFinished;
 };

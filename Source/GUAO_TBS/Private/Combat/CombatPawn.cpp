@@ -31,6 +31,7 @@ ACombatPawn::ACombatPawn()
 
 	AutoPossessAI = EAutoPossessAI::Disabled;
 
+	CombatPawnID = -1;
 	Level = 1;
 	MaxHealth = 50.f;
 	MaxMana = 50.f;
@@ -45,17 +46,19 @@ void ACombatPawn::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	if (!CombatPawnName.IsEmpty()) { SetCombatPawnName(CombatPawnName); }
+	if (CombatPawnID > 0) { SetCombatPawnID(CombatPawnID); }
 }
 
-void ACombatPawn::SetCombatPawnName(const FString& InCombatPawnName)
+void ACombatPawn::SetCombatPawnID(int32 InCombatPawnID)
 {
-	CombatPawnName = InCombatPawnName;
+	CombatPawnID = InCombatPawnID;
 
-	if (!CombatPawnName.IsEmpty())
+	if (CombatPawnID > 0)
 	{
 		FCombatPawnManager* CombatPawnManager = FCombatPawnManager::GetInstance();
-		CombatPawnManager->GetBaseCombatDisplayInfo(CombatPawnName, BaseDisplayInfo);
+
+
+		CombatPawnManager->GetBaseCombatDisplayInfo(CombatPawnID, BaseDisplayInfo);
 		if (BaseDisplayInfo.SkeletalMesh)
 		{
 			SkeletalMeshComp->SetSkeletalMesh(BaseDisplayInfo.SkeletalMesh);
@@ -64,7 +67,7 @@ void ACombatPawn::SetCombatPawnName(const FString& InCombatPawnName)
 			if (BaseDisplayInfo.IdleAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.IdleAnimAsset, true); }
 		}
 
-		if (CombatPawnManager->GetBaseCombatPawnFightInfo(CombatPawnName, BaseFightInfo)) { InitializeCombatPawnAttribute(); }
+		if (CombatPawnManager->GetBaseCombatPawnFightInfo(CombatPawnID, BaseFightInfo)) { InitializeCombatPawnAttribute(); }
 	}
 	
 	ResetPawnState();
@@ -96,6 +99,8 @@ void ACombatPawn::Tick(float DeltaSeconds)
 /// Attribute
 void ACombatPawn::InitializeCombatPawnAttribute()
 {
+	CombatPawnName = BaseFightInfo.CombatPawnName;
+
 	Level = BaseFightInfo.Level;
 	MaxHealth = BaseFightInfo.MHP;
 	MaxMana = BaseFightInfo.MMP;

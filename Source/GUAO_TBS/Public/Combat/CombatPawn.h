@@ -37,7 +37,6 @@ class GUAO_TBS_API ACombatPawn : public APawn
 public:
 	ACombatPawn();
 	
-	void SetCombatPawnName(const FString& InCombatPawnName);
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
@@ -81,10 +80,16 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	/// Attribute
 public:
+	void SetCombatPawnID(int32 InCombatPawnID);
+	int32 GetCombatPawnID() const { return CombatPawnID; }
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+	int32 CombatPawnID;
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	FString CombatPawnName;
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	int32 Level;
+
 	float MaxHealth;
 	float Health;
 	float MaxMana;
@@ -133,6 +138,7 @@ protected:
 	//////////////////////////////////////////////////////////////////////////
 	/// Combat Pawn Info Display
 protected:
+
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	class UWidgetComponent* CombatPawnInfoDisplayComp;
 	UPROPERTY(EditDefaultsOnly)

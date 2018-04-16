@@ -56,11 +56,14 @@ void ATBSCharacter::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 
 	SpringArmComp->AttachToComponent(GridAnchor, FAttachmentTransformRules::KeepWorldTransform);
-	if (GridManager)
-	{
-		MovePathComp->AttachToComponent(GridManager->GetRootComponent(), FAttachmentTransformRules::KeepWorldTransform);
-	}
 	ResetAngleOfView();
+}
+
+void ATBSCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	if (GridManager) { MovePathComp->AttachToComponent(GridManager->GetRootComponent(), FAttachmentTransformRules::KeepWorldTransform); }
 }
 
 void ATBSCharacter::Tick(float DeltaSeconds)

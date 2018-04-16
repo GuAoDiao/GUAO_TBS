@@ -173,7 +173,7 @@ public:
 	FPropsShopInfo() {}
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	FString ShopNPCName;
+	int32 ShopNPCID;
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	TArray<FPropsShopItemInfo> AllShopItems;
 };

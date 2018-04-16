@@ -19,6 +19,7 @@ public:
 	ATBSCharacter();
 
 	virtual void OnConstruction(const FTransform& Transform) override;
+	virtual void BeginPlay() override;
 	void RebindInputComponent(UInputComponent* InInputComp);
 	virtual void Tick(float DeltaSeconds) override;
 

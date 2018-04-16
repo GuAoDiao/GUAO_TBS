@@ -76,6 +76,8 @@ void ATBSGameState::CloseCombat(int32 WinTeam, bool bIsPlayerWin)
 		{
 			for (ACombatPawn* CombatPawn : AllCombatTeam[i].AllCombatPawns)
 			{
+				OnKillCombatPawnDelegate.Broadcast(CombatPawn);
+				
 				CombatPawn->Destroy();
 			}
 		}

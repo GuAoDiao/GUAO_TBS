@@ -13,7 +13,7 @@ void AShopNPCTilePawn::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 
 
-	PropsShopInfo = FPropAndCapabilitiesManager::GetInstance()->GetShopInfo(TilePawnName);
+	PropsShopInfo = FPropAndCapabilitiesManager::GetInstance()->GetShopInfo(TilePawnID);
 }
 
 

@@ -13,6 +13,8 @@ ACombatLeadingRolePawn::ACombatLeadingRolePawn()
 
 void ACombatLeadingRolePawn::MakeDecisionImplementation()
 {
+	PlayerDecisionMaker = nullptr;
+
 	if (CombatManager && CombatManager->IsAutoAttack())
 	{
 		Super::MakeDecisionImplementation();
@@ -31,23 +33,23 @@ void ACombatLeadingRolePawn::MakeDecisionImplementation()
 void ACombatLeadingRolePawn::ToggleCurentDecisionToAutoAttack()
 {
 	// create auto decision maker
-	FAutoDecisionMaker* AutoDecisionMaker = new FAutoDecisionMaker();
-	if (AutoDecisionMaker)
+	if (PlayerDecisionMaker)
 	{
-		AutoDecisionMaker->BeginMakeDecision(this);
-
-		// Interrupt and destroy old player decision maker
-		if (DecisionMaker)
+		FAutoDecisionMaker* AutoDecisionMaker = new FAutoDecisionMaker();
+		if (AutoDecisionMaker)
 		{
-			if (PlayerDecisionMaker)
+			AutoDecisionMaker->BeginMakeDecision(this);
+
+			// Interrupt and destroy old player decision maker
+			if (DecisionMaker)
 			{
 				PlayerDecisionMaker->InterruptMakeDecision();
 				PlayerDecisionMaker = nullptr;
+
+				delete DecisionMaker;
 			}
 
-			delete DecisionMaker;
+			DecisionMaker = AutoDecisionMaker;
 		}
-
-		DecisionMaker = AutoDecisionMaker;
 	}
 }

@@ -260,6 +260,17 @@ public:
 	TMap<int32 /*NextDialogueID*/, FText/*SelectOption*/> SelectOptions;
 };
 
+
+UENUM(BlueprintType)
+enum class EGameTaskFlow : uint8
+{
+	CannotAccept,
+	CanAccept,
+	WaitForComplete,
+	CanFinished,
+	Finished,
+};
+
 UENUM(BlueprintType)
 enum class EGameTaskType : uint8
 {
@@ -283,6 +294,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	int32 FinishedNPCID;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 WaitingDialogueID;
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	int32 FinishedDialogueID;
 

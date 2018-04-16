@@ -30,7 +30,7 @@ protected:
 	class UDataTable* AllBaseCombatPawnFightInfoDT;
 
 public:
-	bool GetBaseCombatDisplayInfo(const FString& InCombatPawnName, FBaseCombatPawnDisplayInfo& OutBaseCombatDisplayInfo);
-	TSubclassOf<ACombatPawn> GetCombatPawnClassFromName(const FString& InCombatPawnName);
-	bool GetBaseCombatPawnFightInfo(const FString& InCombatPawnName, FBaseCombatPawnFightInfo& OutBaseCombatPawnDisplayInfo);
+	bool GetBaseCombatDisplayInfo(int32 InCombatPawnID, FBaseCombatPawnDisplayInfo& OutBaseCombatDisplayInfo);
+	TSubclassOf<ACombatPawn> GetCombatPawnClassFromID(int32 InCombatPawnID);
+	bool GetBaseCombatPawnFightInfo(int32 InCombatPawnID, FBaseCombatPawnFightInfo& OutBaseCombatPawnDisplayInfo);
 };

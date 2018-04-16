@@ -32,7 +32,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CloseCombat(int32 WinTeam, bool bIsPlayerWin);
 	
-
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnKillCombatPawnDelegate, class ACombatPawn* /*CombatPawn*/);
+	FOnKillCombatPawnDelegate OnKillCombatPawnDelegate;
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	FVector CombatLocation;

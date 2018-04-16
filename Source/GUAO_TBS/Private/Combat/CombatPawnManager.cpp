@@ -27,11 +27,11 @@ FCombatPawnManager* FCombatPawnManager::GetInstance()
 	return CombatPawnManager;
 }
 
-bool FCombatPawnManager::GetBaseCombatDisplayInfo(const FString& InCombatPawnName, FBaseCombatPawnDisplayInfo& OutBaseCombatDisplayInfo)
+bool FCombatPawnManager::GetBaseCombatDisplayInfo(int32 InCombatPawnID, FBaseCombatPawnDisplayInfo& OutBaseCombatDisplayInfo)
 {
 	if (AllBaseCombatDisplayInfoDT)
 	{
-		FBaseCombatPawnDisplayInfo*  BaseCombatDisplayInfo = AllBaseCombatDisplayInfoDT->FindRow<FBaseCombatPawnDisplayInfo>(FName(*InCombatPawnName), TEXT("-_- find combat pawn base display info"));
+		FBaseCombatPawnDisplayInfo*  BaseCombatDisplayInfo = AllBaseCombatDisplayInfoDT->FindRow<FBaseCombatPawnDisplayInfo>(FName(*FString::FromInt(InCombatPawnID)), TEXT("-_- find combat pawn base display info"));
 		if (BaseCombatDisplayInfo)
 		{
 			OutBaseCombatDisplayInfo = *BaseCombatDisplayInfo;
@@ -43,11 +43,11 @@ bool FCombatPawnManager::GetBaseCombatDisplayInfo(const FString& InCombatPawnNam
 }
 
 
-TSubclassOf<ACombatPawn> FCombatPawnManager::GetCombatPawnClassFromName(const FString& InCombatPawnName)
+TSubclassOf<ACombatPawn> FCombatPawnManager::GetCombatPawnClassFromID(int32 InCombatPawnID)
 {
 	if (AllCombatPawnClassInfoDT)
 	{
-		FCombatPawnClassInfo*  CombatPawnClassInfo = AllCombatPawnClassInfoDT->FindRow<FCombatPawnClassInfo>(FName(*InCombatPawnName), TEXT("-_- find combat pawn class info"));
+		FCombatPawnClassInfo*  CombatPawnClassInfo = AllCombatPawnClassInfoDT->FindRow<FCombatPawnClassInfo>(FName(*FString::FromInt(InCombatPawnID)), TEXT("-_- find combat pawn class info"));
 		if (CombatPawnClassInfo)
 		{
 			return CombatPawnClassInfo->CombatPawnClass;
@@ -57,11 +57,11 @@ TSubclassOf<ACombatPawn> FCombatPawnManager::GetCombatPawnClassFromName(const FS
 	return nullptr;
 }
 
-bool FCombatPawnManager::GetBaseCombatPawnFightInfo(const FString& InCombatPawnName, FBaseCombatPawnFightInfo& OutBaseCombatPawnDisplayInfo)
+bool FCombatPawnManager::GetBaseCombatPawnFightInfo(int32 InCombatPawnID, FBaseCombatPawnFightInfo& OutBaseCombatPawnDisplayInfo)
 {
 	if (AllBaseCombatPawnFightInfoDT)
 	{
-		FBaseCombatPawnFightInfo*  BaseCombatFightInfo = AllBaseCombatPawnFightInfoDT->FindRow<FBaseCombatPawnFightInfo>(FName(*InCombatPawnName), TEXT("-_- find combat pawn base base fight info"));
+		FBaseCombatPawnFightInfo*  BaseCombatFightInfo = AllBaseCombatPawnFightInfoDT->FindRow<FBaseCombatPawnFightInfo>(FName(*FString::FromInt(InCombatPawnID)), TEXT("-_- find combat pawn base base fight info"));
 		if (BaseCombatFightInfo)
 		{
 			OutBaseCombatPawnDisplayInfo = *BaseCombatFightInfo;
