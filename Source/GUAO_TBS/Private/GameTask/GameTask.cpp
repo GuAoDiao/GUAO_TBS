@@ -40,7 +40,7 @@ void UGameTask::BeAccpeted(class ATBSCharacter* Character)
 {
 	CurrentExcuteCharacter = Character;
 
-	if (GameTaskInfo.FinishedNPCID)
+	if (GameTaskInfo.FinishedNPCID > 0 && GameTaskInfo.WaitingDialogueID > 0)
 	{
 		for (TActorIterator<ANPCTilePawn> It(GetWorld()); It; ++It)
 		{
@@ -60,7 +60,7 @@ void UGameTask::OnCanFinishedTask()
 {
 	GameTaskFlow = EGameTaskFlow::CanFinished;
 
-	if (GameTaskInfo.FinishedNPCID)
+	if (GameTaskInfo.FinishedNPCID > 0 && GameTaskInfo.FinishedDialogueID > 0)
 	{
 		for (TActorIterator<ANPCTilePawn> It(GetWorld()); It; ++It)
 		{
@@ -74,7 +74,7 @@ void UGameTask::OnCanFinishedTask()
 
 void UGameTask::OnFinishedTask()
 {
-	if (GameTaskInfo.FinishedNPCID)
+	if (GameTaskInfo.FinishedNPCID > 0)
 	{
 		for (TActorIterator<ANPCTilePawn> It(GetWorld()); It; ++It)
 		{

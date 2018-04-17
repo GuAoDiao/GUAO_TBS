@@ -8,9 +8,9 @@
 
 void UGameLayout::NativeConstruct()
 {
-	InitializeGameLayoutWidget();
-
 	Super::NativeConstruct();
+
+	InitializeGameLayoutWidget();
 }
 
 

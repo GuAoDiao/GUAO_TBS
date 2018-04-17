@@ -44,6 +44,8 @@ protected:
 	TMap<int32, FGamePropsInfo> AllGamePropsInfo;
 	TMap<int32, FConsumablesPropsInfo> AllConsumablesPropsInfo;
 
+	UPROPERTY()
 	TMap<ECombatCapabilitiesType, UCombatCapabilities*> AllCombatCapabilities;
+	UPROPERTY()
 	TMap<EGameCapabilitiesType, UGameCapabilities*> AllGameCapabilities;
 };

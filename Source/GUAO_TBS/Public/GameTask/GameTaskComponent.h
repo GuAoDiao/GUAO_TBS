@@ -25,6 +25,7 @@ public:
 	void CompleteGameTask(int32 TaskID);
 
 	const TMap<int32, UGameTask*>& GetAllAccpetTasks() const { return AllAcceptTask; }
+	const TMap<int32, UGameTask*>& GetAllCanAcceptTask() const { return AllCanAcceptTask; }
 
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnCanAcceptTaskAddDelegate, int32 /*TaskID*/, UGameTask* /*GameTask*/);
 	FOnCanAcceptTaskAddDelegate OnCanAcceptTaskAddDelegate;
@@ -40,6 +41,8 @@ public:
 protected:
 	class ATBSCharacter* OwnerCharacter;
 	TArray<int32> AllFinishedTask;
+	UPROPERTY()
 	TMap<int32 /**TaskID*/, UGameTask*> AllAcceptTask;
+	UPROPERTY()
 	TMap<int32 /**TaskID*/, UGameTask*> AllCanAcceptTask;
 };
