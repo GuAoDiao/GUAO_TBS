@@ -116,10 +116,7 @@ void AGridManager::InitializeGridEdgeArray()
 
 	FGridEdgesCost GridEdges = bCollisionPlaneWalkable ? FGridEdgesCost::FullGridEdge : FGridEdgesCost::EmptyGridEdge;
 
-	for (int32 i = 0; i < Size; ++i)
-	{
-		GridEdgeArray[i] = GridEdges;
-	}
+	GridEdgeArray.Init(GridEdges, Size);
 }
 
 
