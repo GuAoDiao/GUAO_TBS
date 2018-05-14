@@ -17,9 +17,18 @@ class GUAO_TBS_API UPlayerInfo : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 	
-	UFUNCTION(BlueprintNativeEvent)
-	void InitializePlayerInfoDisplay(const FString& PlayerName, int32 Gold);
-
 	UFUNCTION(BlueprintImplementableEvent)
+	void InitializePlayerInfoDisplay(const FString& PlayerName, int32 Gold, int32 Level, int32 Experience, int32 MaxExperience);
+
+protected:
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 	void UpdateGoldDisplay(int32 Gold);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void UpdateExperienceDisplay(int32 Experience, int32 MaxExperience);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void UpdateLevelAndMaxExperienceDisplay(int32 Level, int32 Experience, int32 MaxExperience);
+
+	void OnLevelUp(int32 Level);
 };

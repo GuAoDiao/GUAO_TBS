@@ -276,7 +276,7 @@ enum class EGameTaskType : uint8
 {
 	KillTask,
 	DialogueTask,
-	Colleetion
+	CollictionTask
 };
 
 USTRUCT(BlueprintType)
@@ -309,6 +309,20 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	TSubclassOf<class UGameTask > TaskClass;
 };
+USTRUCT(BlueprintType)
+struct FGameTaskAcceptableConditions : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FGameTaskAcceptableConditions() : Level(-1), PredecessorTask(-1) {}
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 ID;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 Level;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 PredecessorTask;
+};
 
 USTRUCT(BlueprintType)
 struct FGameKillTaskInfo : public FTableRowBase
@@ -320,6 +334,18 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	TMap<int32/*EnemyID*/, int32/*Nums*/> TaskInfo;
 };
+
+USTRUCT(BlueprintType)
+struct FGameCollictionTaskInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	int32 ID;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TMap<int32/*PropID*/, int32/*Nums*/> TaskInfo;
+};
+
 
 #define ECC_PathTrace ECC_GameTraceChannel1
 #define ECC_RangeTrace ECC_GameTraceChannel1

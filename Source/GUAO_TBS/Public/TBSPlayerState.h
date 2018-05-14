@@ -36,18 +36,43 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TArray<int32> CombatPawnIDInPlayerTeam;
 
+	UFUNCTION(BlueprintCallable)
+	const FString& GetPlayerName() const { return PlayerName; }
+
+	//////////////////////////////////////////////////////////////////////////
+	/// Gold
+public:
 	UFUNCTION(BlueprintPure)
 	int32 GetGold() const { return Gold; }
 	UFUNCTION(BlueprintCallable)
 	void AddGold(int32 InOffset) { Gold += InOffset; UpdateGold(); }
 
-	UFUNCTION(BlueprintCallable)
-	const FString& GetPlayerName() const { return PlayerName; }
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnGoldUpdateDelegate, int32 /* Gold */)
 	FOnGoldUpdateDelegate OnGoldUpdateDelegate;
 protected:
 	void UpdateGold() { OnGoldUpdateDelegate.Broadcast(Gold); UE_LOG(LogTemp, Log, TEXT("-_- Gold : %d"), Gold); }
+	
+	//////////////////////////////////////////////////////////////////////////
+	/// Level And Experience
+public:
+	UFUNCTION(BlueprintCallable)
+	int32 GetLevel() const { return Level; }
+	UFUNCTION(BlueprintCallable)
+	int32 GetExperience() const { return Experience; }
+	UFUNCTION(BlueprintCallable)
+	int32 GetMaxExperience() const { return MaxExperience; }
+
+	UFUNCTION(BlueprintCallable)
+	void AddExperience(int32 InOffset);
+
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnExperienceUpdateDelegate, int32 /* Experience */, int32 /* MaxExperience */)
+	FOnExperienceUpdateDelegate OnExperienceUpdateDelegate;
+
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelUpDelegate, int32 /* Level */)
+	FOnLevelUpDelegate OnLevelUpDelegate;
+protected:
+
 
 public:
 	UGamePropsComponent* GetGamePropsComponent() const { return GamePropsComponent; }
@@ -55,5 +80,9 @@ protected:
 	UPROPERTY()
 	UGamePropsComponent* GamePropsComponent;
 	int32 Gold;
+	int32 Level;
+	int32 MaxLevel;
+	int32 Experience;
+	int32 MaxExperience;
 	FString PlayerName;
 };

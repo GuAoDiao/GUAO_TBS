@@ -12,6 +12,10 @@ ATBSPlayerState::ATBSPlayerState()
 {
 	PlayerName = TEXT("GUAO");
 	Gold = 1000;
+	Level = 1;
+	MaxLevel = 10;
+	Experience = 0;
+	MaxExperience = 10;
 
 	CombatPawnIDInPlayerTeam.Add(1);
 	CombatPawnIDInPlayerTeam.Add(1);
@@ -50,4 +54,21 @@ void ATBSPlayerState::InitializePlayerCombatTeam()
 		}
 	}
 	PlayerCombatTeam.TeamName = TEXT("PlayerTeam");
+}
+
+void ATBSPlayerState::AddExperience(int32 InOffset)
+{
+	Experience += InOffset;
+
+	while (Experience >= MaxExperience)
+	{
+		if (Level == MaxLevel) { Experience = MaxExperience; break; }
+
+		++Level;
+		Experience -= MaxExperience;
+		MaxExperience *= 2.5;
+		OnLevelUpDelegate.Broadcast(Level);
+	}
+
+	OnExperienceUpdateDelegate.Broadcast(Experience, MaxExperience);
 }

@@ -61,5 +61,5 @@ void AEnemyTilePawn::FightSuccess()
 
 void AEnemyTilePawn::FightFailure()
 {
-	UE_LOG(LogTemp, Log, TEXT("-_- you lost"));
+	UE_LOG(LogTemp, Log, TEXT("-_- you lose"));
 }

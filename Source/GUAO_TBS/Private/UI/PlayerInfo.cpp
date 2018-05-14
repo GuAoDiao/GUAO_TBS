@@ -17,12 +17,20 @@ void UPlayerInfo::NativeConstruct()
 	if (OwnerTBSPS)
 	{
 		OwnerTBSPS->OnGoldUpdateDelegate.AddUObject(this, &UPlayerInfo::UpdateGoldDisplay);
+		OwnerTBSPS->OnExperienceUpdateDelegate.AddUObject(this, &UPlayerInfo::UpdateExperienceDisplay);
+		OwnerTBSPS->OnLevelUpDelegate.AddUObject(this, &UPlayerInfo::OnLevelUp);
 
-		InitializePlayerInfoDisplay(OwnerTBSPS->GetPlayerName(), OwnerTBSPS->GetGold());
+		InitializePlayerInfoDisplay(OwnerTBSPS->GetPlayerName(), OwnerTBSPS->GetGold(), OwnerTBSPS->GetLevel(), OwnerTBSPS->GetExperience(), OwnerTBSPS->GetMaxExperience());
 	}
 }
 
-void UPlayerInfo::InitializePlayerInfoDisplay_Implementation(const FString& PlayerName, int32 Gold)
+void UPlayerInfo::OnLevelUp(int32 Level)
 {
+	APlayerController* OwnerPC = GetOwningPlayer();
+	ATBSPlayerState*  OwnerTBSPS = OwnerPC ? Cast<ATBSPlayerState>(OwnerPC->PlayerState) : nullptr;
 
+	if (OwnerTBSPS)
+	{
+		UpdateLevelAndMaxExperienceDisplay(Level, OwnerTBSPS->GetExperience(), OwnerTBSPS->GetMaxExperience());
+	}
 }

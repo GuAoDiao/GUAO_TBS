@@ -59,7 +59,8 @@ void ATBSGameState::CloseCombat(int32 WinTeam, bool bIsPlayerWin)
 {
 	if (CombatManager) { CombatManager->Destroy(); }
 
-	ATBSPlayerController* OwnerTBSPC = GetWorld() ? Cast<ATBSPlayerController>(GetWorld()->GetFirstPlayerController()) : nullptr;
+	UWorld* World = GetWorld();
+	ATBSPlayerController* OwnerTBSPC = World ? Cast<ATBSPlayerController>(World->GetFirstPlayerController()) : nullptr;
 	if (OwnerTBSPC) { OwnerTBSPC->TurnViewportToCharacter(); }
 
 	for (int32 i = 0; i < AllCombatTeam.Num(); ++i)
@@ -88,6 +89,9 @@ void ATBSGameState::CloseCombat(int32 WinTeam, bool bIsPlayerWin)
 		if (bIsPlayerWin)
 		{
 			CurrentFightWithEnemyTilePawn->FightSuccess();
+
+			ATBSPlayerState* OwnerTBSPS = OwnerTBSPC ? Cast<ATBSPlayerState>(OwnerTBSPC->PlayerState) : nullptr;
+			if (OwnerTBSPS) { OwnerTBSPS->AddExperience(OwnerTBSPS->GetLevel() * 10); }
 		}
 		else
 		{
