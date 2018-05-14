@@ -6,8 +6,6 @@
 #include "Combat/CombatPawn.h"
 #include "Combat/CombatPawnManager.h"
 
-#include "GameProps/GamePropsComponent.h"
-
 ATBSPlayerState::ATBSPlayerState()
 {
 	PlayerName = TEXT("GUAO");
@@ -20,8 +18,6 @@ ATBSPlayerState::ATBSPlayerState()
 	CombatPawnIDInPlayerTeam.Add(1);
 	CombatPawnIDInPlayerTeam.Add(1);
 	CombatPawnIDInPlayerTeam.Add(1);
-
-	GamePropsComponent = CreateDefaultSubobject<UGamePropsComponent>(TEXT("GamePropsComponent"));
 }
 
 void ATBSPlayerState::BeginPlay()
@@ -66,7 +62,7 @@ void ATBSPlayerState::AddExperience(int32 InOffset)
 
 		++Level;
 		Experience -= MaxExperience;
-		MaxExperience *= 2.5;
+		MaxExperience *= 2;
 		OnLevelUpDelegate.Broadcast(Level);
 	}
 

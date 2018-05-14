@@ -7,23 +7,24 @@
 #include "UI/GameTask/GameTaskItem.h"
 #include "GameTask/GameTaskComponent.h"
 
-void UGameTaskList::NativeConstruct()
+void UGameTaskList::InitializeGameTaskList()
 {
 	APlayerController* OnwerPC = GetOwningPlayer();
 	ATBSCharacter* OwnetTBSCharacter = OnwerPC ? Cast<ATBSCharacter>(OnwerPC->GetPawn()) : nullptr;
 	OwnerGameTaskComp = OwnetTBSCharacter ? OwnetTBSCharacter->GetGameTaskComp() : nullptr;
 	if (OwnerGameTaskComp)
 	{
-		InitializeGameTaskList();
 
 		OwnerGameTaskComp->OnCanAcceptTaskAddDelegate.AddUObject(this, &UGameTaskList::OnCanAcceptTaskAdd);
 		OwnerGameTaskComp->OnAcceptTaskDelegate.AddUObject(this, &UGameTaskList::OnAcceptTask);
 		OwnerGameTaskComp->OnInterruptTaskDelegate.AddUObject(this, &UGameTaskList::OnInterruptTask);
 		OwnerGameTaskComp->OnFinishedTaskDelegate.AddUObject(this, &UGameTaskList::OnFinishedTask);
+		
+		InitializeAllGameTaskDisplay();
 	}
 }
 
-void UGameTaskList::InitializeGameTaskList()
+void UGameTaskList::InitializeAllGameTaskDisplay()
 {
 	checkf(OwnerGameTaskComp, TEXT("-_- OwnerGameTaskComp must be exists."));
 	

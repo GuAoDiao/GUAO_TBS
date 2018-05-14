@@ -2,29 +2,21 @@
 
 #include "PlayerBackpack.h"
 
-#include "TBSPlayerState.h"
+#include "TBSCharacter.h"
 #include "GameProps/GamePropsComponent.h"
 
 #include "UI/PropItem.h"
 
-void UPlayerBackpack::NativeConstruct()
+void UPlayerBackpack::InitializePlayerBackPack()
 {
-	Super::NativeConstruct();
-
 	APlayerController* OwnerPC = GetOwningPlayer();
-	ATBSPlayerState* OwnerTBSPS = OwnerPC ? Cast<ATBSPlayerState>(OwnerPC->PlayerState) : nullptr;
-	UGamePropsComponent* GamePropsComp = OwnerTBSPS ? OwnerTBSPS->GetGamePropsComponent() : nullptr;
+	ATBSCharacter* OwnerTBSC = OwnerPC ? Cast<ATBSCharacter>(OwnerPC->GetPawn()) : nullptr;
+	UGamePropsComponent* GamePropsComp = OwnerTBSC ? OwnerTBSC->GetGamePropsComponent() : nullptr;
 	if(GamePropsComp)
 	{
 		UpdatePlayerBackpackDisplay(GamePropsComp->GetPropsStoreInfo());
-		GamePropsComp->OnPropsStoreInfoUpdateDelegate.AddUObject(this, &UPlayerBackpack::OnPropsStoreInfoUpdate);
 		GamePropsComp->OnPropsStoreItemChangeDelegate.AddUObject(this, &UPlayerBackpack::OnPropsStoreItemChange);
 	}
-}
-
-void UPlayerBackpack::OnPropsStoreInfoUpdate(const TArray<FPropsStoreItemInfo>& PropsStoreBag)
-{
-	UpdatePlayerBackpackDisplay(PropsStoreBag);
 }
 
 void UPlayerBackpack::UpdatePlayerBackpackDisplay_Implementation(const TArray<FPropsStoreItemInfo>& PropsStoreBag)

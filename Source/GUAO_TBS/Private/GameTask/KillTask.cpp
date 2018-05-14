@@ -8,9 +8,9 @@
 #include "Engine/World.h"
 
 
-void UKillTask::OnInitializeImplementation(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo)
+void UKillTask::OnWaitForAcceptImplementation()
 {
-	const FGameKillTaskInfo* GameKillTaskInfo = FTBSGameAssetManager::GetInstance()->GetGameKillTaskInfo(InGameTaskID);
+	const FGameKillTaskInfo* GameKillTaskInfo = FTBSGameAssetManager::GetInstance()->GetGameKillTaskInfo(GameTaskID);
 	checkf(GameKillTaskInfo, TEXT("-_- game kill task info must be exists."));
 
 	EnemyInfo = GameKillTaskInfo->TaskInfo;
@@ -32,23 +32,32 @@ void UKillTask::OnAcceptImplementation()
 
 void UKillTask::UpdateGameState()
 {
+	bool bIsFinished = true;
 	for (TMap<int32, int32>::TIterator It(EnemyInfo); It; ++It)
 	{
 		checkf(CurrentKillInfo.Contains(It.Key()), TEXT("-_- the current kill info must has target enemy"));
 
 		if (CurrentKillInfo[It.Key()] < It.Value())
 		{
+			bIsFinished = false;
 			break;
 		}
 	}
 
-	ATBSGameState* TBSGameState = GetWorld() ? Cast<ATBSGameState>(GetWorld()->GetGameState()) : nullptr;
-	if (TBSGameState)
+	if (bIsFinished)
 	{
-		TBSGameState->OnKillCombatPawnDelegate.Remove(KillCombatDelegate);
-	}
+		ATBSGameState* TBSGameState = GetWorld() ? Cast<ATBSGameState>(GetWorld()->GetGameState()) : nullptr;
+		if (TBSGameState)
+		{
+			TBSGameState->OnKillCombatPawnDelegate.Remove(KillCombatDelegate);
+		}
 
-	OnCanFinishedTask();
+		OnWaitForCommitTask();
+	}
+	else
+	{
+		OnWaitForCompleteTask();
+	}
 }
 
 void UKillTask::OnKillCombatPawn(ACombatPawn* CombatPawn)
@@ -65,13 +74,10 @@ void UKillTask::OnKillCombatPawn(ACombatPawn* CombatPawn)
 				CurrentKillInfo[CombatPawnID] = It.Value() + 1;
 				if (CurrentKillInfo[CombatPawnID] > EnemyInfo[CombatPawnID])
 				{
-					CurrentKillInfo[CombatPawnID] = EnemyInfo[CombatPawnID];
-					
-					UpdateGameState();
+					CurrentKillInfo[CombatPawnID] = EnemyInfo[CombatPawnID];	
 				}
-
-				break;
 			}
 		}
+		UpdateGameState();
 	}
 }

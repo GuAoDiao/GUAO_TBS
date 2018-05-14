@@ -40,11 +40,17 @@ public:
 	class UDataTable* GetGameTaskInfoDT() const { return GameTaskInfoDT; }
 	const FGameTaskInfo* GetGameTaskInfo(int32 GameTaskID) const;
 	const FGameKillTaskInfo* GetGameKillTaskInfo(int32 GameTaskID) const;
+	const FGameCollectionTaskInfo* GetGameCollectionTaskInfo(int32 GameTaskID) const;
+	const FGameTaskAcceptableConditions* GetGameTaskAcceptableConditions(int32 GameTaskID) const;
 
 protected:
 	UPROPERTY()
 	class UDataTable* GameTaskInfoDT;
 	UPROPERTY()
 	class UDataTable* GameKillTaskInfoDT;
+	UPROPERTY()
+	class UDataTable* GameCollectionTaskInfoDT;
+	UPROPERTY()
+	class UDataTable* GameTaskAcceptableConditionsDT;
 	
 };

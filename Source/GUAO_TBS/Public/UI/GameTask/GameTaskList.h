@@ -19,8 +19,10 @@ class GUAO_TBS_API UGameTaskList : public UUserWidget
 	
 	
 public:
-	virtual void NativeConstruct() override;
+	void InitializeGameTaskList();
 	
+	void InitializeAllGameTaskDisplay();
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void ClearAllGameTaskItem();
 
@@ -35,7 +37,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ChangeItemFromAcceptToFinished(UGameTaskItem* GameTaskItem);
 
-	void InitializeGameTaskList();
+
 	void OnCanAcceptTaskAdd(int32 TaskID, UGameTask* GameTask);
 	void OnAcceptTask(int32 TaskID, UGameTask* GameTask);
 	void OnInterruptTask(int32 TaskID, UGameTask* GameTask);

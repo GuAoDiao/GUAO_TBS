@@ -6,13 +6,6 @@
 #include "UI/ShopPropsItem.h"
 #include "TilePawn/NPC/ShopNPCTilePawn.h"
 
-void UNPCShop::NativeConstruct()
-{
-	Super::NativeConstruct();
-
-	ShopPropsItemClass = LoadClass<UShopPropsItem>(nullptr, TEXT("WidgetBlueprint'/Game/GUAO_TBS/UI/W_ShopPropsItem.W_ShopPropsItem_C'"));
-}
-
 void UNPCShop::InitializeNPCShop(class AShopNPCTilePawn* ShopNPC)
 {
 	OwnerShopNPC = ShopNPC;

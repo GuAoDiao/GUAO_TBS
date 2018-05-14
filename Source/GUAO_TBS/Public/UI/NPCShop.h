@@ -20,8 +20,6 @@ class GUAO_TBS_API UNPCShop : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	virtual void NativeConstruct() override;
-
 	void InitializeNPCShop(class AShopNPCTilePawn* ShopNPC);
 
 	UFUNCTION(BlueprintImplementableEvent)

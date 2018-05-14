@@ -84,43 +84,39 @@ void UGamePropsComponent::UseSingleProps(int32 PropsID)
 	{
 		if (PropsStoreBag[i].ID == PropsID)
 		{
-			if (PropsStoreBag[i].Nums > 0)
+			if (PropsStoreBag[i].Nums <= 0)
 			{
-				FPropAndCapabilitiesManager* PropsManager = FPropAndCapabilitiesManager::GetInstance();
-				const FGamePropsInfo& PropsInfo = PropsManager->GetPropsInfoFormID(PropsStoreBag[i].ID);
+				UE_LOG(LogTemp, Log, TEXT("-_- don't have prop"));
+				return;
+			}
+			FPropAndCapabilitiesManager* PropsManager = FPropAndCapabilitiesManager::GetInstance();
+			const FGamePropsInfo& PropsInfo = PropsManager->GetPropsInfoFormID(PropsStoreBag[i].ID);
 
-				if (PropsInfo.Type == EGamePropsType::Consumables)
+			if (PropsInfo.Type == EGamePropsType::Consumables)
+			{
+				const FConsumablesPropsInfo& ConsumablesPropsInfo = PropsManager->GetConsumablesPropsInfoFormID(PropsStoreBag[i].ID);
+				if (ConsumablesPropsInfo.Type == EConsumablesType::Game || ConsumablesPropsInfo.Type == EConsumablesType::All)
 				{
-					const FConsumablesPropsInfo& ConsumablesPropsInfo = PropsManager->GetConsumablesPropsInfoFormID(PropsStoreBag[i].ID);
-					if (ConsumablesPropsInfo.Type == EConsumablesType::Game || ConsumablesPropsInfo.Type == EConsumablesType::All)
+					for (TMap<EGameCapabilitiesType, FString>::TConstIterator It(ConsumablesPropsInfo.GameCapabilities); It; ++It)
 					{
-						for (TMap<EGameCapabilitiesType, FString>::TConstIterator It(ConsumablesPropsInfo.GameCapabilities); It; ++It)
+						UGameCapabilities* GameCapabilities = PropsManager->GetGameCapabilities(It.Key());
+						if (GameCapabilities)
 						{
-							UGameCapabilities* GameCapabilities = PropsManager->GetGameCapabilities(It.Key());
-							if (GameCapabilities)
-							{
-								GameCapabilities->InitializeGameCapabilities(GetWorld(), It.Value());
-								GameCapabilities->UseGameCapabilities();
-							}
-							
+							GameCapabilities->InitializeGameCapabilities(GetWorld(), It.Value());
+							GameCapabilities->UseGameCapabilities();
 						}
-						UE_LOG(LogTemp, Log, TEXT("-_- use prop"));
-						--PropsStoreBag[i].Nums;
-
-						OnPropsStoreItemChangeDelegate.Broadcast(i, PropsID, PropsStoreBag[i].Nums);
+							
 					}
-				}
-				else
-				{
-					UE_LOG(LogTemp, Log, TEXT("-_- don't use combat prop"));
+					UE_LOG(LogTemp, Log, TEXT("-_- use prop"));
+					--PropsStoreBag[i].Nums;
+
+					OnPropsStoreItemChangeDelegate.Broadcast(i, PropsID, PropsStoreBag[i].Nums);
 				}
 			}
 			else
 			{
-				UE_LOG(LogTemp, Log, TEXT("-_- don't have prop"));
+				UE_LOG(LogTemp, Log, TEXT("-_- don't use combat prop"));
 			}
-
-			return;
 		}
 	}
 }
@@ -146,7 +142,15 @@ void UGamePropsComponent::RemoveProps(int32 PropsID, int32 PropsNum)
 	{
 		if (PropsStoreBag[i].ID == PropsID)
 		{
+			if (PropsStoreBag[i].Nums < PropsNum)
+			{
+				UE_LOG(LogTemp, Log, TEXT("-_- don't have enough prop to remove."));
+				return;
+			}
+
 			PropsStoreBag[i].Nums -= PropsNum;
+
+			checkf(PropsStoreBag[i].Nums >= 0, TEXT("-_- the props nums must more then zero."));
 
 			OnPropsStoreItemChangeDelegate.Broadcast(i, PropsID, PropsStoreBag[i].Nums);
 

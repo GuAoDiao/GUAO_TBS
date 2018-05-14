@@ -5,6 +5,7 @@
 
 #include "PropAndCapabilitiesManager.h"
 #include "UI/NPCShop.h"
+#include "TBSCharacter.h"
 #include "TBSPlayerState.h"
 #include "GameProps/GamePropsComponent.h"
 
@@ -32,6 +33,7 @@ void AShopNPCTilePawn::BuyItem(int32 ID)
 {
 	APlayerController* OwnerPC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr;
 	ATBSPlayerState* OwnerTBSPS = OwnerPC ? Cast<ATBSPlayerState>(OwnerPC->PlayerState) : nullptr;
+	ATBSCharacter* OwnerTBSC = OwnerPC ? Cast<ATBSCharacter>(OwnerPC->GetPawn()) : nullptr;
 	
 	int32 PropsShopItemIndex = GetPropsShopItemIndex(ID);
 
@@ -40,7 +42,7 @@ void AShopNPCTilePawn::BuyItem(int32 ID)
 		if (PropsShopInfo.AllShopItems[PropsShopItemIndex].Nums > 0)
 		{
 			OwnerTBSPS->AddGold(-PropsShopInfo.AllShopItems[PropsShopItemIndex].Gold);
-			UGamePropsComponent* GamePropsComp = OwnerTBSPS->GetGamePropsComponent();
+			UGamePropsComponent* GamePropsComp = OwnerTBSC->GetGamePropsComponent();
 			if (GamePropsComp) { GamePropsComp->AddProps(ID, 1); }
 
 			--PropsShopInfo.AllShopItems[PropsShopItemIndex].Nums;

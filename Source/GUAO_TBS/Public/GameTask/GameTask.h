@@ -6,6 +6,8 @@
 #include "TBSTypes.h"
 #include "GameTask.generated.h"
 
+class ATBSCharacter;
+
 /**
  * 
  */
@@ -16,17 +18,26 @@ class GUAO_TBS_API UGameTask : public UObject
 	
 public:
 	void Initilaize(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo);
+	
 	virtual void OnInitializeImplementation(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo) {}
-	bool CanAccpet(class ATBSCharacter* Character);
-	void BeAccpeted(class ATBSCharacter* Character);
+
+	void WaitForAccept();
+	virtual void OnWaitForAcceptImplementation() {};
+
+	bool CanAccpet(ATBSCharacter* Character);
+
+	void BeAccpeted(ATBSCharacter* Character);
 	virtual void OnAcceptImplementation() {};
 
 	virtual void UpdateGameState() {};
 	
-	bool IsFinished() const { return GameTaskFlow == EGameTaskFlow::CanFinished; }
+	bool IsFinished() const { return GameTaskFlow == EGameTaskFlow::WaitForCommit; }
 
-	void OnCanFinishedTask();
+	void OnWaitForCompleteTask();
+	void OnWaitForCommitTask();
+
 	void OnFinishedTask();
+	virtual void OnFinishedTaskImplementation() {};
 
 	void BeCannelled();
 	void OnGameTaskOrogress();

@@ -23,12 +23,11 @@ void ATBSHUD::ShowGameLayout()
 		if (!GameLayout && GameLayoutClass)
 		{
 			GameLayout = CreateWidget<UGameLayout>(GetGameInstance(), GameLayoutClass);
+			GameLayout->InitializeGameLayoutWidget();
 		}
 
 		if (GameLayout)
-		{
-			GameLayout->InitializeGameLayoutWidget();
-			
+		{			
 			if(!GameLayout->IsInViewport()){ GameLayout->AddToViewport(); }
 			if (CombatLayout && CombatLayout->IsInViewport()) { CombatLayout->RemoveFromViewport(); }
 			

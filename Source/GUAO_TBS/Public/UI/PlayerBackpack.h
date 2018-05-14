@@ -21,7 +21,7 @@ class GUAO_TBS_API UPlayerBackpack : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	virtual void NativeConstruct() override;
+	void InitializePlayerBackPack();
 	
 	void OnPropsStoreInfoUpdate(const TArray<FPropsStoreItemInfo>& PropsStoreBag);
 	void OnPropsStoreItemChange(int32  PropsIndex, int32  PropsID, int32  PropsNum);

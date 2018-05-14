@@ -4,19 +4,13 @@
 
 #include "UI/PlayerBackpack.h"
 #include "UI/GameTask/GameTaskList.h"
-
-
-void UGameLayout::NativeConstruct()
-{
-	Super::NativeConstruct();
-
-	InitializeGameLayoutWidget();
-}
-
+#include "UI/PlayerInfo.h"
 
 void UGameLayout::InitializeGameLayoutWidget_Implementation()
 {
-
+	if (GameTaskList) { GameTaskList->InitializeGameTaskList(); }
+	if (PlayerInfo) { PlayerInfo->InitializePlayInfo(); }
+	if (PlayerBackPack) { PlayerBackPack->InitializePlayerBackPack(); }
 }
 
 void UGameLayout::TogglePlayerBackPackDisplay()

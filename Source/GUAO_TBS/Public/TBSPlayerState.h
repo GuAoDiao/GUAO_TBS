@@ -72,13 +72,6 @@ public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelUpDelegate, int32 /* Level */)
 	FOnLevelUpDelegate OnLevelUpDelegate;
 protected:
-
-
-public:
-	UGamePropsComponent* GetGamePropsComponent() const { return GamePropsComponent; }
-protected:
-	UPROPERTY()
-	UGamePropsComponent* GamePropsComponent;
 	int32 Gold;
 	int32 Level;
 	int32 MaxLevel;

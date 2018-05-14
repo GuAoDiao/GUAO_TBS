@@ -2,7 +2,7 @@
 
 #include "PropItem.h"
 
-#include "TBSPlayerState.h"
+#include "TBSCharacter.h"
 #include "PropAndCapabilitiesManager.h"
 #include "GameProps/GamePropsComponent.h"
 
@@ -31,7 +31,7 @@ const FGamePropsInfo& UPropsItem::GetGamePropsInfo() const
 void UPropsItem::UseProps()
 {
 	APlayerController* OwnerPC = GetOwningPlayer();
-	ATBSPlayerState* OwnerTBSPS = OwnerPC ? Cast<ATBSPlayerState>(OwnerPC->PlayerState) : nullptr;
+	ATBSCharacter* OwnerTBSPS = OwnerPC ? Cast<ATBSCharacter>(OwnerPC->GetPawn()) : nullptr;
 	UGamePropsComponent* GamePropsComponent = OwnerTBSPS ? OwnerTBSPS->GetGamePropsComponent() : nullptr;
 	if (GamePropsComponent) { GamePropsComponent->UseSingleProps(CurrentPropsID); }
 }

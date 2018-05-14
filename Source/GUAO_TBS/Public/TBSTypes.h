@@ -264,10 +264,10 @@ public:
 UENUM(BlueprintType)
 enum class EGameTaskFlow : uint8
 {
-	CannotAccept,
-	CanAccept,
+	Initialize,
+	WaitForAccept,
 	WaitForComplete,
-	CanFinished,
+	WaitForCommit,
 	Finished,
 };
 
@@ -276,7 +276,8 @@ enum class EGameTaskType : uint8
 {
 	KillTask,
 	DialogueTask,
-	CollictionTask
+	CollictionTask,
+	Custom
 };
 
 USTRUCT(BlueprintType)
@@ -284,6 +285,7 @@ struct FGameTaskInfo : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 public:
+	FGameTaskInfo() : AcceptFromNPCID(-1),FinishedNPCID(-1),WaitingDialogueID(-1) {}
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	int32 ID;
 
@@ -336,7 +338,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FGameCollictionTaskInfo : public FTableRowBase
+struct FGameCollectionTaskInfo : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 public:

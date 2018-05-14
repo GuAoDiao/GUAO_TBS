@@ -18,11 +18,16 @@ public:
 
 	virtual void BeginPlay() override;
 
+	void OnLevelUp(int32 Level);
+
 	void UpdateAllCanAcceptTask();
 
 	void AccpetGameTask(int32 TaskID);
 	void InterruptTask(int32 TaskID);
 	void CompleteGameTask(int32 TaskID);
+
+	bool TargetTaskIsFinished(int32 TaskID);
+
 
 	const TMap<int32, UGameTask*>& GetAllAccpetTasks() const { return AllAcceptTask; }
 	const TMap<int32, UGameTask*>& GetAllCanAcceptTask() const { return AllCanAcceptTask; }

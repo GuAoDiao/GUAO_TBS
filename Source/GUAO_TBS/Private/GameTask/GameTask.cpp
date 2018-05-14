@@ -5,16 +5,28 @@
 #include "Engine/World.h"
 #include "EngineUtils.h"
 
+#include "TBSGameAssetManager.h"
 #include "TBSCharacter.h"
 #include "TilePawn/NPC/NPCTilePawn.h"
+#include "TBSPlayerState.h"
+#include "GameTask/GameTaskComponent.h"
 
 void UGameTask::Initilaize(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo)
 {
 	GameTaskID = InGameTaskID;
 	checkf(InGameTaskInfo, TEXT("-_- Game Task Info must exists."));
 	GameTaskInfo = *InGameTaskInfo;
+	
+	OnInitializeImplementation(InGameTaskID, InGameTaskInfo);
 
-	if (GameTaskInfo.AcceptFromNPCID)
+	GameTaskFlow = EGameTaskFlow::Initialize;
+}
+
+void UGameTask::WaitForAccept()
+{
+	GameTaskFlow = EGameTaskFlow::WaitForAccept;
+
+	if (GameTaskInfo.AcceptFromNPCID != -1)
 	{
 		for (TActorIterator<ANPCTilePawn> It(GetWorld()); It; ++It)
 		{
@@ -25,20 +37,45 @@ void UGameTask::Initilaize(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo)
 		}
 	}
 
-	OnInitializeImplementation(InGameTaskID, InGameTaskInfo);
-
-	GameTaskFlow = EGameTaskFlow::CanAccept;
+	OnWaitForAcceptImplementation();
 }
 
 bool UGameTask::CanAccpet(class ATBSCharacter* Character)
 {
+	const FGameTaskAcceptableConditions* GameTaskAcceptableConditions = FTBSGameAssetManager::GetInstance()->GetGameTaskAcceptableConditions(GameTaskID);
+	if (GameTaskAcceptableConditions)
+	{
+		AController* OwnerC = Character ? Character->GetController() : nullptr;
+		ATBSPlayerState* OwnerTBSPS = OwnerC ? Cast<ATBSPlayerState>(OwnerC->PlayerState) : nullptr;
+		checkf(OwnerTBSPS, TEXT("-_- Player State Must be exists."));
+
+		// Level limit
+		if (GameTaskAcceptableConditions->Level > OwnerTBSPS->GetLevel()) { return false; }
+
+		// Predecessor task not finished
+		if (GameTaskAcceptableConditions->PredecessorTask != -1)
+		{
+			if (!Character->GetGameTaskComp()->TargetTaskIsFinished(GameTaskAcceptableConditions->PredecessorTask)) { return false; }
+		}
+	}
+
 	return true;
 }
-
 
 void UGameTask::BeAccpeted(class ATBSCharacter* Character)
 {
 	CurrentExcuteCharacter = Character;
+
+	OnAcceptImplementation();
+
+	UpdateGameState();
+}
+
+void UGameTask::OnWaitForCompleteTask()
+{
+	if (GameTaskFlow == EGameTaskFlow::WaitForComplete) { return; }
+
+	GameTaskFlow = EGameTaskFlow::WaitForComplete;
 
 	if (GameTaskInfo.FinishedNPCID > 0 && GameTaskInfo.WaitingDialogueID > 0)
 	{
@@ -50,15 +87,10 @@ void UGameTask::BeAccpeted(class ATBSCharacter* Character)
 			}
 		}
 	}
-
-	OnAcceptImplementation();
-
-	GameTaskFlow = EGameTaskFlow::WaitForComplete;
 }
-
-void UGameTask::OnCanFinishedTask()
+void UGameTask::OnWaitForCommitTask()
 {
-	GameTaskFlow = EGameTaskFlow::CanFinished;
+	GameTaskFlow = EGameTaskFlow::WaitForCommit;
 
 	if (GameTaskInfo.FinishedNPCID > 0 && GameTaskInfo.FinishedDialogueID > 0)
 	{
@@ -84,4 +116,6 @@ void UGameTask::OnFinishedTask()
 			}
 		}
 	}
+
+	OnFinishedTaskImplementation();
 }

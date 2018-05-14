@@ -16,6 +16,7 @@
 #include "TBSGameAssetManager.h"
 #include "Dialogue/NPCDialogue.h"
 #include "GameTask/GameTaskComponent.h"
+#include "GameProps/GamePropsComponent.h"
 
 ATBSCharacter::ATBSCharacter()
 {
@@ -49,6 +50,7 @@ ATBSCharacter::ATBSCharacter()
 	TileType = ETBSTileType::Player;
 
 	GameTaskComp = CreateDefaultSubobject<UGameTaskComponent>("GameTask");
+	GamePropsComponent = CreateDefaultSubobject<UGamePropsComponent>(TEXT("GamePropsComponent"));
 }
 
 void ATBSCharacter::OnConstruction(const FTransform& Transform)

@@ -52,7 +52,7 @@ void UNPCDialogue::InitializeDialogue(const FDialogueInfo* DialogueInfo)
 		case EDialogueType::AcceptTask:
 		{
 			const FDialogueTaskInfo* TaskInfo = FTBSGameAssetManager::GetInstance()->GetDialogueTaskInfo(DialogueInfo->ID);
-			checkf(TaskInfo, TEXT("-_- the dialogue task info must exists."));
+			checkf(TaskInfo, TEXT("-_- the dialogue task (%d) info must exists."), DialogueInfo->ID);
 			ShowAcceptTaskList(TaskInfo->TaskID);
 			break;
 		}

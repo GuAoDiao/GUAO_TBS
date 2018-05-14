@@ -7,10 +7,8 @@
 #include "TBSPlayerState.h"
 
 
-void UPlayerInfo::NativeConstruct()
+void UPlayerInfo::InitializePlayInfo()
 {
-	Super::NativeConstruct();
-
 	APlayerController* OwnerPC = GetOwningPlayer();
 	ATBSPlayerState*  OwnerTBSPS = OwnerPC ? Cast<ATBSPlayerState>(OwnerPC->PlayerState) : nullptr;
 

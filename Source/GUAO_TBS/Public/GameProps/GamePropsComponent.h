@@ -26,8 +26,6 @@ public:
 	void RemoveProps(int32 PropsID, int32 PropsNum);
 	const TArray<FPropsStoreItemInfo>& GetPropsStoreInfo() const { return PropsStoreBag; }
 
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnPropsStoreInfoUpdateDelegate, const TArray<FPropsStoreItemInfo>& /* PropsStoreBag */);
-	FOnPropsStoreInfoUpdateDelegate OnPropsStoreInfoUpdateDelegate;
 	DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnPropsStoreItemChangeDelegate, int32 /* PropsIndex */, int32 /* PropsID */, int32 /* PropsNum */);
 	FOnPropsStoreItemChangeDelegate OnPropsStoreItemChangeDelegate;
 

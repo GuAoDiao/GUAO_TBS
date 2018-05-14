@@ -31,6 +31,8 @@ FTBSGameAssetManager::FTBSGameAssetManager()
 
 	GameTaskInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_GameTaskInfo.DT_GameTaskInfo'"));
 	GameKillTaskInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_GameKillTaskInfo.DT_GameKillTaskInfo'"));
+	GameCollectionTaskInfoDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_GameCollectionTaskInfo.DT_GameCollectionTaskInfo'"));
+	GameTaskAcceptableConditionsDT = LoadObject<UDataTable>(nullptr, TEXT("DataTable'/Game/GUAO_TBS/Datatable/DT_GameTaskAcceptableConditions.DT_GameTaskAcceptableConditions'"));
 
 	LoadAllDialogueClassInfo();
 }
@@ -106,6 +108,28 @@ const FGameKillTaskInfo* FTBSGameAssetManager::GetGameKillTaskInfo(int32 GameTas
 	if (GameKillTaskInfoDT)
 	{
 		return GameKillTaskInfoDT->FindRow<FGameKillTaskInfo>(FName(*FString::FromInt(GameTaskID)), TEXT("-_- Find Game Kill Task Info From DT"));
+	}
+	return nullptr;
+}
+
+const FGameCollectionTaskInfo* FTBSGameAssetManager::GetGameCollectionTaskInfo(int32 GameTaskID) const
+{
+	if (GameCollectionTaskInfoDT)
+	{
+		return GameCollectionTaskInfoDT->FindRow<FGameCollectionTaskInfo>(FName(*FString::FromInt(GameTaskID)), TEXT("-_- find game collection task info from DT."));
+	}
+	return nullptr;
+}
+
+const FGameTaskAcceptableConditions* FTBSGameAssetManager::GetGameTaskAcceptableConditions(int32 GameTaskID) const
+{
+	if (GameTaskAcceptableConditionsDT)
+	{
+		uint8* Result = GameTaskAcceptableConditionsDT->FindRowUnchecked(FName(*FString::FromInt(GameTaskID)));
+		if (Result)
+		{
+			return reinterpret_cast<FGameTaskAcceptableConditions*>(Result);
+		}
 	}
 	return nullptr;
 }

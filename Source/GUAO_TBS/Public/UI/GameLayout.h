@@ -15,8 +15,6 @@ class GUAO_TBS_API UGameLayout : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	virtual void NativeConstruct() override;
-	
 	UFUNCTION(BlueprintNativeEvent)
 	void InitializeGameLayoutWidget();
 

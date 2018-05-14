@@ -15,7 +15,7 @@ class GUAO_TBS_API UPlayerInfo : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	virtual void NativeConstruct() override;
+	void InitializePlayInfo();
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void InitializePlayerInfoDisplay(const FString& PlayerName, int32 Gold, int32 Level, int32 Experience, int32 MaxExperience);

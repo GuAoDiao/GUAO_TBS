@@ -2,7 +2,10 @@
 
 #include "GameTaskComponent.h"
 
+#include "GameFramework/Controller.h"
+
 #include "TBSCharacter.h"
+#include "TBSPlayerState.h"
 #include "TBSGameAssetManager.h"
 #include "GameTask/GameTask.h"
 
@@ -21,6 +24,16 @@ void UGameTaskComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	AController* OwnerC = OwnerCharacter->GetController();
+	ATBSPlayerState* OwnerTBSPS = OwnerC ? Cast<ATBSPlayerState>(OwnerC->PlayerState) : nullptr;
+	checkf(OwnerTBSPS, TEXT("-_- Owner Player State must be exists."));
+	OwnerTBSPS->OnLevelUpDelegate.AddUObject(this, &UGameTaskComponent::OnLevelUp);
+
+	UpdateAllCanAcceptTask();
+}
+
+void UGameTaskComponent::OnLevelUp(int32 Level)
+{
 	UpdateAllCanAcceptTask();
 }
 
@@ -33,17 +46,24 @@ void UGameTaskComponent::UpdateAllCanAcceptTask()
 		GameTaskInfoDT->GetAllRows<FGameTaskInfo>(TEXT("-_- find all game task info"), AllGameTaskInfo);
 		for (FGameTaskInfo* GameTaskInfo : AllGameTaskInfo)
 		{
-			if (GameTaskInfo)
+			checkf(GameTaskInfo, TEXT("-_- Game Task Info muse be exists."));
+						
+			if (AllCanAcceptTask.Contains(GameTaskInfo->ID) || AllAcceptTask.Contains(GameTaskInfo->ID) || AllFinishedTask.Contains(GameTaskInfo->ID)) { continue; }
+				
+			UGameTask* GameTask = GameTaskInfo->TaskClass ? NewObject<UGameTask>(this, GameTaskInfo->TaskClass) : nullptr;
+			if (GameTask)
 			{
-				if (AllCanAcceptTask.Contains(GameTaskInfo->ID)) { continue; }
-
-				UGameTask* GameTask = GameTaskInfo->TaskClass ? NewObject<UGameTask>(this, GameTaskInfo->TaskClass) : nullptr;
-				if (GameTask)
+				GameTask->Initilaize(GameTaskInfo->ID, GameTaskInfo);
+				if (GameTask->CanAccpet(OwnerCharacter))
 				{
-					GameTask->Initilaize(GameTaskInfo->ID, GameTaskInfo);
+					GameTask->WaitForAccept();
 					AllCanAcceptTask.Add(GameTaskInfo->ID, GameTask);
 					
 					OnCanAcceptTaskAddDelegate.Broadcast(GameTaskInfo->ID, GameTask);
+				}
+				else
+				{
+					GameTask->ConditionalBeginDestroy();
 				}
 			}
 		}
@@ -90,5 +110,12 @@ void UGameTaskComponent::CompleteGameTask(int32 TaskID)
 			AllAcceptTask[TaskID]->ConditionalBeginDestroy();
 			AllAcceptTask.Remove(TaskID);
 		}
+
+		UpdateAllCanAcceptTask();
 	}
+}
+
+bool UGameTaskComponent::TargetTaskIsFinished(int32 TaskID)
+{
+	return AllFinishedTask.Contains(TaskID);
 }
