@@ -180,15 +180,14 @@ bool ACombatPawn::ExecuteAction(float DeltaSeconds)
 /// Damage , Health, Death;
 void ACombatPawn::AcceptDamage(float Damage, ACombatPawn* Causer)
 {
-	if (Damage < 0.f) { Damage = 0.f; }
+	if (Damage > 0.f)
+	{
+		Health -= Damage;
 
-	if (Damage == 0.f) { return; }
+		if (Health < 0.f) { Health = 0.f; }
 
-	Health -= Damage;
-
-	if (Health < 0.f) { Health = 0.f; }
-
-	UpdateHealth();
+		UpdateHealth();
+	}
 
 	if (Health == 0.f)
 	{
