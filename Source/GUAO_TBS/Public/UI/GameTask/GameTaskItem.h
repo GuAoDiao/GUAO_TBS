@@ -19,5 +19,8 @@ public:
 	void InitializeGameTaskItem(class UGameTask* GameTask);
 	
 	UFUNCTION(BlueprintImplementableEvent)
-	void UpdateGameTaskInfo(const FText& Tile, const FText& Description, EGameTaskType Type);
+	void UpdateGameTaskInfo(const FText& Tile, const FText& Description, const FText& Publisher, const FText& Submission, EGameTaskType Type);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateGameTaskFlow(EGameTaskFlow TaskFlow);
 };

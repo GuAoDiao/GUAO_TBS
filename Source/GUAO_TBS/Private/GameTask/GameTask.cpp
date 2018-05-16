@@ -11,6 +11,13 @@
 #include "TBSPlayerState.h"
 #include "GameTask/GameTaskComponent.h"
 
+void UGameTask::ToggleToTargetGameTaskFlow(EGameTaskFlow TargetGameTaskFlow)
+{
+	GameTaskFlow = TargetGameTaskFlow;
+
+	OnToggleToNewGameTaskFlowDelegate.Broadcast(GameTaskFlow);
+}
+
 void UGameTask::Initilaize(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo)
 {
 	GameTaskID = InGameTaskID;
@@ -19,12 +26,12 @@ void UGameTask::Initilaize(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo)
 	
 	OnInitializeImplementation(InGameTaskID, InGameTaskInfo);
 
-	GameTaskFlow = EGameTaskFlow::Initialize;
+	ToggleToTargetGameTaskFlow(EGameTaskFlow::Initialize);
 }
 
 void UGameTask::WaitForAccept()
 {
-	GameTaskFlow = EGameTaskFlow::WaitForAccept;
+	ToggleToTargetGameTaskFlow(EGameTaskFlow::WaitForAccept);
 
 	if (GameTaskInfo.AcceptFromNPCID != -1)
 	{
@@ -75,7 +82,7 @@ void UGameTask::OnWaitForCompleteTask()
 {
 	if (GameTaskFlow == EGameTaskFlow::WaitForComplete) { return; }
 
-	GameTaskFlow = EGameTaskFlow::WaitForComplete;
+	ToggleToTargetGameTaskFlow(EGameTaskFlow::WaitForComplete);
 
 	if (GameTaskInfo.FinishedNPCID > 0 && GameTaskInfo.WaitingDialogueID > 0)
 	{
@@ -90,7 +97,7 @@ void UGameTask::OnWaitForCompleteTask()
 }
 void UGameTask::OnWaitForCommitTask()
 {
-	GameTaskFlow = EGameTaskFlow::WaitForCommit;
+	ToggleToTargetGameTaskFlow(EGameTaskFlow::WaitForCommit);
 
 	if (GameTaskInfo.FinishedNPCID > 0 && GameTaskInfo.FinishedDialogueID > 0)
 	{
@@ -106,6 +113,8 @@ void UGameTask::OnWaitForCommitTask()
 
 void UGameTask::OnFinishedTask()
 {
+	ToggleToTargetGameTaskFlow(EGameTaskFlow::Finished);
+
 	if (GameTaskInfo.FinishedNPCID > 0)
 	{
 		for (TActorIterator<ANPCTilePawn> It(GetWorld()); It; ++It)

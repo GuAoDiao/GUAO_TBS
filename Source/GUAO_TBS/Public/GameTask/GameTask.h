@@ -17,6 +17,13 @@ class GUAO_TBS_API UGameTask : public UObject
 	GENERATED_BODY()
 	
 public:
+
+	EGameTaskFlow GetGameTaskFlow() const { return GameTaskFlow; }
+	void ToggleToTargetGameTaskFlow(EGameTaskFlow TargetGameTaskFlow);
+
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnToggleToNewGameTaskFlowDelegate, EGameTaskFlow);
+	FOnToggleToNewGameTaskFlowDelegate OnToggleToNewGameTaskFlowDelegate;
+
 	void Initilaize(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo);
 	
 	virtual void OnInitializeImplementation(int32 InGameTaskID, FGameTaskInfo* InGameTaskInfo) {}

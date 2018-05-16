@@ -311,6 +311,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	TSubclassOf<class UGameTask > TaskClass;
 };
+
 USTRUCT(BlueprintType)
 struct FGameTaskAcceptableConditions : public FTableRowBase
 {
