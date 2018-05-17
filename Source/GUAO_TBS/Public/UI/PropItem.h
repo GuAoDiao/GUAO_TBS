@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 
-#include "TBSPropsTypes.h"
+#include "TBSPropsAndCapabilitiesTypes.h"
 
 #include "PropItem.generated.h"
 

@@ -8,6 +8,9 @@
 
 #include "TBSTypes.generated.h"
 
+//////////////////////////////////////////////////////////////////////////
+/// Grid
+
 UENUM(BlueprintType)
 enum class  ETBSTileType : uint8
 {
@@ -16,30 +19,6 @@ enum class  ETBSTileType : uint8
 	NPC,
 	Enemy
 };
-
-UENUM(BlueprintType)
-enum class ECombatState : uint8
-{
-	Startup,
-	BeginCombat,
-
-	ChoosePawn,
-	BeginPawnTurn,
-	Decision,
-	Action,
-	EndPawnTurn,
-
-	TurnTeam,
-
-	TurnBout,
-
-	FightEnd,
-	RunAway,
-
-	Results
-};
-
-
 
 USTRUCT(BlueprintType)
 struct FGridEdgesCost
@@ -73,6 +52,30 @@ public:
 	int32 Index;
 	int32 Cost;
 	int32 Parent;
+};
+
+//////////////////////////////////////////////////////////////////////////
+/// Combat
+UENUM(BlueprintType)
+enum class ECombatState : uint8
+{
+	Startup,
+	BeginCombat,
+
+	ChoosePawn,
+	BeginPawnTurn,
+	Decision,
+	Action,
+	EndPawnTurn,
+
+	TurnTeam,
+
+	TurnBout,
+
+	FightEnd,
+	RunAway,
+
+	Results
 };
 
 
@@ -140,21 +143,6 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FTilePawnInfo : public FTableRowBase
-{
-	GENERATED_USTRUCT_BODY()
-public:
-	UPROPERTY(EditDefaultsOnly)
-	int32 ID;
-	UPROPERTY(EditDefaultsOnly)
-	FName Name;
-	UPROPERTY(EditDefaultsOnly)
-	class USkeletalMesh* SkeletalMesh;
-	UPROPERTY(EditDefaultsOnly)
-	class UAnimationAsset* IdleAnim;
-};
-
-USTRUCT(BlueprintType)
 struct FCombatTeam
 {
 	GENERATED_USTRUCT_BODY()
@@ -199,6 +187,26 @@ public:
 	FString TeamName;
 };
 
+
+//////////////////////////////////////////////////////////////////////////
+/// Tile Pawn
+USTRUCT(BlueprintType)
+struct FTilePawnInfo : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly)
+	int32 ID;
+	UPROPERTY(EditDefaultsOnly)
+	FName Name;
+	UPROPERTY(EditDefaultsOnly)
+	class USkeletalMesh* SkeletalMesh;
+	UPROPERTY(EditDefaultsOnly)
+	class UAnimationAsset* IdleAnim;
+};
+
+//////////////////////////////////////////////////////////////////////////
+/// Dialogue
 
 UENUM(BlueprintType)
 enum class EDialogueType : uint8

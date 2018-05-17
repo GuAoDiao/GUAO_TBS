@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 
-#include "TBSPropsTypes.h"
+#include "TBSPropsAndCapabilitiesTypes.h"
 
 #include "GamePropsComponent.generated.h"
 

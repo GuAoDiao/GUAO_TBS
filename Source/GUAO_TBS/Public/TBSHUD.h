@@ -20,21 +20,29 @@ class GUAO_TBS_API ATBSHUD : public AHUD
 public:
 	virtual void BeginPlay() override;
 	
-	void ShowGameLayout();
+	//////////////////////////////////////////////////////////////////////////
+	/// Combat Layout
+public:
 	void ShowCombatLayout();
 
 	UCombatLayout* GetCombatLayout() const { return CombatLayout; }
-public:
-	void TogglePlayerBackPackDisplay();
-	void ToggleGameTaskListDisplay();
+
 protected:
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UGameLayout> GameLayoutClass;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UCombatLayout> CombatLayoutClass;
 
 	UPROPERTY(Transient)
 	UCombatLayout* CombatLayout;
+	//////////////////////////////////////////////////////////////////////////
+	/// Game Layout
+public:
+	void ShowGameLayout();
+	void TogglePlayerBackPackDisplay();
+	void ToggleGameTaskListDisplay();
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameLayout> GameLayoutClass;
+	
 	UPROPERTY(Transient)
 	UGameLayout* GameLayout;
 };

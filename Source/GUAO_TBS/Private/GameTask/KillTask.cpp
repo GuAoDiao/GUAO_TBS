@@ -24,10 +24,7 @@ void UKillTask::OnAcceptImplementation()
 	}
 
 	ATBSGameState* TBSGameState = GetWorld() ? Cast<ATBSGameState>(GetWorld()->GetGameState()) : nullptr;
-	if (TBSGameState)
-	{
-		KillCombatDelegate = TBSGameState->OnKillCombatPawnDelegate.AddUObject(this, &UKillTask::OnKillCombatPawn);
-	}
+	if (TBSGameState) { KillCombatDelegate = TBSGameState->OnKillCombatPawnDelegate.AddUObject(this, &UKillTask::OnKillCombatPawn); }
 }
 
 void UKillTask::UpdateGameState()
@@ -47,10 +44,7 @@ void UKillTask::UpdateGameState()
 	if (bIsFinished)
 	{
 		ATBSGameState* TBSGameState = GetWorld() ? Cast<ATBSGameState>(GetWorld()->GetGameState()) : nullptr;
-		if (TBSGameState)
-		{
-			TBSGameState->OnKillCombatPawnDelegate.Remove(KillCombatDelegate);
-		}
+		if (TBSGameState) { TBSGameState->OnKillCombatPawnDelegate.Remove(KillCombatDelegate); }
 
 		OnWaitForCommitTask();
 	}

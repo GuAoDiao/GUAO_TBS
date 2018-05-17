@@ -20,6 +20,8 @@ public:
 	
 	virtual void InitializeDialogue(const FDialogueInfo* DialogueInfo);
 
+	//////////////////////////////////////////////////////////////////////////
+	/// Dispaly
 	UFUNCTION(BlueprintImplementableEvent)
 	void ResetToEmptyDisplay();
 
@@ -45,6 +47,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ShowCommonNextButton(int32 NextID);
 
+	//////////////////////////////////////////////////////////////////////////
+	/// Action
 	UFUNCTION(BlueprintCallable)
 	void FinishDialogue();
 

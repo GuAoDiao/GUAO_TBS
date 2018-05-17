@@ -34,6 +34,7 @@ protected:
 	class UDataTable* DialogueTaskInfoDT;
 
 	TMap<EDialogueType, FDialogueClassInfo> AllDialogueClassInfo;
+
 	//////////////////////////////////////////////////////////////////////////
 	/// Game Task
 public:

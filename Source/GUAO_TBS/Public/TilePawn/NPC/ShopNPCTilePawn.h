@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "TilePawn/NPC/NPCTilePawn.h"
 
-#include "TBSPropsTypes.h"
+#include "TBSPropsAndCapabilitiesTypes.h"
 
 #include "ShopNPCTilePawn.generated.h"
 
@@ -33,11 +33,10 @@ public:
 
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnShopPropsItemNumsChangeDelegate, int32 /* PropsIndex */, int32 /* PropsNums */);
 	FOnShopPropsItemNumsChangeDelegate OnShopPropsItemNumsChangeDelegate;
-protected:
 
+protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UNPCShop> NPCShopClass;
-
 	UPROPERTY(Transient)
 	UNPCShop* NPCShop;
 	UPROPERTY()

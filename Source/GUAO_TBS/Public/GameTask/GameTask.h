@@ -46,11 +46,6 @@ public:
 	void OnFinishedTask();
 	virtual void OnFinishedTaskImplementation() {};
 
-	void BeCannelled();
-	void OnGameTaskOrogress();
-
-	void GetGameTaskDisplayInfo();	
-
 	int32 GetGameTaskID() const { return GameTaskID; }
 protected:
 	class ATBSCharacter* CurrentExcuteCharacter;

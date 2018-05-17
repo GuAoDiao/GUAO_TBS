@@ -20,9 +20,7 @@ public:
 	ANPCTilePawn();
 
 	void TalkWith(ATBSCharacter* InPlayer);
-
-
-
+	
 	virtual void OnTalkWithImplementation(ATBSCharacter* InPlayer);
 	
 	DECLARE_DELEGATE_OneParam(FOnTalkWithDelegate, ATBSCharacter* /*InPlayer*/);

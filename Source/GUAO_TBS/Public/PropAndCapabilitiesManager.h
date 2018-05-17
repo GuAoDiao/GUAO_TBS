@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#include "TBSPropsTypes.h"
+#include "TBSPropsAndCapabilitiesTypes.h"
 
 class UCombatCapabilities;
 class UGameCapabilities;
@@ -20,29 +20,41 @@ protected:
 public:
 	static FPropAndCapabilitiesManager* GetInstance();
 	
+	//////////////////////////////////////////////////////////////////////////
+	/// Props
 public:
 	const FGamePropsInfo& GetPropsInfoFormID(int32 PropsID);
 	const FConsumablesPropsInfo& GetConsumablesPropsInfoFormID(int32 PropsID);
-	const FPropsShopInfo& GetShopInfo(int32 InShopNPCID) const;
-
-	UCombatCapabilities* GetCombatCapabilities(ECombatCapabilitiesType InConsumablesType);
-	UGameCapabilities* GetGameCapabilities(EGameCapabilitiesType InGameCapabilitiesType);
-
-
+	
 protected:
 	UPROPERTY()
 	class UDataTable* GamePropsInfoDT;
 	UPROPERTY()
 	class UDataTable* ConsumablesPropsInfoDT;
+
+	TMap<int32, FGamePropsInfo> AllGamePropsInfo;
+	TMap<int32, FConsumablesPropsInfo> AllConsumablesPropsInfo;
+
+	//////////////////////////////////////////////////////////////////////////
+	/// Props Shop
+public:
+	const FPropsShopInfo& GetShopInfo(int32 InShopNPCID) const;
+
+protected:
+	UPROPERTY()
+	class UDataTable* PropsShopInfoDT;
+
+	//////////////////////////////////////////////////////////////////////////
+	/// Capabilities
+public:
+	UCombatCapabilities* GetCombatCapabilities(ECombatCapabilitiesType InConsumablesType);
+	UGameCapabilities* GetGameCapabilities(EGameCapabilitiesType InGameCapabilitiesType);
+
+protected:
 	UPROPERTY()
 	class UDataTable* GameCapabilitiesClassInfoDT;
 	UPROPERTY()
 	class UDataTable* CombatCapabilitiesClassInfoDT;
-	UPROPERTY()
-	class UDataTable* PropsShopInfoDT;
-
-	TMap<int32, FGamePropsInfo> AllGamePropsInfo;
-	TMap<int32, FConsumablesPropsInfo> AllConsumablesPropsInfo;
 
 	UPROPERTY()
 	TMap<ECombatCapabilitiesType, UCombatCapabilities*> AllCombatCapabilities;
