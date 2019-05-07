@@ -18,7 +18,7 @@ void UPlayerInfo::InitializePlayInfo()
 		OwnerTBSPS->OnExperienceUpdateDelegate.AddUObject(this, &UPlayerInfo::UpdateExperienceDisplay);
 		OwnerTBSPS->OnLevelUpDelegate.AddUObject(this, &UPlayerInfo::OnLevelUp);
 
-		InitializePlayerInfoDisplay(OwnerTBSPS->GetPlayerName(), OwnerTBSPS->GetGold(), OwnerTBSPS->GetLevel(), OwnerTBSPS->GetExperience(), OwnerTBSPS->GetMaxExperience());
+		InitializePlayerInfoDisplay(OwnerTBSPS->GetPlayerUserName(), OwnerTBSPS->GetGold(), OwnerTBSPS->GetLevel(), OwnerTBSPS->GetExperience(), OwnerTBSPS->GetMaxExperience());
 	}
 }
 

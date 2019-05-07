@@ -37,7 +37,7 @@ public:
 	TArray<int32> CombatPawnIDInPlayerTeam;
 
 	UFUNCTION(BlueprintCallable)
-	const FString& GetPlayerName() const { return PlayerName; }
+	const FString& GetPlayerUserName() const { return PlayerUserName; }
 
 	//////////////////////////////////////////////////////////////////////////
 	/// Gold
@@ -77,5 +77,5 @@ protected:
 	int32 MaxLevel;
 	int32 Experience;
 	int32 MaxExperience;
-	FString PlayerName;
+	FString PlayerUserName;
 };

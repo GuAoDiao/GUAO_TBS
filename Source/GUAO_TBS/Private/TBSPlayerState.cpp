@@ -8,7 +8,7 @@
 
 ATBSPlayerState::ATBSPlayerState()
 {
-	PlayerName = TEXT("GUAO");
+	PlayerUserName = TEXT("GUAO");
 	Gold = 1000;
 	Level = 1;
 	MaxLevel = 10;
