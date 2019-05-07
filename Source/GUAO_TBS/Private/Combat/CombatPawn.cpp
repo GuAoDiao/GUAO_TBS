@@ -27,7 +27,7 @@ ACombatPawn::ACombatPawn()
 	CombatPawnInfoDisplayComp->SetupAttachment(GetRootComponent());
 	CombatPawnInfoDisplayComp->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
 
-	CombatPawnInfoDisplayClass = LoadClass<UCombatPawnInfoDisplay>(this, TEXT("WidgetBlueprint'/Game/GUAO_TBS/Blueprints/Combat/W_CombatPawnDisplayInfo.W_CombatPawnDisplayInfo_C'"));
+	CombatPawnInfoDisplayClass = LoadClass<UCombatPawnInfoWidget>(this, TEXT("WidgetBlueprint'/Game/GUAO_TBS/UI/Combat/UMG_CombatPawnInfoWidget.UMG_CombatPawnInfoWidget_C'"));
 
 	AutoPossessAI = EAutoPossessAI::Disabled;
 
@@ -82,7 +82,7 @@ void ACombatPawn::BeginPlay()
 		CombatPawnInfoDisplayComp->SetWidgetClass(CombatPawnInfoDisplayClass);
 		CombatPawnInfoDisplayComp->SetWidgetSpace(EWidgetSpace::Screen);
 		
-		CombatPawnInfoDisplay = Cast<UCombatPawnInfoDisplay>(CombatPawnInfoDisplayComp->GetUserWidgetObject());
+		CombatPawnInfoDisplay = Cast<UCombatPawnInfoWidget>(CombatPawnInfoDisplayComp->GetUserWidgetObject());
 		if (CombatPawnInfoDisplay)
 		{
 			CombatPawnInfoDisplay->InitializeCombatPawnInfoDisplay(Level, CombatPawnName, MaxHealth, MaxMana);

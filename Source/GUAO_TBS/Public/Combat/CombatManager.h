@@ -110,5 +110,5 @@ public:
 
 protected:
 	UPROPERTY(Transient)
-	class UCombatLayout* CombatLayout;
+	class UCombatLayoutWidget* CombatLayout;
 };

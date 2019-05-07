@@ -12,7 +12,7 @@
 class IDecisionMaker;
 class ICombatAction;
 class ACombatManager;
-class UCombatPawnInfoDisplay;
+class UCombatPawnInfoWidget;
 
 
 namespace ECombatPawnState
@@ -142,7 +142,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	class UWidgetComponent* CombatPawnInfoDisplayComp;
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UCombatPawnInfoDisplay> CombatPawnInfoDisplayClass;
+	TSubclassOf<UCombatPawnInfoWidget> CombatPawnInfoDisplayClass;
 	UPROPERTY(Transient)
-	UCombatPawnInfoDisplay* CombatPawnInfoDisplay;
+	UCombatPawnInfoWidget* CombatPawnInfoDisplay;
 };

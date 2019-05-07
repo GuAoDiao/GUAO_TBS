@@ -7,14 +7,14 @@
 FPlayerDecisionMaker::FPlayerDecisionMaker()
 {
 	DecisionMakeUI = nullptr;
-	DecisionMakeUIClass = LoadClass<UPlayerDecisionMakerUI>(nullptr, TEXT("WidgetBlueprint'/Game/GUAO_TBS/Blueprints/Combat/W_PlayerDecisionMakerUI.W_PlayerDecisionMakerUI_C'"));
+	DecisionMakeUIClass = LoadClass<UPlayerDecisionMakerWidget>(nullptr, TEXT("WidgetBlueprint'/Game/GUAO_TBS/UI/Combat/UMG_PlayerDecisionMakerWidget.UMG_PlayerDecisionMakerWidget_C'"));
 }
 
 void FPlayerDecisionMaker::BeginMakeDecision(class ACombatPawn* CombatPawn)
 {
 	if (!DecisionMakeUI && DecisionMakeUIClass && CombatPawn && CombatPawn->GetWorld())
 	{
-		DecisionMakeUI = CreateWidget<UPlayerDecisionMakerUI>(CombatPawn->GetWorld(), DecisionMakeUIClass);
+		DecisionMakeUI = CreateWidget<UPlayerDecisionMakerWidget>(CombatPawn->GetWorld(), DecisionMakeUIClass);
 		DecisionMakeUI->BeginMakeDecision(CombatPawn);
 		DecisionMakeUI->AddToViewport();
 	}

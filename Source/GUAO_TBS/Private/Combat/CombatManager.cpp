@@ -10,11 +10,11 @@
 #include "GameFramework/SpringArmComponent.h"
 
 #include "Combat/CombatPawn.h"
-#include "Combat/CombatLayout.h"
 #include "Combat/CombatLeadingRolePawn.h"
 #include "TBSPlayerController.h"
 #include "TBSGameState.h"
 #include "TBSHUD.h"
+#include "UI/CombatLayout.h"
 
 ACombatManager::ACombatManager()
 {

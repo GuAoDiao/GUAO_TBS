@@ -8,7 +8,7 @@
 #include "Combat/PlayerDecisionMakerUI.h"
 
 
-class UPlayerDecisionMakerUI;
+class UPlayerDecisionMakerWidget;
 
 /**
  * 
@@ -24,6 +24,6 @@ public:
 	virtual bool MakeDecision(float DeltaSeconds) override;
 	
 protected:
-	TSubclassOf<UPlayerDecisionMakerUI> DecisionMakeUIClass;
-	UPlayerDecisionMakerUI* DecisionMakeUI;
+	TSubclassOf<UPlayerDecisionMakerWidget> DecisionMakeUIClass;
+	UPlayerDecisionMakerWidget* DecisionMakeUI;
 };
