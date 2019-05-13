@@ -8,11 +8,11 @@
 #include "WidgetComponent.h"
 #include "GameFramework/PlayerController.h"
 
+#include "GameFramework/TBSGameAssetManager.h"
 #include "Combat/DecisionMakers/AutoDecisionMaker.h"
 #include "Combat/Actions/ICombatAction.h"
 #include "Combat/CombatManager.h"
-#include "Combat/CombatPawnInfoDisplay.h"
-#include "Combat/CombatPawnManager.h"
+#include "UI/Combat/CombatPawnInfoWidget.h"
 #include "TBSCharacter.h"
 
 ACombatPawn::ACombatPawn()
@@ -55,10 +55,10 @@ void ACombatPawn::SetCombatPawnID(int32 InCombatPawnID)
 
 	if (CombatPawnID > 0)
 	{
-		FCombatPawnManager* CombatPawnManager = FCombatPawnManager::GetInstance();
+		FTBSGameAssetManager* TBSGameAssetManager = FTBSGameAssetManager::GetInstance();
 
+		TBSGameAssetManager->GetBaseCombatDisplayInfo(CombatPawnID, BaseDisplayInfo);
 
-		CombatPawnManager->GetBaseCombatDisplayInfo(CombatPawnID, BaseDisplayInfo);
 		if (BaseDisplayInfo.SkeletalMesh)
 		{
 			SkeletalMeshComp->SetSkeletalMesh(BaseDisplayInfo.SkeletalMesh);
@@ -67,7 +67,7 @@ void ACombatPawn::SetCombatPawnID(int32 InCombatPawnID)
 			if (BaseDisplayInfo.IdleAnimAsset) { SkeletalMeshComp->PlayAnimation(BaseDisplayInfo.IdleAnimAsset, true); }
 		}
 
-		if (CombatPawnManager->GetBaseCombatPawnFightInfo(CombatPawnID, BaseFightInfo)) { InitializeCombatPawnAttribute(); }
+		if (TBSGameAssetManager->GetBaseCombatPawnFightInfo(CombatPawnID, BaseFightInfo)) { InitializeCombatPawnAttribute(); }
 	}
 	
 	ResetPawnState();

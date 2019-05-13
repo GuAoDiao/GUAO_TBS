@@ -3,7 +3,6 @@
 #include "GameTaskItemWidget.h"
 
 #include "GameTask/GameTask.h"
-#include "PalaceLattice/TilePawnManager.h"
 #include "TBSGameAssetManager.h"
 
 void UGameTaskItemWidget::InitializeGameTaskItem(UGameTask* GameTask)
@@ -14,8 +13,8 @@ void UGameTaskItemWidget::InitializeGameTaskItem(UGameTask* GameTask)
 	const FGameTaskInfo* GameTaskInfo = FTBSGameAssetManager::GetInstance()->GetGameTaskInfo(GameTaskID);
 	checkf(GameTaskInfo, TEXT("-_- the game task info must exists."));
 
-	const FTilePawnInfo* AcceptTilePawnInfo = FTilePawnManager::GetInstance()->GetTilePawnInfo(GameTaskInfo->AcceptFromNPCID);
-	const FTilePawnInfo* FinishedTilePawnInfo = FTilePawnManager::GetInstance()->GetTilePawnInfo(GameTaskInfo->AcceptFromNPCID);
+	const FTilePawnInfo* AcceptTilePawnInfo = FTBSGameAssetManager::GetInstance()->GetTilePawnInfo(GameTaskInfo->AcceptFromNPCID);
+	const FTilePawnInfo* FinishedTilePawnInfo = FTBSGameAssetManager::GetInstance()->GetTilePawnInfo(GameTaskInfo->AcceptFromNPCID);
 
 	checkf(AcceptTilePawnInfo && FinishedTilePawnInfo, TEXT("-_- the accept tile pawn and finished pawn info must exists."));
 	

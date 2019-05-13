@@ -2,7 +2,7 @@
 
 #include "ShopPropItemWidget.h"
 
-#include "PropAndCapabilitiesManager.h"
+#include "GameFramework/TBSGameAssetManager.h"
 #include "TilePawn/NPC/ShopNPCTilePawn.h"
 
 void UShopPropItemWidget::InitializeShopPropsItem(AShopNPCTilePawn* ShopNPC, int32 InID, int32 InNums, int32 InGold)
@@ -17,7 +17,7 @@ void UShopPropItemWidget::InitializeShopPropsItem(AShopNPCTilePawn* ShopNPC, int
 
 const FGamePropsInfo& UShopPropItemWidget::GetGamePropsInfo() const
 {
-	return FPropAndCapabilitiesManager::GetInstance()->GetPropsInfoFormID(ID);
+	return FTBSGameAssetManager::GetInstance()->GetPropsInfoFormID(ID);
 }
 
 void UShopPropItemWidget::BuyItem()

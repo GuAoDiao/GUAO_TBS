@@ -7,7 +7,7 @@
 #include "TBSTypes.h"
 #include "TBSGameState.h"
 #include "Combat/CombatPawn.h"
-#include "CombatPawnManager.h"
+#include "GameFramework/TBSGameAssetManager.h"
 
 AEnemyTilePawn::AEnemyTilePawn()
 {
@@ -40,7 +40,7 @@ void AEnemyTilePawn::BeginCombat()
 		FCombatTeam EnemyTeam;
 		for (int32 CombatEnemyID : AllCombatEnemy)
 		{
-			TSubclassOf<ACombatPawn> CombatEnemyClass = FCombatPawnManager::GetInstance()->GetCombatPawnClassFromID(CombatEnemyID);
+			TSubclassOf<ACombatPawn> CombatEnemyClass = FTBSGameAssetManager::GetInstance()->GetCombatPawnClassFromID(CombatEnemyID);
 			ACombatPawn* ComatPawn = CombatEnemyClass ? World->SpawnActor<ACombatPawn>(CombatEnemyClass, FVector(0.f, 0.f, 10000.f), FRotator::ZeroRotator, ActorSpawnParameters) : nullptr;
 			if (ComatPawn)
 			{

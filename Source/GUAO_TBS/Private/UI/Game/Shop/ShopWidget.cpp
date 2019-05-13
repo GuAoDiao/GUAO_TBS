@@ -2,7 +2,7 @@
 
 #include "ShopWidget.h"
 
-#include "PropAndCapabilitiesManager.h"
+#include "GameFramework/TBSGameAssetManager.h"
 #include "UI/Game/Shop/ShopPropItemWidget.h"
 #include "TilePawn/NPC/ShopNPCTilePawn.h"
 

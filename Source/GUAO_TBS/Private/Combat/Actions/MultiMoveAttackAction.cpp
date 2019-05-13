@@ -2,11 +2,11 @@
 
 #include "MultiMoveAttackAction.h"
 
+#include "GameFramework/TBSGameAssetManager.h"
 #include "Combat/CombatPawn.h"
 #include "Combat/CombatManager.h"
 #include "Combat/Actions/MoveAction.h"
 
-#include "PropAndCapabilitiesManager.h"
 #include "Combat/CombatCapabilities/MultiDamageCapabilities.h"
 
 FMultiMoveAttackAction::FMultiMoveAttackAction(int32 InTargetTeam, TArray<int32> InTargetIndex)
@@ -32,8 +32,7 @@ void FMultiMoveAttackAction::AttackImplementation()
 			AttackTargetPawn.Add(CombatManager->AllTeamsInfo[TargetTeam].AllCombatPawnInfo[TargetPawnIndex].CombatPawn);
 		}
 
-		FPropAndCapabilitiesManager* PropsManager = FPropAndCapabilitiesManager::GetInstance();
-		UMultiDamageCapabilities* MultiMoveAttackCapabilities = Cast<UMultiDamageCapabilities>(PropsManager->GetCombatCapabilities(ECombatCapabilitiesType::MultiDamage));
+		UMultiDamageCapabilities* MultiMoveAttackCapabilities = Cast<UMultiDamageCapabilities>(FTBSGameAssetManager::GetInstance()->GetCombatCapabilities(ECombatCapabilitiesType::MultiDamage));
 		if (MultiMoveAttackCapabilities)
 		{
 			MultiMoveAttackCapabilities->InitializeCombatCapabilities(OwnerCombatPawn->GetWorld(), TEXT("1"));

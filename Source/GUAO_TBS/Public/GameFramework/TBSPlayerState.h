@@ -24,6 +24,8 @@ class GUAO_TBS_API ATBSPlayerState : public APlayerState
 public:
 	ATBSPlayerState();
 
+	virtual void OnConstruction(const FTransform& Transform) override;
+
 	virtual void BeginPlay() override;
 
 	//////////////////////////////////////////////////////////////////////////
@@ -78,4 +80,5 @@ protected:
 	int32 Experience;
 	int32 MaxExperience;
 	FString PlayerUserName;
+	FName CharacterName;
 };

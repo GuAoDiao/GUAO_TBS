@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 
+#include "GameFramework/TBSGameAssetManager.h"
+
 #include "Combat/CombatPawn.h"
 #include "Combat/CombatManager.h"
 #include "Combat/Actions/MoveAction.h"
 
-#include "PropAndCapabilitiesManager.h"
 #include "Combat/CombatCapabilities/MonomerDamageCapabilities.h"
 
 FMonomerMoveAttackAction::FMonomerMoveAttackAction(int32 InTargetTeam, int32 InTargetIndex)
@@ -33,8 +34,7 @@ void FMonomerMoveAttackAction::AttackImplementation()
 {
 	if (OwnerCombatPawn && TargetPawn)
 	{
-		FPropAndCapabilitiesManager* PropsManager = FPropAndCapabilitiesManager::GetInstance();
-		UMonomerDamageCapabilities* MonomerAttackCapabilities = Cast<UMonomerDamageCapabilities>(PropsManager->GetCombatCapabilities(ECombatCapabilitiesType::MonomerDamage));
+		UMonomerDamageCapabilities* MonomerAttackCapabilities = Cast<UMonomerDamageCapabilities>(FTBSGameAssetManager::GetInstance()->GetCombatCapabilities(ECombatCapabilitiesType::MonomerDamage));
 		if (MonomerAttackCapabilities)
 		{
 			MonomerAttackCapabilities->InitializeCombatCapabilities(OwnerCombatPawn->GetWorld(), TEXT("1"));

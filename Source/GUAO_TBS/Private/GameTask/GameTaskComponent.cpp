@@ -39,8 +39,7 @@ void UGameTaskComponent::OnLevelUp(int32 Level)
 
 void UGameTaskComponent::UpdateAllCanAcceptTask()
 {
-	UDataTable* GameTaskInfoDT = FTBSGameAssetManager::GetInstance()->GetGameTaskInfoDT();
-	if (GameTaskInfoDT)
+	if (UDataTable* GameTaskInfoDT = FTBSGameAssetManager::GetInstance()->GetTargetDataTable("GameTaskInfo"))
 	{
 		TArray<FGameTaskInfo*> AllGameTaskInfo;
 		GameTaskInfoDT->GetAllRows<FGameTaskInfo>(TEXT("-_- find all game task info"), AllGameTaskInfo);

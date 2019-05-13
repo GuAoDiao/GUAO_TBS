@@ -4,9 +4,8 @@
 
 #include "GameFramework/PlayerController.h"
 
-
-#include "UI/GameLayout.h"
-#include "UI/CombatLayout.h"
+#include "UI/GameLayoutWidget.h"
+#include "UI/CombatLayoutWidget.h"
 
 void ATBSHUD::BeginPlay()
 {

@@ -2,7 +2,7 @@
 
 #include "GamePropsComponent.h"
 
-#include "PropAndCapabilitiesManager.h"
+#include "GameFramework/TBSGameAssetManager.h"
 #include "GameProps/GameCapabilities.h"
 
 UGamePropsComponent::UGamePropsComponent()
@@ -89,17 +89,17 @@ void UGamePropsComponent::UseSingleProps(int32 PropsID)
 				UE_LOG(LogTemp, Log, TEXT("-_- don't have prop"));
 				return;
 			}
-			FPropAndCapabilitiesManager* PropsManager = FPropAndCapabilitiesManager::GetInstance();
-			const FGamePropsInfo& PropsInfo = PropsManager->GetPropsInfoFormID(PropsStoreBag[i].ID);
+
+			const FGamePropsInfo& PropsInfo = FTBSGameAssetManager::GetInstance()->GetPropsInfoFormID(PropsStoreBag[i].ID);
 
 			if (PropsInfo.Type == EGamePropsType::Consumables)
 			{
-				const FConsumablesPropsInfo& ConsumablesPropsInfo = PropsManager->GetConsumablesPropsInfoFormID(PropsStoreBag[i].ID);
+				const FConsumablesPropsInfo& ConsumablesPropsInfo = FTBSGameAssetManager::GetInstance()->GetConsumablesPropsInfoFormID(PropsStoreBag[i].ID);
 				if (ConsumablesPropsInfo.Type == EConsumablesType::Game || ConsumablesPropsInfo.Type == EConsumablesType::All)
 				{
 					for (TMap<EGameCapabilitiesType, FString>::TConstIterator It(ConsumablesPropsInfo.GameCapabilities); It; ++It)
 					{
-						UGameCapabilities* GameCapabilities = PropsManager->GetGameCapabilities(It.Key());
+						UGameCapabilities* GameCapabilities = FTBSGameAssetManager::GetInstance()->GetGameCapabilities(It.Key());
 						if (GameCapabilities)
 						{
 							GameCapabilities->InitializeGameCapabilities(GetWorld(), It.Value());

@@ -6,8 +6,8 @@
 #include "EngineUtils.h"
 #include "Components/SkeletalMeshComponent.h"
 
-#include "PalaceLattice/TilePawnManager.h"
 #include "GridManager.h"
+#include "GameFramework/TBSGameAssetManager.h"
 
 ATilePawn::ATilePawn()
 {
@@ -42,7 +42,7 @@ void ATilePawn::OnConstruction(const FTransform& Transform)
 	
 	if (TilePawnID > 0)
 	{
-		const FTilePawnInfo* TilePawnInfo = FTilePawnManager::GetInstance()->GetTilePawnInfo(TilePawnID);
+		const FTilePawnInfo* TilePawnInfo = FTBSGameAssetManager::GetInstance()->GetTilePawnInfo(TilePawnID);
 		if (TilePawnInfo)
 		{
 			TilePawnName = TilePawnInfo->Name;

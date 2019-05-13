@@ -2,9 +2,8 @@
 
 #include "ShopNPCTilePawn.h"
 
-
-#include "PropAndCapabilitiesManager.h"
-#include "UI/Game/Shop/NPCShop.h"
+#include "GameFramework/TBSGameAssetManager.h"
+#include "UI/Game/Shop/ShopWidget.h"
 #include "TBSCharacter.h"
 #include "TBSPlayerState.h"
 #include "GameProps/GamePropsComponent.h"
@@ -14,7 +13,7 @@ void AShopNPCTilePawn::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 
 
-	PropsShopInfo = FPropAndCapabilitiesManager::GetInstance()->GetShopInfo(TilePawnID);
+	PropsShopInfo = FTBSGameAssetManager::GetInstance()->GetShopInfo(TilePawnID);
 }
 
 

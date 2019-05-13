@@ -5,7 +5,7 @@
 #include "Combat/DecisionMakers/IDecisionMaker.h"
 
 #include "CoreMinimal.h"
-#include "Combat/PlayerDecisionMakerUI.h"
+#include "UI/Combat/PlayerDecisionMakerWidget.h"
 
 
 class UPlayerDecisionMakerWidget;

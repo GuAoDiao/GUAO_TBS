@@ -14,7 +14,7 @@
 #include "TBSPlayerController.h"
 #include "TBSGameState.h"
 #include "TBSHUD.h"
-#include "UI/CombatLayout.h"
+#include "UI/CombatLayoutWidget.h"
 
 ACombatManager::ACombatManager()
 {

@@ -3,8 +3,8 @@
 #include "PropItemWidget.h"
 
 #include "TBSCharacter.h"
-#include "PropAndCapabilitiesManager.h"
 #include "GameProps/GamePropsComponent.h"
+#include "GameFramework/TBSGameAssetManager.h"
 
 void UPropItemWidget::InitializePropsItemDisplay(int32 PropsID, int32 PropsNum)
 {
@@ -23,7 +23,7 @@ void UPropItemWidget::InitializePropsItemDisplay(int32 PropsID, int32 PropsNum)
 
 const FGamePropsInfo& UPropItemWidget::GetGamePropsInfo() const
 {
-	return FPropAndCapabilitiesManager::GetInstance()->GetPropsInfoFormID(CurrentPropsID);
+	return FTBSGameAssetManager::GetInstance()->GetPropsInfoFormID(CurrentPropsID);
 }
 
 

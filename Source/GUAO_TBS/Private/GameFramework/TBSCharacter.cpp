@@ -3,20 +3,29 @@
 #include "TBSCharacter.h"
 
 #include "Engine/World.h"
+
 #include "Camera/CameraComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Components/InputComponent.h"
 #include "Components/SplineComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+
+#include "Animation/AnimInstance.h"
+
+#include "Kismet/KismetMathLibrary.h"
+
 
 #include "GridManager.h"
 #include "GridPathFinding.h"
 #include "TilePawn/NPC/NPCTilePawn.h"
 #include "TilePawn/Enemy/EnemyTilePawn.h"
 #include "TBSGameAssetManager.h"
-#include "Dialogue/NPCDialogue.h"
 #include "GameTask/GameTaskComponent.h"
 #include "GameProps/GamePropsComponent.h"
+#include "GameFramework/TBSGameInstance.h"
+#include "GameFramework/TBSGameAssetManager.h"
+#include "GameFramework/Archive/TBSArchiveItem.h"
+#include "UI/Game/Dialogue/DialogueWidget.h"
 
 ATBSCharacter::ATBSCharacter()
 {
@@ -59,6 +68,22 @@ void ATBSCharacter::OnConstruction(const FTransform& Transform)
 
 	SpringArmComp->AttachToComponent(GridAnchor, FAttachmentTransformRules::KeepWorldTransform);
 	ResetAngleOfView();
+
+	if (UTBSGameInstance* TBSGameInstance = Cast<UTBSGameInstance>(GetGameInstance()))
+	{
+		if (UTBSArchiveItem* TBSArchiveItemInfo = TBSGameInstance->GetCurrentArchiveItemInfo())
+		{
+			if (const FTBSCharacterInfo* TBSCharacterInfo = FTBSGameAssetManager::GetInstance()->GetCharacterInfo(TBSArchiveItemInfo->CharacterName))
+			{
+				if (ensure(!TBSCharacterInfo->CharacterMesh.IsNull() && !TBSCharacterInfo->CharacterAnimInstance.IsNull()))
+				{
+					PawnSkeletalMeshComp->SetSkeletalMesh(TBSCharacterInfo->CharacterMesh.LoadSynchronous());
+					PawnSkeletalMeshComp->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+					PawnSkeletalMeshComp->SetAnimInstanceClass(TBSCharacterInfo->CharacterAnimInstance.LoadSynchronous());
+				}
+			}
+		}
+	}
 }
 
 void ATBSCharacter::BeginPlay()
